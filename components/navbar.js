@@ -1,4 +1,4 @@
-// import Logo from './logo'
+import Logo from './logo'
 import NextLink from 'next/link'
 import {
     Container,
@@ -15,7 +15,7 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
-// import ThemeToggleButton from './theme-toggle-button'
+import ThemeToggleButton from './theme-toggle-button'
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
     const active = path === href
@@ -25,7 +25,7 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
             <Link
                 p={2}
                 bg={active ? '#81e6d9' : undefined}
-                color={active ? '#202023' : inactiveColor}
+                color={active ? '#374151' : inactiveColor}
                 target={target}
                 {...props}
             >
@@ -51,7 +51,7 @@ const Navbar = props => {
             <Container display="flex" p={3} maxW="container.md" wrap="wrap" align="center" justify="space-between">
                 <Flex align="center" mr={5}>
                     <Heading as="h1" size="lg" letterSpacing={'tighter'}>
-                        {/* <Logo /> */}
+                        <Logo />
                     </Heading>
                 </Flex>
                 <Stack
@@ -77,7 +77,7 @@ const Navbar = props => {
 
                 </Stack>
                 <Box flex={1} align="right">
-                    {/* <ThemeToggleButton /> */}
+                    <ThemeToggleButton />
                     <Box ml={2} display={{ base: 'inline-block' }}>
                         <Menu>
                             <MenuButton as={IconButton} icon={<HamburgerIcon />} variant="outline" aria-label="Options" />
