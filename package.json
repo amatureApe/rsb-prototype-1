@@ -9,11 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.4.1",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "framer-motion": "^7.6.7",
-    "next": "13.0.3",
+    "@chakra-ui/icons": "^2.0.8",
+    "@chakra-ui/react": "^2.2.8",
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "framer-motion": "^7.2.0",
+    "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
