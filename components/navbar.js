@@ -42,18 +42,16 @@ const Navbar = props => {
             position="fixed"
             as="nav"
             w="100%"
-            mt={4}
             bg={useColorModeValue('#ffffff40', '#20202380')}
             style={{ backdropFilter: 'blur(10px' }}
             zIndex={1}
             {...props}
         >
-            <Container display="flex" p={3} maxW="container.xl" wrap="wrap" align="center" justify="space-between">
+            <Container display="flex" p={3} maxW="container.xl" wrap="wrap" align="center" justify="space-between" mt={2} mb={2}>
                 <Box flex={1} align="center">
                     <Logo />
                 </Box>
-                <Box flex={1} align="center" >
-
+                <Box flex={1} align="center" mt={2}>
                     <LinkItem href="/set-bet" path={path}>
                         Set Bet
                     </LinkItem>
@@ -66,7 +64,6 @@ const Navbar = props => {
                     <LinkItem href="/about" path={path}>
                         About
                     </LinkItem>
-
                 </Box>
                 <Box flex={1} align="center">
                     <ThemeToggleButton />
