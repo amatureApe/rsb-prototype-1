@@ -22,7 +22,8 @@ import React from 'react'
 import { useState } from 'react'
 
 const Works = () => {
-    const [value, setValue] = React.useState('1')
+    const [betPrivacy, setBetPrivacy] = React.useState('1')
+    const [betSide, setBetSide] = React.useState('1')
     return (
         < Layout title="Works" >
             <Container mt={10} maxW="md" align="center">
@@ -58,19 +59,19 @@ const Works = () => {
             <Heading>Liveness Period</Heading>
             <Input bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Livness Period here" />
             <Heading>Bet Privacy</Heading>
-            <Text mb={1}>Is your bet private?</Text>
-            <RadioGroup onChange={setValue} value={value} mb={4}>
+            <Text mb={1}>Is your bet public or private?</Text>
+            <RadioGroup onChange={setBetPrivacy} value={betPrivacy} mb={4}>
                 <Stack direction='row'>
-                    <Radio value='1'>Affirmation</Radio>
-                    <Radio value='2'>Negation</Radio>
+                    <Radio value='1' colorScheme="pink">Public</Radio>
+                    <Radio value='2' colorScheme="pink">Private</Radio>
                 </Stack>
             </RadioGroup>
             <Heading>Bet Side</Heading>
-            <Text mb={1}>What side of the bet are you on?</Text>
-            <RadioGroup onChange={setValue} value={value} mb={4}>
+            <Text mb={1}>Are you in affirmation or negation of the bet?</Text>
+            <RadioGroup onChange={setBetSide} value={betSide} mb={4}>
                 <Stack direction='row'>
-                    <Radio value='1'>Affirmation</Radio>
-                    <Radio value='2'>Negation</Radio>
+                    <Radio value='1' colorScheme="pink">Affirmation</Radio>
+                    <Radio value='2' colorScheme="pink">Negation</Radio>
                 </Stack>
             </RadioGroup>
             <Heading>Counter Bet Size</Heading>
