@@ -24,8 +24,8 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
         <NextLink href={href} passHref scroll={false}>
             <Link
                 p={2}
-                bg={active ? '#81e6d9' : undefined}
-                color={active ? '#374151' : inactiveColor}
+                bg={active ? '#FF4993' : undefined}
+                color={active ? 'whiteAlpha.900' : inactiveColor}
                 target={target}
                 {...props}
             >
@@ -48,20 +48,12 @@ const Navbar = props => {
             zIndex={1}
             {...props}
         >
-            <Container display="flex" p={3} maxW="container.md" wrap="wrap" align="center" justify="space-between">
-                <Flex align="center" mr={5}>
-                    <Heading as="h1" size="lg" letterSpacing={'tighter'}>
-                        <Logo />
-                    </Heading>
-                </Flex>
-                <Stack
-                    direction={{ base: 'column', md: 'row' }}
-                    display={{ base: 'none', md: 'flex' }}
-                    width={{ base: 'full', md: 'auto' }}
-                    alignItems="center"
-                    flexgrow={1}
-                    mt={{ base: 4, nmd: 0 }}
-                >
+            <Container display="flex" p={3} maxW="container.xl" wrap="wrap" align="center" justify="space-between">
+                <Box flex={1} align="center">
+                    <Logo />
+                </Box>
+                <Box flex={1} align="center" >
+
                     <LinkItem href="/set-bet" path={path}>
                         Set Bet
                     </LinkItem>
@@ -75,12 +67,19 @@ const Navbar = props => {
                         About
                     </LinkItem>
 
-                </Stack>
-                <Box flex={1} align="right">
+                </Box>
+                <Box flex={1} align="center">
                     <ThemeToggleButton />
                     <Box ml={2} display={{ base: 'inline-block' }}>
                         <Menu>
-                            <MenuButton as={IconButton} icon={<HamburgerIcon />} variant="outline" aria-label="Options" />
+                            <MenuButton
+                                as={IconButton}
+                                icon={<HamburgerIcon />}
+                                variant="outline"
+                                aria-label="Options"
+                                bg="#FF4993"
+                                color="whiteAlpha.900"
+                            />
                             <MenuList>
                                 <NextLink href="/set-bet" passHref>
                                     <MenuItem as={Link}>Set Bet</MenuItem>
@@ -99,8 +98,8 @@ const Navbar = props => {
                         </Menu>
                     </Box>
                 </Box>
-            </Container >
-        </Box >
+            </Container>
+        </Box>
     )
 }
 
