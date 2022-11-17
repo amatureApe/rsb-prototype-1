@@ -98,6 +98,7 @@ const Works = () => {
                     loadingText='Submitting'
                     bg='#FF4993'
                     color="whiteAlpha.800"
+                    _hover={{ bg: 'pink.500' }}
                     variant='solid'
                 >
                     Submit

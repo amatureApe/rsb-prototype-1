@@ -19,7 +19,7 @@ import ThemeToggleButton from './theme-toggle-button'
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
     const active = path === href
-    const inactiveColor = useColorModeValue('gray200', 'whiteAlpha.900')
+    const inactiveColor = useColorModeValue('#3D4950', 'whiteAlpha.900')
     return (
         <NextLink href={href} passHref scroll={false}>
             <Link
@@ -78,6 +78,7 @@ const Navbar = props => {
                                 variant="outline"
                                 aria-label="Options"
                                 bg="#FF4993"
+                                _hover={{ bg: 'pink.500' }}
                                 color="whiteAlpha.900"
                             />
                             <MenuList>

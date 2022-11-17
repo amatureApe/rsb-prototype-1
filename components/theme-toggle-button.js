@@ -19,6 +19,7 @@ const ThemeToggleButton = () => {
                     aria-label="Toggle theme"
                     color="whiteAlpha.900"
                     bg={'#FF4993'}
+                    _hover={{ bg: 'pink.500' }}
                     icon={useColorModeValue(<MoonIcon />, <SunIcon />)}
                     onClick={toggleColorMode}
                 ></IconButton>
