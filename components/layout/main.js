@@ -1,15 +1,17 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Navbar from '../navbar.js'
 import { Box, Container, Heading } from '@chakra-ui/react'
 
 const Main = ({ children, router }) => {
+    const [accounts, setAccounts] = useState([])
     return (
         <Box as="main" pb={8}>
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <title>amatureApe - Homepage</title>
             </Head>
-            <Navbar path={router.asPath} />
+            <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
             <Container maxW="container.md" pt={14}>
                 {children}
             </Container>

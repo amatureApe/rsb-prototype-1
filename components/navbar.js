@@ -7,6 +7,8 @@ import {
     Stack,
     Heading,
     Flex,
+    Text,
+    Button,
     Menu,
     MenuItem,
     MenuList,
@@ -36,7 +38,17 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
 }
 
 const Navbar = props => {
-    const { path } = props
+    const { path, accounts, setAccounts } = props
+    const isConnected = Boolean(accounts[0])
+
+    async function connectAccount() {
+        if (window.ethereum) {
+            const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts"
+            })
+            setAccounts(accounts)
+        }
+    }
     return (
         <Box
             position="fixed"
@@ -96,6 +108,28 @@ const Navbar = props => {
                         </Menu>
                     </Box>
                 </Box>
+                {isConnected ? (
+                    <Flex direction="row" align="center">
+                        <Button
+                            bg="#FF4993"
+                            color="whiteAlpha.800"
+                            _hover={{ bg: 'pink.500' }}
+                        >
+                            <Flex direction="column">
+                                <Text>Connected</Text>
+                                <Text>Hello</Text>
+                            </Flex>
+
+                        </Button>
+                    </Flex>
+                ) : (
+                    <Button
+                        bg="#FF4993"
+                        color="whiteAlpha.800"
+                        _hover={{ bg: 'pink.500' }}
+                        onClick={connectAccount}
+                    >Connect</Button>
+                )}
             </Container>
         </Box>
     )

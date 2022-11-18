@@ -39,7 +39,7 @@ const Works = () => {
                 <Heading>Your Bet</Heading>
                 <Stack justify="space-between" align="center" direction="row">
                     <Button m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
-                    <Button variant="outline" colorScheme="pink">Advanced<ChevronDownIcon /></Button>
+                    <Button variant="outline" colorScheme="pink">Advanced <ChevronDownIcon /></Button>
                 </Stack>
             </Stack>
             <Textarea bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" />
