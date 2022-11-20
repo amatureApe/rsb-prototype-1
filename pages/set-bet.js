@@ -26,10 +26,9 @@ import Layout from '../components/layout/article'
 import React from 'react'
 import { useState, useRef } from 'react'
 import NumInput from '../components/inputs/number-input'
-import RadioButton from '../components/inputs/radio-input'
-// import HelpAccordion from '../components/menus-and-drawers/help-menu-accordion'
 import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
 import HelpDrawer from '../components/menus-and-drawers/help-drawer'
+import RadioSettings from '../components/inputs/bet-radio-settings'
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
@@ -78,7 +77,8 @@ const SetBet = () => {
 
 
     return (
-        <Layout title="Set Bet" >
+        <Layout title="Set Bet">
+
             <Stack justify="space-between" direction="row" align="end">
                 <Heading>Your Bet</Heading>
                 <Stack justify="space-between" align="center" direction="row">
@@ -101,26 +101,15 @@ const SetBet = () => {
                 <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
             </Collapse>
 
-            <Flex direction="row" justify="space-between">
-                {betPrivacy === '1' ? (
-                    <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0)">
-                        <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={handleBetPrivacy} value={betPrivacy} />
-                    </Box>
-                ) : (
-                    <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)">
-                        <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={handleBetPrivacy} value={betPrivacy} />
-                    </Box>
-                )}
-                <Box borderTop="2px" borderLeft="1px" borderRight="2px" borderColor="rgba(255, 73, 147, 0)">
-                    <RadioButton headingText={"Bet Side"} descText={"Which side of the bet are you on?"} onChange={setBetSide} value={betSide} />
-                </Box>
-            </Flex>
+            <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
 
             <Collapse in={isOpenCounterparty} animateOpacity>
+                <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" />
                 <Box bg="rgba(255, 73, 147, 0.2)" px={2}>
                     <Heading>Counterparty</Heading>
                     <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={setCounterParty} />
                 </Box>
+                <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
             </Collapse>
 
             <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />

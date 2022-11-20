@@ -6,12 +6,23 @@ const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPe
     return (
         <Box>
             <HStack>
-                <Text fontSize={18} bg="rgba(255, 73, 147, 0.2)" px={2} cursor="pointer" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Text>
+                <Text
+                    fontSize={18}
+                    px={2} cursor="pointer"
+                    onClick={onToggleAdvancedMenu}
+                    borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)"
+                >
+                    Advanced <ChevronUpIcon />
+                </Text>
             </HStack>
             <Box bg="rgba(255, 73, 147, 0.2)">
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-                <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
-                <NumInput headingText={"Liveness Period"} headingSize={28} onChange={setLivenessPeriod} />
+                <Box px={2}>
+                    <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
+                </Box>
+                <Box px={2}>
+                    <NumInput headingText={"Liveness Period"} headingSize={28} onChange={setLivenessPeriod} />
+                </Box>
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
             </Box>
         </Box>
