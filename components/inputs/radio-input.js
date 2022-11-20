@@ -10,7 +10,7 @@ import {
 
 const RadioButton = ({ headingText, descText, onChange, value }) => {
     return (
-        <Flex direction="column" justify="center" align="center">
+        <Flex direction="column" justify="center" align="center" px={2}>
             <Heading>{headingText}</Heading>
             <Text mb={1}>{descText}</Text>
             <RadioGroup onChange={onChange} value={value} mb={4}>

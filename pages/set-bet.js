@@ -27,7 +27,9 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import NumInput from '../components/inputs/number-input'
 import RadioButton from '../components/inputs/radio-input'
-import HelpAccordion from '../components/help-menu-accordion'
+// import HelpAccordion from '../components/menus-and-drawers/help-menu-accordion'
+import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
+import HelpDrawer from '../components/menus-and-drawers/help-drawer'
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
@@ -37,11 +39,17 @@ const SetBet = () => {
     const [livenessPeriod, setLivenessPeriod] = useState(0)
     const [betPrivacy, setBetPrivacy] = useState('1')
     const [betSide, setBetSide] = useState('1')
+    const [counterParty, setCounterParty] = useState('')
     const [counterBet, setCounterBet] = useState(0)
 
     const {
         isOpen: isOpenAdvancedMenu,
         onToggle: onToggleAdvancedMenu
+    } = useDisclosure()
+
+    const {
+        isOpen: isOpenCounterparty,
+        onToggle: onToggleCounterparty
     } = useDisclosure()
 
     const {
@@ -55,12 +63,18 @@ const SetBet = () => {
         setBet(value)
     }
 
+    const handleBetPrivacy = (betPrivacy) => {
+        setBetPrivacy(betPrivacy)
+        onToggleCounterparty()
+
+    }
+
     const handleCollateralChange = (e) => {
         let value = e.target.value
         setCollateral(value)
     }
 
-    console.log(isOpenAdvancedMenu)
+    console.log(betPrivacy)
 
 
     return (
@@ -77,27 +91,37 @@ const SetBet = () => {
                 </Stack>
             </Stack>
             <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
+
             <Heading>Collateral</Heading>
             <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" onChange={handleCollateralChange} />
 
             <NumInput headingText={"Bet Size"} onChange={setBetSize} />
 
             <Collapse in={isOpenAdvancedMenu} animateOpacity>
-                <HStack>
-                    <Text fontSize={18} bg="rgba(255, 73, 147, 0.2)" px={2} cursor="pointer" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Text>
-                </HStack>
-                <Box bg="rgba(255, 73, 147, 0.2)">
-                    <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-                    <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
-                    <NumInput headingText={"Liveness Period"} headingSize={28} onChange={setLivenessPeriod} />
-                    <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-                </Box>
+                <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
             </Collapse>
 
             <Flex direction="row" justify="space-between">
-                <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={setBetPrivacy} value={betPrivacy} />
-                <RadioButton headingText={"Bet Side"} descText={"Which side of the bet are you on?"} onChange={setBetSide} value={betSide} />
+                {betPrivacy === '1' ? (
+                    <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0)">
+                        <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={handleBetPrivacy} value={betPrivacy} />
+                    </Box>
+                ) : (
+                    <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)">
+                        <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={handleBetPrivacy} value={betPrivacy} />
+                    </Box>
+                )}
+                <Box borderTop="2px" borderLeft="1px" borderRight="2px" borderColor="rgba(255, 73, 147, 0)">
+                    <RadioButton headingText={"Bet Side"} descText={"Which side of the bet are you on?"} onChange={setBetSide} value={betSide} />
+                </Box>
             </Flex>
+
+            <Collapse in={isOpenCounterparty} animateOpacity>
+                <Box bg="rgba(255, 73, 147, 0.2)" px={2}>
+                    <Heading>Counterparty</Heading>
+                    <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={setCounterParty} />
+                </Box>
+            </Collapse>
 
             <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
 
@@ -113,27 +137,8 @@ const SetBet = () => {
                     Submit
                 </Button>
             </Stack>
-            <Drawer
-                isOpen={isOpenHelpDrawer}
-                placement='right'
-                onClose={onToggleHelpDrawer}
-                finalFocusRef={helpBtnRef}
-                size="md"
-            >
-                <DrawerOverlay />
-                <DrawerContent bg={useColorModeValue("#f0e7db", "#202023")} borderLeft="1px" borderColor="#FF4993">
-                    <DrawerCloseButton />
-                    <DrawerHeader>Ready Set Bet</DrawerHeader>
-                    <Text p={4}>Welcome to Ready Set Bet. Below are the explanations for the different input parameters. Enjoy responsibly.</Text>
 
-                    <DrawerBody>
-                        <HelpAccordion />
-                    </DrawerBody>
-
-                    <DrawerFooter>
-                    </DrawerFooter>
-                </DrawerContent>
-            </Drawer>
+            <HelpDrawer isOpenHelpDrawer={isOpenHelpDrawer} onToggleHelpDrawer={onToggleHelpDrawer} helpBtnRef={helpBtnRef} />
         </Layout >
     )
 }
