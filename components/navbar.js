@@ -41,7 +41,7 @@ const Navbar = props => {
     const { path, accounts, setAccounts } = props
     const isConnected = Boolean(accounts[0])
 
-    async function connectAccount() {
+    const connectAccount = async () => {
         if (window.ethereum) {
             const accounts = await window.ethereum.request({
                 method: "eth_requestAccounts"
@@ -109,15 +109,15 @@ const Navbar = props => {
                     </Box>
                 </Box>
                 {isConnected ? (
-                    <Flex direction="row" align="center">
+                    <Flex direction="row" align="center" px={5}>
                         <Button
                             bg="#FF4993"
-                            color="whiteAlpha.800"
+                            color="whiteAlpha.900"
                             _hover={{ bg: 'pink.500' }}
                         >
                             <Flex direction="column">
-                                <Text>Connected</Text>
-                                <Text>Hello</Text>
+                                <Text fontSize={12}>Connected</Text>
+                                <Text fontSize={12}>{accounts[0].slice(0, 4) + '...' + accounts[0].slice(-4)}</Text>
                             </Flex>
 
                         </Button>
@@ -125,7 +125,7 @@ const Navbar = props => {
                 ) : (
                     <Button
                         bg="#FF4993"
-                        color="whiteAlpha.800"
+                        color="whiteAlpha.900"
                         _hover={{ bg: 'pink.500' }}
                         onClick={connectAccount}
                     >Connect</Button>

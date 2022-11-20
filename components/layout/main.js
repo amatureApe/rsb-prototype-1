@@ -11,8 +11,11 @@ const Main = ({ children, router }) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <title>amatureApe - Homepage</title>
             </Head>
-            <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
-            <Container maxW="container.md" pt={14}>
+            <Box>
+                <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
+
+            </Box>
+            <Container maxW="container.md" pt={20}>
                 {children}
             </Container>
             <Box mt={10} align="center" borderTop="1px">

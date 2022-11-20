@@ -12,29 +12,39 @@ import {
     RadioGroup,
     Stack,
     Text,
-    Spacer,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import Head from 'next/head'
 import Layout from '../components/layout/article'
 import React from 'react'
 import { useState } from 'react'
+import NumInput from '../components/inputs/number-input'
+import RadioButton from '../components/inputs/radio-input'
 
-const Works = () => {
-    const [betPrivacy, setBetPrivacy] = React.useState('1')
-    const [betSide, setBetSide] = React.useState('1')
+const SetBet = () => {
+    const [bet, setBet] = useState('')
+    const [collateral, setCollateral] = useState('')
+    const [betSize, setBetSize] = useState(0)
+    const [validationReward, setValidationReward] = useState('')
+    const [livenessPeriod, setLivenessPeriod] = useState(0)
+    const [betPrivacy, setBetPrivacy] = useState('1')
+    const [betSide, setBetSide] = useState('1')
+    const [counterBet, setCounterBet] = useState(0)
+
+    const handleBetChange = (e) => {
+        let value = e.target.value
+        setBet(value)
+    }
+
+    const handleCollateralChange = (e) => {
+        let value = e.target.value
+        setCollateral(value)
+    }
+
+    console.log(counterBet)
+
+
     return (
         < Layout title="Works" >
-            <Container mt={10} maxW="md" align="center">
-                <Heading as="h3" fontSize={20} mb={4}>
-                    Set Your Bet!
-                </Heading>
-            </Container>
             <Stack justify="space-between" direction="row" align="end">
                 <Heading>Your Bet</Heading>
                 <Stack justify="space-between" align="center" direction="row">
@@ -42,79 +52,28 @@ const Works = () => {
                     <Button variant="outline" colorScheme="pink">Advanced <ChevronDownIcon /></Button>
                 </Stack>
             </Stack>
-            <Textarea bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" />
+            <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
             <Heading>Collateral</Heading>
-            <Input bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" />
-            <Heading>Bet Size</Heading>
-            <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} mb={4}>
-                <NumberInputField focusBorderColor='red.200' />
-                <NumberInputStepper>
-                    <NumberIncrementStepper
-                        bg='#FF4993'
-                        color="whiteAlpha.800"
-                        _active={{ bg: 'pink.300' }}
-                        children='+'
-                        mb={0.5}
-                    />
-                    <NumberDecrementStepper
-                        bg='#FF4993'
-                        color="whiteAlpha.800"
-                        _active={{ bg: 'pink.300' }}
-                        children='-'
-                    />
-                </NumberInputStepper>
-            </NumberInput>
-            <Heading>Validation Reward</Heading>
-            <Input bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your reward to validators here" />
-            <Heading>Liveness Period</Heading>
-            <Input bg="whiteAlpha.800" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Livness Period here" />
+            <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" onChange={handleCollateralChange} />
+
+            <NumInput headingText={"Bet Size"} onChange={setBetSize} />
+
+            <NumInput headingText={"Validation Reward"} onChange={setValidationReward} />
+            <NumInput headingText={"Liveness Period"} onChange={setLivenessPeriod} />
+
             <Flex direction="row" justify="space-between">
-                <Flex direction="column" justify="center" align="center">
-                    <Heading>Bet Privacy</Heading>
-                    <Text mb={1}>Is your bet public or private?</Text>
-                    <RadioGroup onChange={setBetPrivacy} value={betPrivacy} mb={4}>
-                        <Stack direction='row'>
-                            <Radio value='1' colorScheme="pink">Public</Radio>
-                            <Radio value='2' colorScheme="pink">Private</Radio>
-                        </Stack>
-                    </RadioGroup>
-                </Flex>
-                <Flex direction="column" justify="center" align="center">
-                    <Heading>Bet Side</Heading>
-                    <Text mb={1}>Which side of the bet are you on?</Text>
-                    <RadioGroup onChange={setBetSide} value={betSide} mb={4}>
-                        <Stack direction='row'>
-                            <Radio value='1' colorScheme="pink">Affirmation</Radio>
-                            <Radio value='2' colorScheme="pink">Negation</Radio>
-                        </Stack>
-                    </RadioGroup>
-                </Flex>
+                <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={setBetPrivacy} value={betPrivacy} />
+                <RadioButton headingText={"Bet Side"} descText={"Which side of the bet are you on?"} onChange={setBetSide} value={betSide} />
             </Flex>
-            <Heading>Counter Bet Size</Heading>
-            <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} mb={4}>
-                <NumberInputField focusBorderColor='red.200' />
-                <NumberInputStepper>
-                    <NumberIncrementStepper
-                        bg='#FF4993'
-                        color="whiteAlpha.800"
-                        _active={{ bg: 'pink.300' }}
-                        children='+'
-                        mb={0.5}
-                    />
-                    <NumberDecrementStepper
-                        bg='#FF4993'
-                        color="whiteAlpha.800"
-                        _active={{ bg: 'pink.300' }}
-                        children='-'
-                    />
-                </NumberInputStepper>
-            </NumberInput>
+
+            <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
+
             <Stack direction='row' spacing={4}>
                 <Button
                     isLoading={false}
                     loadingText='Submitting'
                     bg='#FF4993'
-                    color="whiteAlpha.800"
+                    color="whiteAlpha.900"
                     _hover={{ bg: 'pink.500' }}
                     variant='solid'
                 >
@@ -125,5 +84,4 @@ const Works = () => {
     )
 }
 
-export default Works
-// export { getServerSideProps } from '../components/chakra'
+export default SetBet
