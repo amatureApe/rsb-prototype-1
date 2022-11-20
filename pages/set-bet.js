@@ -11,9 +11,13 @@ import {
     Radio,
     RadioGroup,
     Stack,
+    HStack,
     Text,
+    Divider,
+    Collapse,
+    useDisclosure
 } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import Layout from '../components/layout/article'
 import React from 'react'
 import { useState } from 'react'
@@ -30,6 +34,11 @@ const SetBet = () => {
     const [betSide, setBetSide] = useState('1')
     const [counterBet, setCounterBet] = useState(0)
 
+    const {
+        isOpen: isOpenAdvancedMenu,
+        onToggle: onToggleAdvancedMenu
+    } = useDisclosure()
+
     const handleBetChange = (e) => {
         let value = e.target.value
         setBet(value)
@@ -40,16 +49,20 @@ const SetBet = () => {
         setCollateral(value)
     }
 
-    console.log(counterBet)
+    console.log(isOpenAdvancedMenu)
 
 
     return (
-        < Layout title="Works" >
+        <Layout title="Set Bet" >
             <Stack justify="space-between" direction="row" align="end">
                 <Heading>Your Bet</Heading>
                 <Stack justify="space-between" align="center" direction="row">
                     <Button m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
-                    <Button variant="outline" colorScheme="pink">Advanced <ChevronDownIcon /></Button>
+                    {isOpenAdvancedMenu ? (
+                        <Button variant="outline" colorScheme="pink" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Button>
+                    ) : (
+                        <Button variant="outline" colorScheme="pink" onClick={onToggleAdvancedMenu}>Advanced <ChevronDownIcon /></Button>
+                    )}
                 </Stack>
             </Stack>
             <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
@@ -58,8 +71,17 @@ const SetBet = () => {
 
             <NumInput headingText={"Bet Size"} onChange={setBetSize} />
 
-            <NumInput headingText={"Validation Reward"} onChange={setValidationReward} />
-            <NumInput headingText={"Liveness Period"} onChange={setLivenessPeriod} />
+            <Collapse in={isOpenAdvancedMenu} animateOpacity>
+                <HStack>
+                    <Text fontSize={18} bg="rgba(255, 73, 147, 0.2)" px={2} cursor="pointer" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Text>
+                </HStack>
+                <Box bg="rgba(255, 73, 147, 0.2)">
+                    <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
+                    <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
+                    <NumInput headingText={"Liveness Period"} headingSize={28} onChange={setLivenessPeriod} />
+                    <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
+                </Box>
+            </Collapse>
 
             <Flex direction="row" justify="space-between">
                 <RadioButton headingText={"Bet Privacy"} descText={"Is your bet public or private?"} onChange={setBetPrivacy} value={betPrivacy} />
