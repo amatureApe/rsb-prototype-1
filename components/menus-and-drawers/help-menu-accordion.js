@@ -173,6 +173,28 @@ const HelpAccordion = () => {
                         </AccordionPanel>
                     </AccordionItem>
                 </Flex>
+
+                <Spacer mt={10} />
+                <Text>More</Text>
+
+                <Flex direction="column">
+                    <AccordionItem mb={1}>
+                        <h2>
+                            <AccordionButton bg="rgba(251, 76, 76, 0.3)" _hover={{ bg: "rgba(251, 76, 76, 0.2)" }}>
+                                <Box flex='1' textAlign='left'>
+                                    UMA Protocol
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat.
+                        </AccordionPanel>
+                    </AccordionItem>
+                </Flex>
             </Flex>
         </Accordion >
     )

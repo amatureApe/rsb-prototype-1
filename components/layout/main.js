@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import Navbar from '../navbar.js'
+import NoSsr from '../icons-and-logos/no-ssr.js'
+import VoxelDog from '../icons-and-logos/voxel-img.js'
 import { Box, Container, Heading } from '@chakra-ui/react'
 
 const Main = ({ children, router }) => {
@@ -13,9 +15,11 @@ const Main = ({ children, router }) => {
             </Head>
             <Box>
                 <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
-
             </Box>
             <Container maxW="container.md" pt={20}>
+                <NoSsr>
+                    <VoxelDog />
+                </NoSsr>
                 {children}
             </Container>
             <Box mt={10} align="center" borderTop="1px">

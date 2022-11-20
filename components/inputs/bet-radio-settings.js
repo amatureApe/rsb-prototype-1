@@ -8,7 +8,7 @@ const RadioSettings = ({ betPrivacy, handleBetPrivacy, betSide, setBetSide }) =>
     return (
         <Flex direction="row" justify="space-between">
             {betPrivacy === '1' ? (
-                <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0)">
+                <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0)" pt={1}>
                     <RadioButton
                         headingText={"Bet Privacy"}
                         descText={"Is your bet public or private?"}
@@ -19,7 +19,7 @@ const RadioSettings = ({ betPrivacy, handleBetPrivacy, betSide, setBetSide }) =>
                     />
                 </Box>
             ) : (
-                <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)">
+                <Box borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)" pt={1}>
                     <RadioButton
                         headingText={"Bet Privacy"}
                         descText={"Is your bet public or private?"}
@@ -30,7 +30,7 @@ const RadioSettings = ({ betPrivacy, handleBetPrivacy, betSide, setBetSide }) =>
                     />
                 </Box>
             )}
-            <Box borderTop="2px" borderLeft="1px" borderRight="2px" borderColor="rgba(255, 73, 147, 0)">
+            <Box borderTop="2px" borderLeft="1px" borderRight="2px" borderColor="rgba(255, 73, 147, 0)" pt={1}>
                 <RadioButton
                     headingText={"Bet Side"}
                     descText={"Which side of the bet are you on?"}

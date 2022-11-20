@@ -101,7 +101,7 @@ const SetBet = () => {
             <Collapse in={isOpenCounterparty} animateOpacity>
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" />
                 <Box bg="rgba(255, 73, 147, 0.2)" px={2}>
-                    <Heading>Counterparty</Heading>
+                    <Heading pt={1}>Counterparty</Heading>
                     <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={setCounterParty} />
                 </Box>
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
