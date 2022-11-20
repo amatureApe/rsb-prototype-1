@@ -1,4 +1,4 @@
-import Logo from './logo'
+import Logo from './icons-and-logos/main-logo'
 import NextLink from 'next/link'
 import {
     Container,

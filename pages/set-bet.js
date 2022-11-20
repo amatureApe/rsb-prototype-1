@@ -5,17 +5,11 @@ import {
     Input,
     Button,
     Box,
-    Flex,
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
+    Icon,
     Stack,
     HStack,
     Text,
+    Image,
     Divider,
     Collapse,
     useDisclosure,
@@ -29,6 +23,7 @@ import NumInput from '../components/inputs/number-input'
 import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
 import HelpDrawer from '../components/menus-and-drawers/help-drawer'
 import RadioSettings from '../components/inputs/bet-radio-settings'
+import UMAIcon from '../components/icons-and-logos/uma-icon'
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
@@ -114,7 +109,7 @@ const SetBet = () => {
 
             <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
 
-            <Stack direction='row' spacing={4}>
+            <Stack direction='row' spacing={4} align="center" justify="space-between">
                 <Button
                     isLoading={false}
                     loadingText='Submitting'
@@ -125,6 +120,11 @@ const SetBet = () => {
                 >
                     Submit
                 </Button>
+
+                <HStack>
+                    <Text>Validated by</Text>
+                    <UMAIcon />
+                </HStack>
             </Stack>
 
             <HelpDrawer isOpenHelpDrawer={isOpenHelpDrawer} onToggleHelpDrawer={onToggleHelpDrawer} helpBtnRef={helpBtnRef} />
