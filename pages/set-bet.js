@@ -6,23 +6,28 @@ import {
     Button,
     Box,
     Flex,
-    FormLabel,
-    FormControl,
-    Radio,
-    RadioGroup,
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
     Stack,
     HStack,
     Text,
     Divider,
     Collapse,
-    useDisclosure
+    useDisclosure,
+    useColorModeValue
 } from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import Layout from '../components/layout/article'
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import NumInput from '../components/inputs/number-input'
 import RadioButton from '../components/inputs/radio-input'
+import HelpAccordion from '../components/help-menu-accordion'
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
@@ -38,6 +43,12 @@ const SetBet = () => {
         isOpen: isOpenAdvancedMenu,
         onToggle: onToggleAdvancedMenu
     } = useDisclosure()
+
+    const {
+        isOpen: isOpenHelpDrawer,
+        onToggle: onToggleHelpDrawer,
+    } = useDisclosure()
+    const helpBtnRef = useRef()
 
     const handleBetChange = (e) => {
         let value = e.target.value
@@ -57,7 +68,7 @@ const SetBet = () => {
             <Stack justify="space-between" direction="row" align="end">
                 <Heading>Your Bet</Heading>
                 <Stack justify="space-between" align="center" direction="row">
-                    <Button m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
+                    <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
                     {isOpenAdvancedMenu ? (
                         <Button variant="outline" colorScheme="pink" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Button>
                     ) : (
@@ -102,6 +113,27 @@ const SetBet = () => {
                     Submit
                 </Button>
             </Stack>
+            <Drawer
+                isOpen={isOpenHelpDrawer}
+                placement='right'
+                onClose={onToggleHelpDrawer}
+                finalFocusRef={helpBtnRef}
+                size="md"
+            >
+                <DrawerOverlay />
+                <DrawerContent bg={useColorModeValue("#f0e7db", "#202023")} borderLeft="1px" borderColor="#FF4993">
+                    <DrawerCloseButton />
+                    <DrawerHeader>Ready Set Bet</DrawerHeader>
+                    <Text p={4}>Welcome to Ready Set Bet. Below are the explanations for the different input parameters. Enjoy responsibly.</Text>
+
+                    <DrawerBody>
+                        <HelpAccordion />
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </Layout >
     )
 }
