@@ -26,8 +26,9 @@ import HelpDrawer from '../components/menus-and-drawers/help-drawer'
 import RadioSettings from '../components/inputs/bet-radio-settings'
 import UMAIcon from '../components/icons-and-logos/uma-icon'
 
-import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+import contractConnection from '../utils/contractConnection'
 
+import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
 
 const SetBet = () => {
@@ -52,7 +53,6 @@ const SetBet = () => {
         betSize,
         counterBet
     ]
-
 
     const prepareData = (
         _question,
@@ -80,8 +80,6 @@ const SetBet = () => {
         return data
     }
 
-    console.log(prepareData(...args))
-
     const {
         isOpen: isOpenAdvancedMenu,
         onToggle: onToggleAdvancedMenu
@@ -106,7 +104,6 @@ const SetBet = () => {
     const handleBetPrivacy = (betPrivacy) => {
         setBetPrivacy(betPrivacy)
         onToggleCounterparty()
-
     }
 
     const handleCollateralChange = (e) => {
@@ -120,23 +117,14 @@ const SetBet = () => {
     }
 
     const handleSetBet = async () => {
-        if (window.ethereum) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum)
-            const signer = provider.getSigner()
-            const contract = new ethers.Contract(
-                rsbBetHandlerAddress,
-                rsbBetHandlerABI.abi,
-                signer
-            )
-            try {
-                const response = await contract.setBet(...prepareData(...args))
-                console.log('RESPONSE', response)
-            } catch (err) {
-                console.log("error: ", err)
-            }
+        const contract = await contractConnection(rsbBetHandlerAddress, rsbBetHandlerABI)
+        try {
+            const response = await contract.setBet(...prepareData(...args))
+            const test = await contract.bets(1)
+        } catch (err) {
+            console.log("error: ", err)
         }
     }
-
 
     return (
         <Layout title="Set Bet">
