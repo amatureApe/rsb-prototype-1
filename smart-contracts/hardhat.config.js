@@ -7,7 +7,6 @@ require("hardhat-contract-sizer");
 require("dotenv").config();
 
 
-const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
 const PRIVATE_KEY = process.env.MNEMONIC;
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY;
@@ -19,13 +18,6 @@ module.exports = {
     hardhat: {
       chainId: 31337,
       blockConfirmations: 1,
-    },
-    rinkeby: {
-      chainId: 4,
-      blockConfirmations: 6,
-      url: RINKEBY_RPC_URL,
-      accounts: [PRIVATE_KEY],
-      saveDeployments: true,
     },
     goerli: {
       chainId: 5,
@@ -54,7 +46,6 @@ module.exports = {
     apiKey: {
       mainnet: `${process.env.ETHERSCAN_API_KEY}`,
       goerli: `${process.env.ETHERSCAN_API_KEY}`,
-      rinkeby: `${process.env.ETHERSCAN_API_KEY}`,
     },
   },
   mocha: {

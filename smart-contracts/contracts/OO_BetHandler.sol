@@ -100,7 +100,15 @@ contract OO_BetHandler is ReentrancyGuard {
     ) public nonReentrant {
         require(msg.sender != _privateBetRecipient, "Can't bet yourself");
         if (_privateBet == true) {
-            require(_privateBetRecipient != ZERO_ADDRESS, "Private bets must have a recipient");
+            require(
+                _privateBetRecipient != ZERO_ADDRESS,
+                "Private bets must have a recipient"
+            );
+        } else {
+            require(
+                _privateBetRecipient == ZERO_ADDRESS,
+                "Public bet must be 0 address"
+            );
         }
         bytes memory ancillaryData = createQuestion(_question); // Question to ask the UMA Oracle.
         IERC20 bondCurrency = IERC20(_bondCurrency); // Use preferred token as the bond currency.
