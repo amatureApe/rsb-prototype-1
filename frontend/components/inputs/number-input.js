@@ -8,11 +8,11 @@ import {
     NumberDecrementStepper,
 } from '@chakra-ui/react'
 
-const NumInput = ({ headingText, headingSize = 36, onChange }) => {
+const NumInput = ({ headingText, headingSize = 36, precision = null, onChange }) => {
     return (
         <Box>
             <Heading fontSize={headingSize}>{headingText}</Heading>
-            <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} mb={4} onChange={onChange}>
+            <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} precision={precision} min={0} mb={4} onChange={onChange}>
                 <NumberInputField focusBorderColor='red.200' />
                 <NumberInputStepper>
                     <NumberIncrementStepper

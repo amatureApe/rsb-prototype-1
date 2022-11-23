@@ -21,7 +21,7 @@ const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPe
                     <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
                 </Box>
                 <Box px={2}>
-                    <NumInput headingText={"Liveness Period"} headingSize={28} onChange={setLivenessPeriod} />
+                    <NumInput headingText={"Liveness Period"} headingSize={28} precision={0} onChange={setLivenessPeriod} />
                 </Box>
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
             </Box>

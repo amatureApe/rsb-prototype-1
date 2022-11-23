@@ -1,3 +1,6 @@
+import React from 'react'
+import { useState, useRef } from 'react'
+import { ethers, BigNumber, utils } from 'ethers'
 import {
     Container,
     Heading,
@@ -17,24 +20,67 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import Layout from '../components/layout/article'
-import React from 'react'
-import { useState, useRef } from 'react'
 import NumInput from '../components/inputs/number-input'
 import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
 import HelpDrawer from '../components/menus-and-drawers/help-drawer'
 import RadioSettings from '../components/inputs/bet-radio-settings'
 import UMAIcon from '../components/icons-and-logos/uma-icon'
 
+import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+
+const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
+
 const SetBet = () => {
     const [bet, setBet] = useState('')
     const [collateral, setCollateral] = useState('')
     const [betSize, setBetSize] = useState(0)
-    const [validationReward, setValidationReward] = useState('')
-    const [livenessPeriod, setLivenessPeriod] = useState(0)
+    const [validationReward, setValidationReward] = useState('0')
+    const [livenessPeriod, setLivenessPeriod] = useState('0')
     const [betPrivacy, setBetPrivacy] = useState('1')
     const [betSide, setBetSide] = useState('1')
-    const [counterParty, setCounterParty] = useState('')
+    const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
     const [counterBet, setCounterBet] = useState(0)
+
+    const args = [
+        bet,
+        collateral,
+        validationReward,
+        livenessPeriod,
+        betPrivacy,
+        counterParty,
+        betSide,
+        betSize,
+        counterBet
+    ]
+
+
+    const prepareData = (
+        _question,
+        _bondCurrency,
+        _reward,
+        _liveness,
+        _privateBet,
+        _privateBetRecipient,
+        _affirmation,
+        _betAmount,
+        _counterBetAmount
+    ) => {
+        const data = [
+            _question,
+            _bondCurrency,
+            utils.parseEther(_reward),
+            BigNumber.from(_liveness),
+            _privateBet === '1' ? false : true,
+            _privateBetRecipient,
+            _affirmation === '1' ? true : false,
+            utils.parseEther(_betAmount),
+            utils.parseEther(_counterBetAmount)
+        ]
+
+        return data
+    }
+
+    console.log(prepareData(...args))
 
     const {
         isOpen: isOpenAdvancedMenu,
@@ -68,7 +114,28 @@ const SetBet = () => {
         setCollateral(value)
     }
 
-    console.log(betPrivacy)
+    const handleCounterpartyChange = (e) => {
+        let value = e.target.value
+        setCounterParty(value)
+    }
+
+    const handleSetBet = async () => {
+        if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum)
+            const signer = provider.getSigner()
+            const contract = new ethers.Contract(
+                rsbBetHandlerAddress,
+                rsbBetHandlerABI.abi,
+                signer
+            )
+            try {
+                const response = await contract.setBet(...prepareData(...args))
+                console.log('RESPONSE', response)
+            } catch (err) {
+                console.log("error: ", err)
+            }
+        }
+    }
 
 
     return (
@@ -102,7 +169,7 @@ const SetBet = () => {
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" />
                 <Box bg="rgba(255, 73, 147, 0.2)" px={2}>
                     <Heading pt={1}>Counterparty</Heading>
-                    <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={setCounterParty} />
+                    <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={handleCounterpartyChange} />
                 </Box>
                 <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
             </Collapse>
@@ -117,6 +184,7 @@ const SetBet = () => {
                     color="whiteAlpha.900"
                     _hover={{ bg: 'pink.500' }}
                     variant='solid'
+                    onClick={handleSetBet}
                 >
                     Submit
                 </Button>
