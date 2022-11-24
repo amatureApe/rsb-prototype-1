@@ -50,6 +50,7 @@ const OpenBets = ({ Component, pageProps, router }) => {
                 <Wrap>
                     {bets.map((bet) => {
                         const creator = utils.getAddress(bet.creator)
+                        const question = utils.toUtf8String(bet.question)
                         const affirmation = utils.getAddress(bet.affirmation)
                         const negation = utils.getAddress(bet.negation)
                         return (
@@ -66,11 +67,12 @@ const OpenBets = ({ Component, pageProps, router }) => {
                                                     <Text fontSize="12px">Creator: {creator.slice(0, 4) + '...' + creator.slice(-4)}</Text>
                                                 </Flex>
                                             </Stack>
-                                            <Divider />
+                                            <Divider mb={-10} />
                                         </CardHeader>
                                         <CardBody>
                                             <Box>
-                                                <Text fontSize="14px">Bet: {utils.toUtf8String(bet.question)}</Text>
+                                                <Heading fontSize="14px">Bet:</Heading>
+                                                <Text fontSize="14px" noOfLines={3}>{question}</Text>
                                             </Box>
                                             <Spacer mb={5} />
                                             <Text>Bet Size: </Text>
