@@ -13,15 +13,10 @@ const Main = ({ children, router }) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <title>amatureApe - Homepage</title>
             </Head>
-            <Box>
+            <Box pb={20}>
                 <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
             </Box>
-            <Container maxW="container.md" pt={20}>
-                <NoSsr>
-                    <VoxelDog />
-                </NoSsr>
-                {children}
-            </Container>
+            {children}
             <Box mt={10} align="center" borderTop="1px">
                 <Heading mt={5}>INSERT FOOTER</Heading>
             </Box>
