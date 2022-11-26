@@ -77,7 +77,7 @@ const OpenBets = ({ Component, pageProps, router }) => {
                             <Badge colorScheme='green'>Affirmation</Badge>
                         return (
                             <WrapItem>
-                                <Center w='300px'>
+                                <Center w='400px'>
                                     <Card>
                                         <CardHeader>
                                             <Stack direction="row" justify="space-between">
@@ -96,15 +96,17 @@ const OpenBets = ({ Component, pageProps, router }) => {
                                                 <Text fontSize="14px" noOfLines={3}>{bet.question}</Text>
                                             </Box>
                                             <Divider mt={5} mb={1} />
-                                            <Stack direction="row">
+                                            <Stack direction="row" justify="space-between">
                                                 <Stack direction="column" spacing={0.5}>
-                                                    <Heading fontSize="12px">{bet.collateralSymbol}</Heading>
                                                     <Stack>
-                                                        <Badge fontSize="10px" colorScheme="green">Affirmation: </Badge>
+                                                        <Badge fontSize="10px" colorScheme="green">Affirmation: 100000000000000000 {bet.collateralSymbol}</Badge>
                                                     </Stack>
                                                     <Stack>
                                                         <Badge fontSize="10px" colorScheme="red">Negation: </Badge>
                                                     </Stack>
+                                                </Stack>
+                                                <Stack justify="center" align="center">
+                                                    <Button h="24px" bg="#FF4993">Bet</Button>
                                                 </Stack>
                                             </Stack>
                                         </CardBody>
