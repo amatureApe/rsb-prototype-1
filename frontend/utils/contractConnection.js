@@ -6,7 +6,7 @@ const contractConnection = async (address, abi) => {
         const signer = provider.getSigner()
         const contract = new ethers.Contract(
             address,
-            abi.abi,
+            abi,
             signer
         )
         return contract

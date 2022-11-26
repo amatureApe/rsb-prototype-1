@@ -13,7 +13,8 @@ import {
     WrapItem,
     Center,
     Divider,
-    Spacer
+    Spacer,
+    Badge
 } from '@chakra-ui/react'
 import Layout from '../components/layout/main'
 import theme from '../lib/theme'
@@ -22,18 +23,39 @@ import { useEffect, useState } from 'react'
 
 import contractConnection from '../utils/contractConnection'
 
+import erc20ABI from '../../smart-contracts/contracts/abis/erc20ABI.json'
+
 import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
 
 const OpenBets = ({ Component, pageProps, router }) => {
     const [bets, setBets] = useState([])
 
-    const getBet = async () => {
-        const contract = await contractConnection(rsbBetHandlerAddress, rsbBetHandlerABI)
+    const test = { hello: 'Hello' }
 
-        const bet = await contract.bets(1)
-        console.log(bet)
+    const getBet = async () => {
+        const contract = await contractConnection(rsbBetHandlerAddress, rsbBetHandlerABI.abi)
+
+        const response = await contract.bets(1)
+
+        const bet = {
+            creator: utils.getAddress(response.creator),
+            betId: utils.formatUnits(response.betId, 0),
+            collateral: utils.getAddress(response.bondCurrency),
+            collateralSymbol: await getSymbol(utils.getAddress(response.bondCurrency)),
+            question: utils.toUtf8String(response.question),
+            betStatus: utils.formatUnits(response.betStatus, 0),
+            affirmation: utils.getAddress(response.affirmation),
+            negation: utils.getAddress(response.negation),
+        }
+
         setBets([...bets, bet])
+    }
+
+    const getSymbol = async (addr) => {
+        const token = await contractConnection(addr, erc20ABI)
+        const symbol = await token.symbol()
+        return symbol
     }
 
     const handleBet = async () => {
@@ -49,10 +71,10 @@ const OpenBets = ({ Component, pageProps, router }) => {
             <Box>
                 <Wrap>
                     {bets.map((bet) => {
-                        const creator = utils.getAddress(bet.creator)
-                        const question = utils.toUtf8String(bet.question)
-                        const affirmation = utils.getAddress(bet.affirmation)
-                        const negation = utils.getAddress(bet.negation)
+                        const creatorPosition = bet.creator === bet.affirmation ? 'Aff' : 'Neg'
+                        const openPosition = bet.creator === bet.affirmation ?
+                            <Badge colorScheme='red'>Negation</Badge> :
+                            <Badge colorScheme='green'>Affirmation</Badge>
                         return (
                             <WrapItem>
                                 <Center w='300px'>
@@ -60,23 +82,31 @@ const OpenBets = ({ Component, pageProps, router }) => {
                                         <CardHeader>
                                             <Stack direction="row" justify="space-between">
                                                 <Stack direction="row">
-                                                    <Heading fontSize="14px">Id: {utils.formatUnits(bet.betId, 0)}</Heading>
-                                                    <Heading fontSize="14px">Status: {utils.formatUnits(bet.betStatus, 0)}</Heading>
+                                                    <Heading fontSize="14px">Id: {bet.betId}</Heading>
+                                                    <Heading fontSize="14px">Status: {bet.betStatus}</Heading>
                                                 </Stack>
                                                 <Flex direction="row" justify="center" align="center">
-                                                    <Text fontSize="12px">Creator: {creator.slice(0, 4) + '...' + creator.slice(-4)}</Text>
+                                                    <Text fontSize="12px">Position: {openPosition}</Text>
                                                 </Flex>
                                             </Stack>
                                             <Divider mb={-10} />
                                         </CardHeader>
                                         <CardBody>
                                             <Box>
-                                                <Heading fontSize="14px">Bet:</Heading>
-                                                <Text fontSize="14px" noOfLines={3}>{question}</Text>
+                                                <Text fontSize="14px" noOfLines={3}>{bet.question}</Text>
                                             </Box>
-                                            <Spacer mb={5} />
-                                            <Text>Bet Size: </Text>
-                                            <Text>Counterbet: </Text>
+                                            <Divider mt={5} mb={1} />
+                                            <Stack direction="row">
+                                                <Stack direction="column" spacing={0.5}>
+                                                    <Heading fontSize="12px">{bet.collateralSymbol}</Heading>
+                                                    <Stack>
+                                                        <Badge fontSize="10px" colorScheme="green">Affirmation: </Badge>
+                                                    </Stack>
+                                                    <Stack>
+                                                        <Badge fontSize="10px" colorScheme="red">Negation: </Badge>
+                                                    </Stack>
+                                                </Stack>
+                                            </Stack>
                                         </CardBody>
                                     </Card>
                                 </Center>
