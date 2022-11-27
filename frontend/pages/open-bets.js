@@ -13,15 +13,17 @@ import {
     WrapItem,
     Center,
     Divider,
+    Image,
     Spacer,
     Badge
 } from '@chakra-ui/react'
-import Layout from '../components/layout/main'
+import Layout from '../components/layout/article'
 import theme from '../lib/theme'
 import { ethers, utils, BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 
 import contractConnection from '../utils/contractConnection'
+import getRatio from '../utils/getRatio'
 
 import erc20ABI from '../../smart-contracts/contracts/abis/erc20ABI.json'
 
@@ -46,8 +48,12 @@ const OpenBets = ({ Component, pageProps, router }) => {
             question: utils.toUtf8String(response.question),
             betStatus: utils.formatUnits(response.betStatus, 0),
             affirmation: utils.getAddress(response.affirmation),
+            affirmationAmount: utils.formatEther(response.affirmationAmount),
             negation: utils.getAddress(response.negation),
+            negationAmount: utils.formatEther(response.negationAmount)
         }
+
+        console.log(bet.negationAmount)
 
         setBets([...bets, bet])
     }
@@ -64,7 +70,7 @@ const OpenBets = ({ Component, pageProps, router }) => {
     }
 
     return (
-        <div>
+        <Layout title="Set Bet">
             <Button colorScheme="pink" onClick={handleBet}>
                 Click
             </Button>
@@ -73,11 +79,14 @@ const OpenBets = ({ Component, pageProps, router }) => {
                     {bets.map((bet) => {
                         const creatorPosition = bet.creator === bet.affirmation ? 'Aff' : 'Neg'
                         const openPosition = bet.creator === bet.affirmation ?
-                            <Badge colorScheme='red'>Negation</Badge> :
+                            <Badge colorScheme='red' mb={1}>Negation</Badge> :
                             <Badge colorScheme='green'>Affirmation</Badge>
+                        const odds = bet.creator == bet.affirmation ?
+                            <Badge colorScheme="pink" py={1}><Badge colorScheme="pink" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge> :
+                            <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge>
                         return (
                             <WrapItem>
-                                <Center w='400px'>
+                                <Center maxW={400}>
                                     <Card>
                                         <CardHeader>
                                             <Stack direction="row" justify="space-between">
@@ -92,21 +101,42 @@ const OpenBets = ({ Component, pageProps, router }) => {
                                             <Divider mb={-10} />
                                         </CardHeader>
                                         <CardBody>
-                                            <Box>
-                                                <Text fontSize="14px" noOfLines={3}>{bet.question}</Text>
-                                            </Box>
-                                            <Divider mt={5} mb={1} />
+                                            <Stack direction="row">
+                                                <Image src="https://bit.ly/dan-abramov" boxSize="100px"></Image>
+                                                <Stack direciton="row" justify="space-between">
+                                                    <Text fontSize="14px" noOfLines={3}>{bet.question.slice(2, -54)}
+
+                                                    </Text>
+                                                    <Text fontSize="12px">Expires At:</Text>
+                                                </Stack>
+                                            </Stack>
+                                            <Divider mt={3} mb={2} />
                                             <Stack direction="row" justify="space-between">
                                                 <Stack direction="column" spacing={0.5}>
                                                     <Stack>
-                                                        <Badge fontSize="10px" colorScheme="green">Affirmation: 100000000000000000 {bet.collateralSymbol}</Badge>
+                                                        <Badge fontSize="10px" colorScheme="green">
+                                                            <Flex>
+                                                                <Text>Affirmation: </Text>
+                                                                <Spacer px={2} />
+                                                                <Text>{bet.affirmationAmount} {bet.collateralSymbol}</Text>
+                                                            </Flex>
+                                                        </Badge>
                                                     </Stack>
                                                     <Stack>
-                                                        <Badge fontSize="10px" colorScheme="red">Negation: </Badge>
+                                                        <Badge fontSize="10px" colorScheme="red">
+                                                            <Flex>
+                                                                <Text>Negation: </Text>
+                                                                <Spacer px={2} />
+                                                                <Text>{bet.negationAmount} {bet.collateralSymbol}</Text>
+                                                            </Flex>
+                                                        </Badge>
                                                     </Stack>
                                                 </Stack>
+                                                <Stack direction="row" align="center" justify="center">
+                                                    {odds}
+                                                </Stack>
                                                 <Stack justify="center" align="center">
-                                                    <Button h="24px" bg="#FF4993">Bet</Button>
+                                                    <Button h="24px" bg="#FF4993">Buy</Button>
                                                 </Stack>
                                             </Stack>
                                         </CardBody>
@@ -117,7 +147,7 @@ const OpenBets = ({ Component, pageProps, router }) => {
                     })}
                 </Wrap>
             </Box>
-        </div >
+        </Layout >
     )
 }
 

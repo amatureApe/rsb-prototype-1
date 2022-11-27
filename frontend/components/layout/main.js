@@ -16,6 +16,9 @@ const Main = ({ children, router }) => {
             <Box pb={20}>
                 <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
             </Box>
+            <NoSsr>
+                <VoxelDog />
+            </NoSsr>
             {children}
             <Box mt={10} align="center" borderTop="1px">
                 <Heading mt={5}>INSERT FOOTER</Heading>

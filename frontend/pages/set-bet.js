@@ -132,9 +132,6 @@ const SetBet = () => {
     return (
         <Layout title="Set Bet">
             <Container maxW="container.md">
-                <NoSsr>
-                    <VoxelDog />
-                </NoSsr>
                 <Stack justify="space-between" direction="row" align="end">
                     <Heading>Your Bet</Heading>
                     <Stack justify="space-between" align="center" direction="row">
