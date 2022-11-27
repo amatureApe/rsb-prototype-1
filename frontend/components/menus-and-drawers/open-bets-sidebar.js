@@ -14,13 +14,10 @@ import {
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
-export default function Sidebar() {
-    const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
-    const [hidden, setHidden] = useState(!isOpen)
+export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hidden, setHidden }) {
 
     return (
         <Box>
-            <Button {...getButtonProps()}>Toggle</Button>
             <motion.div
                 {...getDisclosureProps()}
                 hidden={hidden}

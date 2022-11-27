@@ -16,7 +16,8 @@ import {
     Divider,
     Image,
     Spacer,
-    Badge
+    Badge,
+    useDisclosure
 } from '@chakra-ui/react'
 
 import Layout from '../components/layout/article'
@@ -35,8 +36,13 @@ const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
 
 const OpenBets = ({ Component, pageProps, router }) => {
     const [bets, setBets] = useState([])
+    const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
+    const [hidden, setHidden] = useState(!isOpen)
 
-    const test = { hello: 'Hello' }
+    const {
+        isOpen: isOpenSidebar,
+        onToggle: onToggleSidebar
+    } = useDisclosure()
 
     const getBet = async () => {
         const contract = await contractConnection(rsbBetHandlerAddress, rsbBetHandlerABI.abi)
@@ -56,8 +62,6 @@ const OpenBets = ({ Component, pageProps, router }) => {
             negationAmount: utils.formatEther(response.negationAmount)
         }
 
-        console.log(bet.negationAmount)
-
         setBets([...bets, bet])
     }
 
@@ -74,14 +78,14 @@ const OpenBets = ({ Component, pageProps, router }) => {
 
     return (
         <Layout title="Set Bet">
-            <Button colorScheme="pink" onClick={handleBet}>
+            <Button colorScheme="pink" onClick={handleBet} m={5}>
                 Click
             </Button>
-            <Container borderWidth="1px" maxW="full">
-                <Text>Hello</Text>
+            <Container maxW="full" borderWidth="1px" borderColor="#FF4993" borderRadius="10px" mb={4}>
+                <Button {...getButtonProps()}>Filters</Button>
             </Container>
             <Stack direction="row">
-                <Sidebar />
+                <Sidebar getButtonProps={getButtonProps} getDisclosureProps={getDisclosureProps} isOpen={isOpen} hidden={hidden} setHidden={setHidden} />
                 <CardsWrap bets={bets} />
             </Stack>
         </Layout >
