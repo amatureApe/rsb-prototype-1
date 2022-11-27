@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react'
 import contractConnection from '../utils/contractConnection'
 import getRatio from '../utils/getRatio'
 
-import erc20ABI from '../../smart-contracts/contracts/abis/erc20ABI.json'
+import erc20ABI from '../utils/abis/erc20ABI.json'
 
 import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
