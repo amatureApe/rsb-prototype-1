@@ -15,8 +15,11 @@ import {
     Divider,
     Image,
     Spacer,
-    Badge
+    Badge,
+    useColorModeValue
 } from '@chakra-ui/react'
+
+import { StarIcon } from '@chakra-ui/icons'
 
 import getRatio from '../utils/getRatio'
 
@@ -28,23 +31,26 @@ const CardsWrap = ({ bets }) => {
                     const creatorPosition = bet.creator === bet.affirmation ? 'Aff' : 'Neg'
                     const openPosition = bet.creator === bet.affirmation ?
                         <Badge colorScheme='red' mb={1}>Negation</Badge> :
-                        <Badge colorScheme='green'>Affirmation</Badge>
+                        <Badge colorScheme='green' mb={1}>Affirmation</Badge>
                     const odds = bet.creator == bet.affirmation ?
                         <Badge colorScheme="red" py={1}><Badge colorScheme="red" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge> :
                         <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge>
                     return (
-                        <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10}>
-                            <Center maxW={400}>
-                                <Card>
+                        <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10} key={bet.betId}>
+                            <Center w={400}>
+                                <Card bg={useColorModeValue("#f0e7db", "#202023")}>
                                     <CardHeader>
                                         <Stack direction="row" justify="space-between">
-                                            <Stack direction="row">
+                                            <Stack direction="row" align="center" justify="center">
                                                 <Heading fontSize="14px">Id: {bet.betId}</Heading>
                                                 <Heading fontSize="14px">Status: {bet.betStatus}</Heading>
                                             </Stack>
                                             <Flex direction="row" justify="center" align="center">
-                                                <Text fontSize="12px">Position: {openPosition}</Text>
+                                                <Text fontSize="14px">Position: {openPosition}</Text>
                                             </Flex>
+                                            <Stack>
+                                                <StarIcon />
+                                            </Stack>
                                         </Stack>
                                         <Divider mb={-10} />
                                     </CardHeader>
@@ -52,7 +58,7 @@ const CardsWrap = ({ bets }) => {
                                         <Stack direction="row">
                                             <Image src="https://bit.ly/dan-abramov" boxSize="100px"></Image>
                                             <Stack direciton="row" justify="space-between">
-                                                <Text fontSize="14px" noOfLines={3}>{bet.question.slice(2, -54)}
+                                                <Text fontSize="14px">{bet.question.slice(2, -55)}
 
                                                 </Text>
                                                 <Text fontSize="12px">Expires At:</Text>

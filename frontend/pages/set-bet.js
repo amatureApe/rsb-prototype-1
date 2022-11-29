@@ -31,8 +31,9 @@ import VoxelDog from '../components/icons-and-logos/voxel-img'
 
 import contractConnection from '../utils/contractConnection'
 
-import rsbBetHandlerABI from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
-const rsbBetHandlerAddress = '0x996F097d2A2817f86727d2862F089857fCa70814'
+import erc20ABI from '../utils/abis/erc20ABI.json'
+
+import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
@@ -119,11 +120,15 @@ const SetBet = () => {
         setCounterParty(value)
     }
 
+    const checkApproval = async () => {
+        const token = await contractConnection(collateral, erc20ABI)
+    }
+
     const handleSetBet = async () => {
-        const contract = await contractConnection(rsbBetHandlerAddress, rsbBetHandlerABI)
+        const contract = await contractConnection(handler.address, handler.abi)
+        console.log(prepareData(...args))
         try {
             const response = await contract.setBet(...prepareData(...args))
-            const test = await contract.bets(1)
         } catch (err) {
             console.log("error: ", err)
         }
