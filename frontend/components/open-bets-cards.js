@@ -33,8 +33,9 @@ const CardsWrap = ({ bets }) => {
                         <Badge colorScheme='red' mb={1}>Negation</Badge> :
                         <Badge colorScheme='green' mb={1}>Affirmation</Badge>
                     const odds = bet.creator == bet.affirmation ?
-                        <Badge colorScheme="red" py={1}><Badge colorScheme="red" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge> :
-                        <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge>
+                        <Badge colorScheme="red" py={1}><Badge colorScheme="red" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge> :
+                        <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge>
+                    console.log("PING", bet.creator, bet.affirmation)
                     return (
                         <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10} key={bet.betId}>
                             <Center w={400}>
@@ -58,7 +59,7 @@ const CardsWrap = ({ bets }) => {
                                         <Stack direction="row">
                                             <Image src="https://bit.ly/dan-abramov" boxSize="100px"></Image>
                                             <Stack direciton="row" justify="space-between">
-                                                <Text fontSize="14px">{bet.question.slice(2, -55)}
+                                                <Text fontSize="14px" noOfLines={3}>{bet.question.slice(2, -55)}
 
                                                 </Text>
                                                 <Text fontSize="12px">Expires At:</Text>

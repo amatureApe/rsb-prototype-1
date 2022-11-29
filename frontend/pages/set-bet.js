@@ -126,6 +126,7 @@ const SetBet = () => {
 
     const handleSetBet = async () => {
         const contract = await contractConnection(handler.address, handler.abi)
+        console.log(betSide)
         console.log(prepareData(...args))
         try {
             const response = await contract.setBet(...prepareData(...args))
