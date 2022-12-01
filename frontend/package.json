@@ -13,11 +13,18 @@
     "@chakra-ui/react": "^2.2.8",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@internationalized/date": "3.0.0",
     "ethers": "^5.7.2",
     "framer-motion": "^7.2.0",
+    "lodash": "^4.17.21",
+    "lodash.range": "^3.2.0",
     "next": "12.2.5",
     "react": "18.2.0",
+    "react-aria": "3.21.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
+    "react-scripts": "5.0.1",
+    "react-stately": "3.19.0",
     "three": "^0.146.0"
   }
 }

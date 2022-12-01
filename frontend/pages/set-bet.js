@@ -8,7 +8,7 @@ import {
     Input,
     Button,
     Box,
-    Icon,
+    Flex,
     Stack,
     HStack,
     Text,
@@ -28,6 +28,7 @@ import RadioSettings from '../components/inputs/bet-radio-settings'
 import UMAIcon from '../components/icons-and-logos/uma-icon'
 import NoSsr from '../components/icons-and-logos/no-ssr'
 import VoxelDog from '../components/icons-and-logos/voxel-img'
+import Expiry from '../components/inputs/date-picker'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -38,6 +39,10 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 const SetBet = () => {
     const [bet, setBet] = useState('')
     const [collateral, setCollateral] = useState('')
+    const [expiry, setExpiry] = useState(new Date())
+    const [expiryDate, setExpiryDate] = useState(0)
+    const [expiryMonth, setExpiryMonth] = useState(0)
+    const [expiryYear, setExpiryYear] = useState(0)
     const [betSize, setBetSize] = useState(0)
     const [validationReward, setValidationReward] = useState('0')
     const [livenessPeriod, setLivenessPeriod] = useState('0')
@@ -45,6 +50,8 @@ const SetBet = () => {
     const [betSide, setBetSide] = useState('1')
     const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
     const [counterBet, setCounterBet] = useState(0)
+
+    console.log(expiry)
 
     const args = [
         bet,
@@ -120,6 +127,21 @@ const SetBet = () => {
         setCounterParty(value)
     }
 
+    const handleExpiryDate = (e) => {
+        let value = e.target.value
+        setExpiryDate(value)
+    }
+
+    const handleExpiryMonth = (e) => {
+        let value = e.target.value
+        setExpiryMonth(value)
+    }
+
+    const handleExpiryYear = (e) => {
+        let value = e.target.value
+        setExpiryYear(value)
+    }
+
     const checkApproval = async () => {
         const token = await contractConnection(collateral, erc20ABI)
     }
@@ -151,8 +173,16 @@ const SetBet = () => {
                 </Stack>
                 <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
-                <Heading>Collateral</Heading>
-                <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" onChange={handleCollateralChange} />
+                <Flex direction="row" justify="space-between">
+                    <Stack direction="column" spacing={0} w={500}>
+                        <Heading>Collateral</Heading>
+                        <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" onChange={handleCollateralChange} />
+                    </Stack>
+                    <Stack direction="column" justify="center" align="center" spacing={0} w={200} mb={4}>
+                        <Heading>Expiry</Heading>
+                        <Expiry startDate={expiry} onChange={setExpiry} />
+                    </Stack>
+                </Flex>
 
                 <NumInput headingText={"Bet Size"} onChange={setBetSize} />
 
@@ -160,7 +190,9 @@ const SetBet = () => {
                     <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
                 </Collapse>
 
-                <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
+                <Stack>
+                    <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
+                </Stack>
 
                 <Collapse in={isOpenCounterparty} animateOpacity>
                     <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" />

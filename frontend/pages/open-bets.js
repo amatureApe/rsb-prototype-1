@@ -49,19 +49,20 @@ const OpenBets = ({ Component, pageProps, router }) => {
     const getBet = async (betId) => {
         const contract = await contractConnection(handler.address, handler.abi)
 
-        const response = await contract.bets(betId)
+        const betInfo = await contract.bets(betId)
+        const betAmount = await contract.betAmounts(betId)
 
         const bet = {
-            creator: utils.getAddress(response.creator),
-            betId: utils.formatUnits(response.betId, 0),
-            collateral: utils.getAddress(response.bondCurrency),
-            collateralSymbol: await getSymbol(utils.getAddress(response.bondCurrency)),
-            question: utils.toUtf8String(response.question),
-            betStatus: utils.formatUnits(response.betStatus, 0),
-            affirmation: utils.getAddress(response.affirmation),
-            affirmationAmount: utils.formatEther(response.affirmationAmount),
-            negation: utils.getAddress(response.negation),
-            negationAmount: utils.formatEther(response.negationAmount)
+            creator: utils.getAddress(betInfo.creator),
+            betId: utils.formatUnits(betInfo.betId, 0),
+            collateral: utils.getAddress(betInfo.bondCurrency),
+            collateralSymbol: await getSymbol(utils.getAddress(betInfo.bondCurrency)),
+            question: utils.toUtf8String(betInfo.question),
+            betStatus: utils.formatUnits(betInfo.betStatus, 0),
+            affirmation: utils.getAddress(betAmount.affirmation),
+            affirmationAmount: utils.formatEther(betAmount.affirmationAmount),
+            negation: utils.getAddress(betAmount.negation),
+            negationAmount: utils.formatEther(betAmount.negationAmount)
         }
 
         setBets([...bets, bet])
