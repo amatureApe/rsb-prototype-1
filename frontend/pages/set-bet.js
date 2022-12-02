@@ -1,4 +1,5 @@
 import React from 'react'
+import dynamic from "next/dynamic"
 import { useState, useRef } from 'react'
 import { ethers, BigNumber, utils } from 'ethers'
 import {
@@ -170,29 +171,31 @@ const SetBet = () => {
                         <Heading>Collateral</Heading>
                         <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                     </Stack>
-                    <Stack direction="column" justify="center" spacing={0} w={300} mb={4}>
-                        <Stack direction="row" align="baseline">
-                            <Heading>Expiry</Heading>
-                            <Text bg="rgba(255, 73, 147, 0.2)" px={1.5} fontSize={14} borderTopRadius={10}>
-                                {new Date(expiry).toLocaleDateString() != "Invalid Date" ? new Date(expiry).toLocaleDateString() : "Date out"} {new Date(expiry).toLocaleTimeString() != "Invalid Date" ? new Date(expiry).toLocaleTimeString() : "of range"}
-                            </Text>
+                    <NoSsr>
+                        <Stack direction="column" justify="center" spacing={0} w={300} mb={4}>
+                            <Stack direction="row" align="baseline">
+                                <Heading>Expiry</Heading>
+                                <Text bg="rgba(255, 73, 147, 0.2)" px={1.5} fontSize={14} borderTopRadius={10}>
+                                    {new Date(expiry).toLocaleDateString() != "Invalid Date" ? new Date(expiry).toLocaleDateString() : "Date out"} {new Date(expiry).toLocaleTimeString() != "Invalid Date" ? new Date(expiry).toLocaleTimeString() : "of range"}
+                                </Text>
+                            </Stack>
+                            <Stack direction="row">
+                                <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
+                                    setExpiryInput(e.target.value)
+                                    setExpiry(Number(e.target.value))
+                                }}></Input>
+                                <Button onClick={onOpenDatePicker} bg="#FF4993"><CalendarIcon /></Button>
+                            </Stack>
+                            <Modal isOpen={isOpenDatePicker} onOverlayClick={() => { onCloseDatePicker() }}>
+                                <ModalOverlay />
+                                <ModalContent>
+                                    <Stack direction="row">
+                                        <DatePicker expiry={expiry} setExpiry={setExpiry} setExpiryInput={setExpiryInput} />
+                                    </Stack>
+                                </ModalContent>
+                            </Modal>
                         </Stack>
-                        <Stack direction="row">
-                            <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
-                                setExpiryInput(e.target.value)
-                                setExpiry(Number(e.target.value))
-                            }}></Input>
-                            <Button onClick={onOpenDatePicker} bg="#FF4993"><CalendarIcon /></Button>
-                        </Stack>
-                        <Modal isOpen={isOpenDatePicker} onOverlayClick={() => { onCloseDatePicker() }}>
-                            <ModalOverlay />
-                            <ModalContent>
-                                <Stack direction="row">
-                                    <DatePicker expiry={expiry} setExpiry={setExpiry} setExpiryInput={setExpiryInput} />
-                                </Stack>
-                            </ModalContent>
-                        </Modal>z
-                    </Stack>
+                    </NoSsr>
                 </Flex>
 
                 <NumInput headingText={"Bet Size"} onChange={setBetSize} />

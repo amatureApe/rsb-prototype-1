@@ -12,6 +12,8 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
     const [converterTime, setConverterTime] = useState(new Date(Date.now()).toLocaleDateString())
     const [converterInputVal, setConverterInputVal] = useState("")
 
+    console.log(Date.now(expiry))
+
     const TRUE_TIME = Date.now()
 
     const {
@@ -78,8 +80,6 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
     // const getTimeFromState = (day) => {
     //     return new Date(currentYear, currentMonth, day).getTime()
     // }
-
-    console.log("PING", converterInputVal)
 
     return (
         <Box borderRadius={10} w={500} bg="rgba(255, 73, 147, 0.2)" p={5}>
