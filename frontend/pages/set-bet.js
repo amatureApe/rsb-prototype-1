@@ -12,13 +12,16 @@ import {
     Stack,
     HStack,
     Text,
-    Image,
+    Modal,
+    ModalOverlay,
+    ModalContent,
     Divider,
     Collapse,
+    Spacer,
     useDisclosure,
     useColorModeValue
 } from '@chakra-ui/react'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronUpIcon, CalendarIcon } from '@chakra-ui/icons'
 
 import Layout from '../components/layout/article'
 import NumInput from '../components/inputs/number-input'
@@ -28,7 +31,7 @@ import RadioSettings from '../components/inputs/bet-radio-settings'
 import UMAIcon from '../components/icons-and-logos/uma-icon'
 import NoSsr from '../components/icons-and-logos/no-ssr'
 import VoxelDog from '../components/icons-and-logos/voxel-img'
-import Expiry from '../components/inputs/date-picker'
+import DatePicker from '../components/inputs/date-picker'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -39,10 +42,8 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 const SetBet = () => {
     const [bet, setBet] = useState('')
     const [collateral, setCollateral] = useState('')
-    const [expiry, setExpiry] = useState(new Date())
-    const [expiryDate, setExpiryDate] = useState(0)
-    const [expiryMonth, setExpiryMonth] = useState(0)
-    const [expiryYear, setExpiryYear] = useState(0)
+    const [expiry, setExpiry] = useState(Date.now())
+    const [expiryInput, setExpiryInput] = useState("")
     const [betSize, setBetSize] = useState(0)
     const [validationReward, setValidationReward] = useState('0')
     const [livenessPeriod, setLivenessPeriod] = useState('0')
@@ -102,6 +103,12 @@ const SetBet = () => {
     } = useDisclosure()
 
     const {
+        isOpen: isOpenDatePicker,
+        onOpen: onOpenDatePicker,
+        onClose: onCloseDatePicker
+    } = useDisclosure()
+
+    const {
         isOpen: isOpenHelpDrawer,
         onToggle: onToggleHelpDrawer,
     } = useDisclosure()
@@ -125,21 +132,6 @@ const SetBet = () => {
     const handleCounterpartyChange = (e) => {
         let value = e.target.value
         setCounterParty(value)
-    }
-
-    const handleExpiryDate = (e) => {
-        let value = e.target.value
-        setExpiryDate(value)
-    }
-
-    const handleExpiryMonth = (e) => {
-        let value = e.target.value
-        setExpiryMonth(value)
-    }
-
-    const handleExpiryYear = (e) => {
-        let value = e.target.value
-        setExpiryYear(value)
     }
 
     const checkApproval = async () => {
@@ -174,13 +166,32 @@ const SetBet = () => {
                 <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
                 <Flex direction="row" justify="space-between">
-                    <Stack direction="column" spacing={0} w={500}>
+                    <Stack direction="column" spacing={0} w={400}>
                         <Heading>Collateral</Heading>
-                        <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your collateral token here" onChange={handleCollateralChange} />
+                        <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                     </Stack>
-                    <Stack direction="column" justify="center" align="center" spacing={0} w={200} mb={4}>
-                        <Heading>Expiry</Heading>
-                        <Expiry startDate={expiry} onChange={setExpiry} />
+                    <Stack direction="column" justify="center" spacing={0} w={300} mb={4}>
+                        <Stack direction="row" align="baseline">
+                            <Heading>Expiry</Heading>
+                            <Text bg="rgba(255, 73, 147, 0.2)" px={1.5} fontSize={14} borderTopRadius={10}>
+                                {new Date(expiry).toLocaleDateString() != "Invalid Date" ? new Date(expiry).toLocaleDateString() : "Date out"} {new Date(expiry).toLocaleTimeString() != "Invalid Date" ? new Date(expiry).toLocaleTimeString() : "of range"}
+                            </Text>
+                        </Stack>
+                        <Stack direction="row">
+                            <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
+                                setExpiryInput(e.target.value)
+                                setExpiry(Number(e.target.value))
+                            }}></Input>
+                            <Button onClick={onOpenDatePicker} bg="#FF4993"><CalendarIcon /></Button>
+                        </Stack>
+                        <Modal isOpen={isOpenDatePicker} onOverlayClick={() => { onCloseDatePicker() }}>
+                            <ModalOverlay />
+                            <ModalContent>
+                                <Stack direction="row">
+                                    <DatePicker expiry={expiry} setExpiry={setExpiry} setExpiryInput={setExpiryInput} />
+                                </Stack>
+                            </ModalContent>
+                        </Modal>z
                     </Stack>
                 </Flex>
 
@@ -203,7 +214,9 @@ const SetBet = () => {
                     <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
                 </Collapse>
 
-                <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
+                <Box mt={4}>
+                    <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
+                </Box>
 
                 <Stack direction='row' spacing={4} align="center" justify="space-between">
                     <Button
