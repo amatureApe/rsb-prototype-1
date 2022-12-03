@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Stack, Input, Text, Heading, Button, Grid, GridItem, Divider, Spacer, Collapse, Menu, MenuList, MenuItem, MenuButton, useDisclosure, Tr } from '@chakra-ui/react'
+import { Box, Stack, Input, Text, Heading, Button, Grid, GridItem, Divider, Spacer, Collapse, Menu, MenuList, MenuItem, MenuButton, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { monthNames } from '../../consts'
 import { getNumberOfDaysInMonth, getSortedDays, range } from '../../utils/date-picker-funcs'
 import { ChevronLeftIcon, ChevronRightIcon, TimeIcon, RepeatClockIcon, NotAllowedIcon, CheckIcon } from '@chakra-ui/icons'
@@ -82,8 +82,8 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
     // }
 
     return (
-        <Box borderRadius={10} w={500} bg="rgba(255, 73, 147, 0.2)" p={5}>
-            <Box p={5} bg="#202023" borderRadius={10}>
+        <Box borderRadius={20} w={500} bg="rgba(255, 73, 147, 0.4)" borderWidth={3} borderColor="#FF4993" p={5}>
+            <Box p={4} bg={useColorModeValue("#f0e7db", "#202023")} borderRadius={20}>
                 <Stack direction="row" justify="space-between" mb={4}>
                     <Button size="sm" color="#FF4993" onClick={prevMonth}>
                         <ChevronLeftIcon />
@@ -129,11 +129,11 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
                         ))}
                     </Grid>
                 </Box>
-                <Divider bg="#FF4993" mt={3} />
+                <Divider borderWidth="0.5px" borderColor="#FF4993" mt={3} />
                 <Box px={5} pt={2} mb={4}>
                     <Stack direction="row" justify="space-between" align="center" mb={2}>
                         <Stack direction="row" align="center" justify="center" spacing={0.5}>
-                            <Text fontSize={14} bg="pink.800" borderRadius={10} px={1}>{timestamp}</Text>
+                            <Text fontSize={14} bg="pink.800" borderRadius={10} px={1} color="whiteAlpha.900">{timestamp}</Text>
                             <Button size="xs" h={3.5} _hover={{ bg: "none" }} _active={{ bg: "none" }} borderRadius={100} variant="ghost" onClick={handleDateReset}><RepeatClockIcon /></Button>
                         </Stack>
                         <Stack direction="row" align="center" justify="center" spacing={1}>
@@ -183,10 +183,10 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
                 </Box>
                 <Box>
                     <Collapse in={isOpenConverter} animateOpacity>
-                        <Divider bg="#FF4993" />
+                        <Divider borderWidth="0.5px" borderColor="#FF4993" />
                         <Stack direction="row" justify="space-between" align="center" color="#FF4993" pr={6} mt={2.5}>
                             <Stack direction="row" justify="center" align="center" spacing={0.5}>
-                                <Input bg="whiteAlpha.800" size="sm" color="#525252" my={2} _placeholder={{ color: "#525252" }} placeholder="Convert Epochs" value={converterInputVal} onChange={handleConverterTime} />
+                                <Input bg="whiteAlpha.800" size="sm" color="#525252" borderWidth="1px" borderColor="#FF4993" borderRadius={10} my={2} _placeholder={{ color: "#525252" }} placeholder="Convert Epochs" value={converterInputVal} onChange={handleConverterTime} />
                                 <Stack px={1} spacing={1}>
                                     <Button size="xs" h={3.5} px={1} pb={0.5} borderRadius={100} onClick={setEpoch}><CheckIcon /></Button>
                                     <Button size="xs" h={3.5} px={1} pb={0.5} borderRadius={100} onClick={handleConverterReset}><NotAllowedIcon /></Button>

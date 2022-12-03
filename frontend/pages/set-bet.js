@@ -41,6 +41,7 @@ import UMAIcon from '../components/icons-and-logos/uma-icon'
 import NoSsr from '../components/icons-and-logos/no-ssr'
 import VoxelDog from '../components/icons-and-logos/voxel-img'
 import DatePicker from '../components/inputs/date-picker'
+import BetAmounts from '../components/inputs/bet-amounts'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -169,7 +170,7 @@ const SetBet = () => {
                         <Heading>Your Bet</Heading>
                         <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
                     </Stack>
-                    <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
+                    <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
                     <Flex direction="row" justify="space-between">
                         <Stack direction="column" spacing={0} w={400} justify="flex-end">
@@ -190,7 +191,7 @@ const SetBet = () => {
                                     <Spacer />
                                 )}
                             </Stack>
-                            <Input bg="whiteAlpha.800" color="#525252" borderTopRadius={0} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
+                            <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" borderTopRadius={0} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                         </Stack>
                         <NoSsr>
                             <Stack direction="column" justify="center" spacing={0} w={300}>
@@ -201,7 +202,7 @@ const SetBet = () => {
                                     </Text>
                                 </Stack>
                                 <Stack direction="row">
-                                    <Input bg="whiteAlpha.800" color="#525252" _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
+                                    <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
                                         setExpiryInput(e.target.value)
                                         setExpiry(Number(e.target.value))
                                     }}></Input>
@@ -209,7 +210,7 @@ const SetBet = () => {
                                 </Stack>
                                 <Modal isOpen={isOpenDatePicker} onOverlayClick={() => { onCloseDatePicker() }}>
                                     <ModalOverlay />
-                                    <ModalContent>
+                                    <ModalContent borderRadius={20}>
                                         <Stack direction="row">
                                             <DatePicker expiry={expiry} setExpiry={setExpiry} setExpiryInput={setExpiryInput} />
                                         </Stack>
@@ -248,17 +249,10 @@ const SetBet = () => {
                                 </Tabs>
                             </Stack>
                         </Stack>
-                        <Input placeholder="Image url" color="rgb(82, 82, 82)" _placeholder={{ color: "#525252" }} bg="whiteAlpha.800" onChange={(e) => setImgUrl(e.target.value)} />
+                        <Input placeholder="Image url" color="rgb(82, 82, 82)" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} bg="whiteAlpha.800" onChange={(e) => setImgUrl(e.target.value)} />
                     </Stack>
 
-                    <Stack direction="row" spacing={10}>
-                        <Box w="50%">
-                            <NumInput headingText={"Bet Size"} onChange={setBetSize} />
-                        </Box>
-                        <Box w="50%">
-                            <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
-                        </Box>
-                    </Stack>
+                    <BetAmounts />
 
                     {/* <Collapse in={isOpenAdvancedMenu} animateOpacity>
                         <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
