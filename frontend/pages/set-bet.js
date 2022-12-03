@@ -161,16 +161,9 @@ const SetBet = () => {
         <Layout title="Set Bet">
             <Container maxW="container.md">
                 <Stack spacing={5}>
-                    <Stack justify="space-between" direction="row" align="end">
+                    <Stack justify="space-between" direction="row" align="flex-end" mb={-4}>
                         <Heading>Your Bet</Heading>
-                        <Stack justify="space-between" align="center" direction="row">
-                            <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
-                            {isOpenAdvancedMenu ? (
-                                <Button variant="outline" colorScheme="pink" onClick={onToggleAdvancedMenu}>Advanced <ChevronUpIcon /></Button>
-                            ) : (
-                                <Button variant="outline" colorScheme="pink" onClick={onToggleAdvancedMenu}>Advanced <ChevronDownIcon /></Button>
-                            )}
-                        </Stack>
+                        <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
                     </Stack>
                     <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
@@ -210,8 +203,8 @@ const SetBet = () => {
                         <Stack direction="row">
                             <Stack>
                                 <Heading>Image</Heading>
-                                <Stack borderWidth={1} borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)" p={2}>
-                                    <Image src={imgUrl} h={150} w={150} bg="blackAlpha.600" p={2} borderRadius={10} />
+                                <Stack borderWidth={1} borderColor="#FF4993" p={2} borderRadius={10}>
+                                    <Image src={imgUrl} h={150} w={150} bg="rgba(255, 73, 147, 0.2)" p={2} borderRadius={10} />
                                 </Stack>
                             </Stack>
                             <Stack w="75%">
@@ -222,10 +215,10 @@ const SetBet = () => {
                                         <Tab color="#FF4993">Dev</Tab>
                                     </TabList>
                                     <TabPanels>
-                                        <TabPanel bg="black">
+                                        <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
                                         </TabPanel>
-                                        <TabPanel>
+                                        <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
                                         </TabPanel>
                                         <TabPanel>

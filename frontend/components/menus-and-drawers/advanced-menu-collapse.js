@@ -4,8 +4,8 @@ import { ChevronUpIcon } from '@chakra-ui/icons'
 
 const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPeriod }) => {
     return (
-        <Box borderWidth="1px" borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)" p={2} mt={-2}>
-            <Stack h={150} p={2} borderRadius={10}>
+        <Box borderWidth="1px" borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)">
+            <Stack h={135} p={2} borderRadius={10}>
                 <Box px={5}>
                     <Heading fontSize={18}>Validation Reward</Heading>
                     <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setValidationReward}>
@@ -27,7 +27,7 @@ const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPe
                         </NumberInputStepper>
                     </NumberInput>
                 </Box>
-                <Box px={5}>
+                <Box px={5} pb={1}>
                     <Heading fontSize={18}>Liveness Period</Heading>
                     <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setLivenessPeriod}>
                         <NumberInputField focusBorderColor='red.200' />

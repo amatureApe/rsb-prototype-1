@@ -10,8 +10,8 @@ import RadioButton from './radio-input'
 
 const RadioSettings = ({ betPrivacy, handleBetPrivacy, betSide, setBetSide }) => {
     return (
-        <Box borderWidth="1px" borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)">
-            <Stack h={135} p={2} borderRadius={10} direction="column" justify="space-between" align="flex">
+        <Box borderWidth="0px" borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)">
+            <Stack h={137} p={2} borderRadius={10} direction="column" justify="space-between" align="flex">
                 <Stack pt={1} direction="row" align="center">
                     <RadioButton
                         headingText={"Bet Privacy"}
