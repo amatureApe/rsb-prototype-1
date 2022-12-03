@@ -8,11 +8,10 @@ import {
 } from '@chakra-ui/react'
 
 
-const RadioButton = ({ headingText, descText, onChange, value, valText1, valText2 }) => {
+const RadioButton = ({ headingText, onChange, value, valText1, valText2 }) => {
     return (
-        <Stack direction="column" justify="center" align="center" px={2} spacing={0}>
-            <Heading>{headingText}</Heading>
-            <Text>{descText}</Text>
+        <Stack direction="column" justify="center" align="flex-start" px={2} spacing={0}>
+            <Heading fontSize={24}>{headingText}</Heading>
             <RadioGroup onChange={onChange} value={value} mb={4}>
                 <Stack direction='row'>
                     <Radio value='1' colorScheme="pink">{valText1}</Radio>

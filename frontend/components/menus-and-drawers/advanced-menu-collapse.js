@@ -1,30 +1,54 @@
 import NumInput from "../inputs/number-input"
-import { HStack, Text, Box, Divider, Collapse, useDisclosure } from "@chakra-ui/react"
+import { HStack, Stack, Box, Divider, Heading, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from "@chakra-ui/react"
 import { ChevronUpIcon } from '@chakra-ui/icons'
 
 const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPeriod }) => {
     return (
-        <Box>
-            <HStack>
-                <Text
-                    fontSize={18}
-                    px={2} cursor="pointer"
-                    onClick={onToggleAdvancedMenu}
-                    borderTop="2px" borderLeft="2px" borderRight="1px" borderColor="rgba(255, 73, 147, 0.2)"
-                >
-                    Advanced <ChevronUpIcon />
-                </Text>
-            </HStack>
-            <Box bg="rgba(255, 73, 147, 0.2)">
-                <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-                <Box px={2}>
-                    <NumInput headingText={"Validation Reward"} headingSize={28} onChange={setValidationReward} />
+        <Box borderWidth="1px" borderColor="#FF4993" bg="rgba(255, 73, 147, 0.2)" p={2} mt={-2}>
+            <Stack h={150} p={2} borderRadius={10}>
+                <Box px={5}>
+                    <Heading fontSize={18}>Validation Reward</Heading>
+                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setValidationReward}>
+                        <NumberInputField focusBorderColor='red.200' />
+                        <NumberInputStepper>
+                            <NumberIncrementStepper
+                                bg='#FF4993'
+                                color="whiteAlpha.800"
+                                _active={{ bg: 'pink.300' }}
+                                children='+'
+                                mb={0.5}
+                            />
+                            <NumberDecrementStepper
+                                bg='#FF4993'
+                                color="whiteAlpha.800"
+                                _active={{ bg: 'pink.300' }}
+                                children='-'
+                            />
+                        </NumberInputStepper>
+                    </NumberInput>
                 </Box>
-                <Box px={2}>
-                    <NumInput headingText={"Liveness Period"} headingSize={28} precision={0} onChange={setLivenessPeriod} />
+                <Box px={5}>
+                    <Heading fontSize={18}>Liveness Period</Heading>
+                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setLivenessPeriod}>
+                        <NumberInputField focusBorderColor='red.200' />
+                        <NumberInputStepper>
+                            <NumberIncrementStepper
+                                bg='#FF4993'
+                                color="whiteAlpha.800"
+                                _active={{ bg: 'pink.300' }}
+                                children='+'
+                                mb={0.5}
+                            />
+                            <NumberDecrementStepper
+                                bg='#FF4993'
+                                color="whiteAlpha.800"
+                                _active={{ bg: 'pink.300' }}
+                                children='-'
+                            />
+                        </NumberInputStepper>
+                    </NumberInput>
                 </Box>
-                <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-            </Box>
+            </Stack>
         </Box>
     )
 }
