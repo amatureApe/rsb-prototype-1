@@ -13,6 +13,7 @@ import {
     Stack,
     HStack,
     Text,
+    Badge,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -21,6 +22,7 @@ import {
     Tab,
     TabPanels,
     TabPanel,
+    Switch,
     Divider,
     Collapse,
     Image,
@@ -49,6 +51,7 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 const SetBet = () => {
     const [bet, setBet] = useState('')
     const [collateral, setCollateral] = useState('')
+    const [collateralSide, setCollateralSide] = useState(true)
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
     const [betSize, setBetSize] = useState(0)
@@ -60,7 +63,7 @@ const SetBet = () => {
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log(imgUrl)
+    console.log(collateralSide)
 
     const args = [
         bet,
@@ -134,7 +137,8 @@ const SetBet = () => {
 
     const handleCollateralChange = (e) => {
         let value = e.target.value
-        setCollateral(value)
+        if (collateralSide)
+            setCollateral(value)
     }
 
     const handleCounterpartyChange = (e) => {
@@ -168,9 +172,25 @@ const SetBet = () => {
                     <Textarea bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
                     <Flex direction="row" justify="space-between">
-                        <Stack direction="column" spacing={0} w={400}>
-                            <Heading>Collateral</Heading>
-                            <Input bg="whiteAlpha.800" color="#525252" _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
+                        <Stack direction="column" spacing={0} w={400} justify="flex-end">
+                            <Stack direction="row" align="center">
+                                {collateralSide ? (
+                                    <Badge colorScheme="green" variant={useColorModeValue("solid", "subtle")} borderTopRadius={15} px={1}>
+                                        <Heading fontSize={24}>Collateral</Heading>
+                                    </Badge>
+                                ) : (
+                                    <Spacer />
+                                )}
+                                <Switch colorScheme="pink" px={1.5} onChange={() => setCollateralSide(!collateralSide)} />
+                                {!collateralSide ? (
+                                    <Badge colorScheme="red" variant={useColorModeValue("solid", "subtle")} borderTopRadius={15} px={1}>
+                                        <Heading fontSize={24}>Collateral</Heading>
+                                    </Badge>
+                                ) : (
+                                    <Spacer />
+                                )}
+                            </Stack>
+                            <Input bg="whiteAlpha.800" color="#525252" borderTopRadius={0} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                         </Stack>
                         <NoSsr>
                             <Stack direction="column" justify="center" spacing={0} w={300}>
