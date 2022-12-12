@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@uma/core/contracts/oracle/interfaces/OptimisticOracleV2Interface.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract OO_BetHandler is ReentrancyGuard {
+contract OO_BetHandlerMain is ReentrancyGuard {
     // Create an Optimistic oracle instance at the deployed address on Görli.
     OptimisticOracleV2Interface oo =
         OptimisticOracleV2Interface(0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884);
@@ -16,30 +16,21 @@ contract OO_BetHandler is ReentrancyGuard {
     // 0x0000000000000000000000000000000000000000
 
     struct Bet {
-        uint256 betId;
         bytes question;
-        uint256 expiry;
         IERC20 bondCurrency;
-        address creator;
-        bool privateBet;
-        uint256 liveness;
         uint256 reward;
-        bytes imgUrl;
+        uint256 liveness;
+        address creator; // Creator of the bet contract.
+        bool privateBet; // Is the bet meant for a specific person or open to everyone?
+        address affirmation; // Address of the side of the bet that affirms the question.
+        uint256 affirmationAmount; // Amount deposited into the bet by the affrimation.
+        address negation; // Address of the side of the bet that negates the question.
+        uint256 negationAmount; // Amount deposited into the bet by the negation.
+        uint256 betId; // The bet's global id number.
         BetStatus betStatus;
     }
 
-    struct BetAmount {
-        uint256 betId;
-        address affirmation; // Address of the side of the bet that affirms the question.
-        IERC20 affirmationToken;
-        uint256 affirmationAmount; // Amount deposited into the bet by the affrimation.
-        address negation; // Address of the side of the bet that negates the question.
-        IERC20 negationToken;
-        uint256 negationAmount; // Amount deposited into the bet by the negation.
-    }
-
     enum BetStatus {
-        LOADING,
         OPEN,
         ACTIVE,
         SETTLING,
@@ -52,7 +43,7 @@ contract OO_BetHandler is ReentrancyGuard {
 
     event BetSet(
         address indexed creator,
-        IERC20 indexed bondCurrency,
+        address indexed bondCurrency,
         bytes indexed ancillaryData,
         uint256 betId
     );
@@ -91,122 +82,115 @@ contract OO_BetHandler is ReentrancyGuard {
 
     uint256 public betId = 0; // latest global betId for all managed bets.
     mapping(uint256 => Bet) public bets; // All bets mapped by their betId
-    mapping(uint256 => BetAmount) public betAmounts; // All bet amounts mapped by their betId.
     mapping(address => uint256[]) public userBets; // All bets the user is and has participated in.
 
     // ********* MUTATIVE FUNCTIONS *************
 
     function setBet(
-        bytes calldata _question,
-        uint256 _expiry,
-        IERC20 _bondCurrency,
+        string calldata _question,
+        address _bondCurrency,
+        uint256 _reward, // Reward is paid to settlers on UMA. It is recommended to pay 5%-10%
         uint256 _liveness,
-        uint256 _reward,
         bool _privateBet,
-        bytes calldata _imgUrl
+        // If _privateBet is false, _privateBetRecipient should be 0x0000000000000000000000000000000000000000
+        address _privateBetRecipient,
+        bool _affirmation,
+        uint256 _betAmount,
+        uint256 _counterBetAmount
     ) public nonReentrant {
+        require(msg.sender != _privateBetRecipient, "Can't bet yourself");
+        if (_privateBet == true) {
+            require(
+                _privateBetRecipient != ZERO_ADDRESS,
+                "Private bets must have a recipient"
+            );
+        } else {
+            require(
+                _privateBetRecipient == ZERO_ADDRESS,
+                "Public bet must be 0 address"
+            );
+        }
+        bytes memory ancillaryData = createQuestion(_question); // Question to ask the UMA Oracle.
+        IERC20 bondCurrency = IERC20(_bondCurrency); // Use preferred token as the bond currency.
+
+        address affirmation;
+        uint256 affirmationAmount;
+        address negation;
+        uint256 negationAmount;
+
+        if (_affirmation == true) {
+            affirmation = msg.sender;
+            affirmationAmount = _betAmount;
+            negationAmount = _counterBetAmount;
+        } else {
+            negation = msg.sender;
+            negationAmount = _betAmount;
+            affirmationAmount = _counterBetAmount;
+        }
+
+        if (_privateBet == true) {
+            affirmation == msg.sender
+                ? negation = _privateBetRecipient
+                : affirmation = _privateBetRecipient;
+        }
+
         Bet memory bet = Bet(
-            betId,
-            _question,
-            _expiry,
-            _bondCurrency,
+            ancillaryData,
+            bondCurrency,
+            _reward,
+            _liveness,
             msg.sender,
             _privateBet,
-            _liveness,
-            _reward,
-            _imgUrl,
-            BetStatus.LOADING
+            affirmation,
+            affirmationAmount,
+            negation,
+            negationAmount,
+            betId,
+            BetStatus.OPEN
         );
 
-        emit BetSet(msg.sender, _bondCurrency, _question, betId);
+        // Make sure to approve this contract to spend your ERC20 externally first
+        bondCurrency.transferFrom(msg.sender, address(this), _betAmount);
+
+        emit BetSet(msg.sender, _bondCurrency, ancillaryData, betId);
 
         bets[betId] = bet;
         userBets[msg.sender].push(betId);
         betId += 1;
     }
 
-    function loadBet(
-        uint256 _betId,
-        address _affirmation,
-        IERC20 _affirmationToken,
-        uint256 _affirmationAmount,
-        address _negation,
-        IERC20 _negationToken,
-        uint256 _negationAmount
-    ) public nonReentrant {
-        Bet storage bet = bets[_betId];
-        require(msg.sender == bet.creator, "not creator");
-        require(
-            bet.creator == _affirmation || bet.creator == _negation,
-            "must be participant"
-        );
-        require(_affirmation != _negation, "must have 2 parties");
-        require(bet.betStatus == BetStatus.LOADING, "not loading");
-
-        BetAmount memory betAmount = BetAmount(
-            _betId,
-            _affirmation,
-            _affirmationToken,
-            _affirmationAmount,
-            _negation,
-            _negationToken,
-            _negationAmount
-        );
-
-        // Make sure to approve this contract to spend your ERC20 externally first
-        if (msg.sender == _affirmation) {
-            _affirmationToken.transferFrom(
-                msg.sender,
-                address(this),
-                _affirmationAmount
-            );
-        } else if (msg.sender == _negation) {
-            _negationToken.transferFrom(
-                msg.sender,
-                address(this),
-                _negationAmount
-            );
-        }
-
-        betAmounts[_betId] = betAmount;
-        bet.betStatus = BetStatus.OPEN;
-    }
-
     function takeBet(uint256 _betId) public nonReentrant {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
         require(msg.sender != bet.creator, "Can't take your own bet");
         if (bet.privateBet == false) {
             require(
-                betAmount.affirmation == ZERO_ADDRESS ||
-                    betAmount.negation == ZERO_ADDRESS,
+                bet.affirmation == ZERO_ADDRESS || bet.negation == ZERO_ADDRESS,
                 "Bet already taken"
             );
         } else {
             require(
-                msg.sender == betAmount.affirmation ||
-                    msg.sender == betAmount.negation,
+                msg.sender == bet.affirmation || msg.sender == bet.negation,
                 "Not bet recipient"
             );
         }
-        require(bet.betStatus == BetStatus.OPEN, "not Open");
+        require(bet.betStatus == BetStatus.OPEN, "Bet not Open");
 
-        if (betAmount.affirmation == ZERO_ADDRESS) {
+        if (bet.affirmation == ZERO_ADDRESS) {
             // Make sure to approve this contract to spend your ERC20 externally first
             bet.bondCurrency.transferFrom(
                 msg.sender,
                 address(this),
-                betAmount.affirmationAmount
+                bet.affirmationAmount
             );
-            betAmount.affirmation = msg.sender;
+            bet.affirmation = msg.sender;
         } else {
             // Make sure to approve this contract to spend your ERC20 externally first
             bet.bondCurrency.transferFrom(
                 msg.sender,
                 address(this),
-                betAmount.negationAmount
+                bet.negationAmount
             );
-            betAmount.negation = msg.sender;
+            bet.negation = msg.sender;
         }
 
         userBets[msg.sender].push(_betId);
@@ -217,15 +201,11 @@ contract OO_BetHandler is ReentrancyGuard {
 
     function requestData(uint256 _betId) public {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
         require(
             bet.betStatus == BetStatus.ACTIVE,
             "Bet not ready to be settled"
         );
-        require(
-            betAmount.affirmation == msg.sender ||
-                betAmount.negation == msg.sender
-        );
+        require(bet.affirmation == msg.sender || bet.negation == msg.sender);
 
         bytes memory ancillaryData = bet.question; // Question to ask the UMA Oracle.
 
@@ -249,46 +229,31 @@ contract OO_BetHandler is ReentrancyGuard {
         oo.setCustomLiveness(IDENTIFIER, requestTime, ancillaryData, liveness);
 
         bet.betStatus = BetStatus.SETTLING;
-        emit DataRequested(
-            betAmount.affirmation,
-            betAmount.negation,
-            betAmount.betId
-        );
+        emit DataRequested(bet.affirmation, bet.negation, bet.betId);
     }
 
     // Settle the request once it's gone through the liveness period of 30 seconds. This acts the finalize the voted on price.
     // In a real world use of the Optimistic Oracle this should be longer to give time to disputers to catch bat price proposals.
     function settleRequest(uint256 _betId) public {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
         require(bet.betStatus == BetStatus.SETTLING, "Bet not settling");
-        require(
-            betAmount.affirmation == msg.sender ||
-                betAmount.negation == msg.sender
-        );
+        require(bet.affirmation == msg.sender || bet.negation == msg.sender);
 
         bytes memory ancillaryData = bet.question;
 
         oo.settle(address(this), IDENTIFIER, requestTime, ancillaryData);
         bet.betStatus = BetStatus.SETTLED;
 
-        emit BetSettled(
-            betAmount.affirmation,
-            betAmount.negation,
-            betAmount.betId
-        );
+        emit BetSettled(bet.affirmation, bet.negation, bet.betId);
     }
 
     function claimWinnings(uint256 _betId) public nonReentrant {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
-        uint256 totalWinnings = betAmount.affirmationAmount +
-            betAmount.negationAmount;
+        uint256 totalWinnings = bet.affirmationAmount + bet.negationAmount;
         int256 settlementData = getSettledData(_betId);
         require(bet.betStatus == BetStatus.SETTLED, "Bet not yet settled");
         require(
-            msg.sender == betAmount.affirmation ||
-                msg.sender == betAmount.negation,
+            msg.sender == bet.affirmation || msg.sender == bet.negation,
             "This is not your bet"
         );
         require(
@@ -296,17 +261,11 @@ contract OO_BetHandler is ReentrancyGuard {
             "Invalid settlement"
         );
         if (settlementData == 1e18) {
-            require(
-                msg.sender == betAmount.affirmation,
-                "Negation did not win bet"
-            );
-            bet.bondCurrency.transfer(betAmount.affirmation, totalWinnings);
+            require(msg.sender == bet.affirmation, "Negation did not win bet");
+            bet.bondCurrency.transfer(bet.affirmation, totalWinnings);
         } else {
-            require(
-                msg.sender == betAmount.negation,
-                "Affirmation did not win bet"
-            );
-            bet.bondCurrency.transfer(betAmount.negation, totalWinnings);
+            require(msg.sender == bet.negation, "Affirmation did not win bet");
+            bet.bondCurrency.transfer(bet.negation, totalWinnings);
         }
 
         bet.betStatus = BetStatus.CLAIMED;
@@ -316,19 +275,14 @@ contract OO_BetHandler is ReentrancyGuard {
 
     function cancelBet(uint256 _betId) public nonReentrant {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
         uint256 refundAmount;
-        require(
-            bet.betStatus == BetStatus.LOADING ||
-                bet.betStatus == BetStatus.OPEN,
-            "Bet already active"
-        );
+        require(bet.betStatus == BetStatus.OPEN, "Bet already active");
         require(msg.sender == bet.creator, "Not bet creator");
 
-        if (bet.creator == betAmount.affirmation) {
-            refundAmount = betAmount.affirmationAmount;
+        if (bet.creator == bet.affirmation) {
+            refundAmount = bet.affirmationAmount;
         } else {
-            refundAmount = betAmount.negationAmount;
+            refundAmount = bet.negationAmount;
         }
 
         bet.bondCurrency.transfer(bet.creator, refundAmount);
@@ -338,28 +292,19 @@ contract OO_BetHandler is ReentrancyGuard {
 
     function killBet(uint256 _betId) public nonReentrant {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
         int256 settlementData = getSettledData(_betId);
         require(bet.betStatus == BetStatus.SETTLED, "Bet not yet settled");
         require(
-            msg.sender == betAmount.affirmation ||
-                msg.sender == betAmount.negation,
+            msg.sender == bet.affirmation || msg.sender == bet.negation,
             "This is not your bet"
         );
         require(settlementData == 2 * 1e18, "Bet is settleable");
-        bet.bondCurrency.transfer(
-            betAmount.affirmation,
-            betAmount.affirmationAmount
-        );
-        bet.bondCurrency.transfer(betAmount.negation, betAmount.negationAmount);
+        bet.bondCurrency.transfer(bet.affirmation, bet.affirmationAmount);
+        bet.bondCurrency.transfer(bet.negation, bet.negationAmount);
 
         bet.betStatus = BetStatus.DEAD;
 
-        emit BetKilled(
-            betAmount.betId,
-            betAmount.affirmationAmount,
-            betAmount.negationAmount
-        );
+        emit BetKilled(bet.betId, bet.affirmationAmount, bet.negationAmount);
     }
 
     //******* VIEW FUNCTIONS ***********
@@ -381,11 +326,9 @@ contract OO_BetHandler is ReentrancyGuard {
     // Fetch the resolved price from the Optimistic Oracle that was settled.
     function getSettledData(uint256 _betId) public view returns (int256) {
         Bet storage bet = bets[_betId];
-        BetAmount storage betAmount = betAmounts[_betId];
-        require(
-            betAmount.affirmation == msg.sender ||
-                betAmount.negation == msg.sender
-        );
+        require(bet.affirmation == msg.sender || bet.negation == msg.sender);
+
+        bytes memory ancillaryData = bet.question;
 
         return
             oo
@@ -393,24 +336,8 @@ contract OO_BetHandler is ReentrancyGuard {
                     address(this),
                     IDENTIFIER,
                     requestTime,
-                    bet.question
+                    ancillaryData
                 )
                 .resolvedPrice;
-    }
-
-    function stringEncode(string calldata _string)
-        public
-        pure
-        returns (bytes memory)
-    {
-        return bytes(_string);
-    }
-
-    function stringDecode(bytes calldata _bytes)
-        public
-        pure
-        returns (string memory)
-    {
-        return string(_bytes);
     }
 }
