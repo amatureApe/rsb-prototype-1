@@ -15,7 +15,7 @@ const BetAmounts = ({ onChange }) => {
     return (
         <Stack direction="row" justify="space-between">
             <Box w="45%">
-                <Badge colorScheme="green" borderTopRadius={10} px={2} variant={useColorModeValue("solid", "subtle")}>
+                <Badge colorScheme="green" borderTopRadius={15} px={2} variant={useColorModeValue("solid", "subtle")}>
                     <Heading fontSize={32}>Bet Amount</Heading>
                 </Badge>
                 <NumberInput size='sm' bg="whiteAlpha.700" borderWidth="0px" borderColor="#FF4993" color="#525252" defaultValue={0} min={0} onChange={onChange}>
@@ -38,7 +38,7 @@ const BetAmounts = ({ onChange }) => {
                 </NumberInput>
             </Box>
             <Box w="45%">
-                <Badge colorScheme="red" px={2} borderTopRadius={10} variant={useColorModeValue("solid", "subtle")} >
+                <Badge colorScheme="red" px={2} borderTopRadius={15} variant={useColorModeValue("solid", "subtle")} >
                     <Heading fontSize={32}>Bet Amount</Heading>
                 </Badge>
                 <NumberInput size='sm' bg="whiteAlpha.700" borderWidth="0px" borderColor="#FF4993" color="#525252" defaultValue={0} min={0} onChange={onChange}>

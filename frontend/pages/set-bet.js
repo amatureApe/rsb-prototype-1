@@ -42,6 +42,7 @@ import NoSsr from '../components/icons-and-logos/no-ssr'
 import VoxelDog from '../components/icons-and-logos/voxel-img'
 import DatePicker from '../components/inputs/date-picker'
 import BetAmounts from '../components/inputs/bet-amounts'
+import BondInput from '../components/inputs/bond-input'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -51,20 +52,24 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
-    const [collateral, setCollateral] = useState('')
+    const [collateral, setCollateral] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     const [collateralSide, setCollateralSide] = useState(true)
+    const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
+    const [affirmationToken, setAffirmationToken] = useState("0x0000000000000000000000000000000000000000")
+    const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
+    const [negationToken, setNegationToken] = useState("0x0000000000000000000000000000000000000000")
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
     const [betSize, setBetSize] = useState(0)
     const [validationReward, setValidationReward] = useState('0')
-    const [livenessPeriod, setLivenessPeriod] = useState('0')
+    const [livenessPeriod, setLivenessPeriod] = useState('30')
     const [betPrivacy, setBetPrivacy] = useState('1')
     const [betSide, setBetSide] = useState('1')
     const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log(collateralSide)
+    console.log(betSide)
 
     const args = [
         bet,
@@ -168,6 +173,12 @@ const SetBet = () => {
                 <Stack spacing={5}>
                     <Stack justify="space-between" direction="row" align="flex-end" mb={-4}>
                         <Heading>Your Bet</Heading>
+                        {betSide == '1' ? (
+                            <Badge colorScheme="green" fontSize={28} borderRadius={20} px={2}>Affirmation</Badge>
+                        ) : (
+                            <Badge colorScheme="red" fontSize={28} borderRadius={20} px={2}>Negation</Badge>
+
+                        )}
                         <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
                     </Stack>
                     <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
@@ -191,7 +202,7 @@ const SetBet = () => {
                                     <Spacer />
                                 )}
                             </Stack>
-                            <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" borderTopRadius={0} _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
+                            <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                         </Stack>
                         <NoSsr>
                             <Stack direction="column" justify="center" spacing={0} w={300}>
@@ -232,12 +243,16 @@ const SetBet = () => {
                                 <Tabs isFitted size="md" px={10}>
                                     <TabList mb={2}>
                                         <Tab color="#FF4993">Settings</Tab>
+                                        <Tab color="#FF4993">Bond</Tab>
                                         <Tab color="#FF4993">Advanced</Tab>
                                         <Tab color="#FF4993">Dev</Tab>
                                     </TabList>
                                     <TabPanels>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
+                                        </TabPanel>
+                                        <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
+                                            <BondInput />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
@@ -253,27 +268,6 @@ const SetBet = () => {
                     </Stack>
 
                     <BetAmounts />
-
-                    {/* <Collapse in={isOpenAdvancedMenu} animateOpacity>
-                        <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
-                    </Collapse>
-
-                    <Stack>
-                        <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
-                    </Stack>
-
-                    <Collapse in={isOpenCounterparty} animateOpacity>
-                        <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" />
-                        <Box bg="rgba(255, 73, 147, 0.2)" px={2}>
-                            <Heading pt={1}>Counterparty</Heading>
-                            <Input bg="whiteAlpha.800" color="#525252" mb={4} _placeholder={{ color: "#525252" }} placeholder="Input your Counterparty's address" onChange={handleCounterpartyChange} />
-                        </Box>
-                        <Divider orientation='horizontal' bg="#FF4993" borderWidth="1px" mb={2} />
-                    </Collapse>
-
-                    <Box mt={4}>
-                        <NumInput headingText={"Counter Bet"} onChange={setCounterBet} />
-                    </Box> */}
 
                     <Stack direction='row' spacing={4} align="center" justify="space-between">
                         <Button
