@@ -52,12 +52,13 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 
 const SetBet = () => {
     const [bet, setBet] = useState('')
-    const [collateral, setCollateral] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
+    const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
+    const [bondInput, setBondInput] = useState("")
     const [collateralSide, setCollateralSide] = useState(true)
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
-    const [affirmationToken, setAffirmationToken] = useState("0x0000000000000000000000000000000000000000")
+    const [affirmationCollateral, setAffirmationToken] = useState("0x0000000000000000000000000000000000000000")
     const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
-    const [negationToken, setNegationToken] = useState("0x0000000000000000000000000000000000000000")
+    const [negationCollateral, setNegationToken] = useState("0x0000000000000000000000000000000000000000")
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
     const [betSize, setBetSize] = useState(0)
@@ -69,11 +70,9 @@ const SetBet = () => {
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log(betSide)
-
     const args = [
         bet,
-        collateral,
+        bond,
         validationReward,
         livenessPeriod,
         betPrivacy,
@@ -153,7 +152,7 @@ const SetBet = () => {
     }
 
     const checkApproval = async () => {
-        const token = await contractConnection(collateral, erc20ABI)
+        const token = await contractConnection(bond, erc20ABI)
     }
 
     const handleSetBet = async () => {
@@ -174,9 +173,9 @@ const SetBet = () => {
                     <Stack justify="space-between" direction="row" align="flex-end" mb={-4}>
                         <Heading>Your Bet</Heading>
                         {betSide == '1' ? (
-                            <Badge colorScheme="green" fontSize={28} borderRadius={20} px={2}>Affirmation</Badge>
+                            <Badge colorScheme="green" fontSize={28} borderRadius={20} px={2} variant={useColorModeValue("solid", "subtle")}>Affirmation</Badge>
                         ) : (
-                            <Badge colorScheme="red" fontSize={28} borderRadius={20} px={2}>Negation</Badge>
+                            <Badge colorScheme="red" fontSize={28} borderRadius={20} px={2} variant={useColorModeValue("solid", "subtle")}>Negation</Badge>
 
                         )}
                         <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
@@ -240,7 +239,7 @@ const SetBet = () => {
                                 </Stack>
                             </Stack>
                             <Stack w="75%">
-                                <Tabs isFitted size="md" px={10}>
+                                <Tabs isFitted size="md" pl={10}>
                                     <TabList mb={2}>
                                         <Tab color="#FF4993">Settings</Tab>
                                         <Tab color="#FF4993">Bond</Tab>
@@ -252,7 +251,7 @@ const SetBet = () => {
                                             <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
-                                            <BondInput />
+                                            <BondInput setBond={setBond} bond={bond} bondInput={bondInput} setBondInput={setBondInput} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
