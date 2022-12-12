@@ -43,6 +43,8 @@ import VoxelDog from '../components/icons-and-logos/voxel-img'
 import DatePicker from '../components/inputs/date-picker'
 import BetAmounts from '../components/inputs/bet-amounts'
 import BondInput from '../components/inputs/bond-input'
+import Expiry from '../components/inputs/expiry'
+import CollateralInputs from '../components/inputs/collateral-inputs'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -56,9 +58,9 @@ const SetBet = () => {
     const [bondInput, setBondInput] = useState("")
     const [collateralSide, setCollateralSide] = useState(true)
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
-    const [affirmationCollateral, setAffirmationToken] = useState("0x0000000000000000000000000000000000000000")
+    const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
     const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
-    const [negationCollateral, setNegationToken] = useState("0x0000000000000000000000000000000000000000")
+    const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
     const [betSize, setBetSize] = useState(0)
@@ -69,6 +71,9 @@ const SetBet = () => {
     const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
+
+    console.log("AFF", affirmationCollateral)
+    console.log("NEG", negationCollateral)
 
     const args = [
         bet,
@@ -142,8 +147,11 @@ const SetBet = () => {
 
     const handleCollateralChange = (e) => {
         let value = e.target.value
-        if (collateralSide)
-            setCollateral(value)
+        if (collateralSide) {
+            setAffirmationCollateral(value)
+        } else {
+            setNegationCollateral(value)
+        }
     }
 
     const handleCounterpartyChange = (e) => {
@@ -182,7 +190,8 @@ const SetBet = () => {
                     </Stack>
                     <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
-                    <Flex direction="row" justify="space-between">
+
+                    {/* <Flex direction="row" justify="space-between">
                         <Stack direction="column" spacing={0} w={400} justify="flex-end">
                             <Stack direction="row" align="center">
                                 {collateralSide ? (
@@ -203,32 +212,7 @@ const SetBet = () => {
                             </Stack>
                             <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
                         </Stack>
-                        <NoSsr>
-                            <Stack direction="column" justify="center" spacing={0} w={300}>
-                                <Stack direction="row" align="baseline">
-                                    <Heading>Expiry</Heading>
-                                    <Text bg="rgba(255, 73, 147, 0.2)" px={1.5} fontSize={14} borderTopRadius={10}>
-                                        {new Date(expiry).toLocaleDateString() != "Invalid Date" ? new Date(expiry).toLocaleDateString() : "Date out"} {new Date(expiry).toLocaleTimeString() != "Invalid Date" ? new Date(expiry).toLocaleTimeString() : "of range"}
-                                    </Text>
-                                </Stack>
-                                <Stack direction="row">
-                                    <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Unix Epoch" value={expiryInput} onChange={(e) => {
-                                        setExpiryInput(e.target.value)
-                                        setExpiry(Number(e.target.value))
-                                    }}></Input>
-                                    <Button onClick={onOpenDatePicker} bg="#FF4993"><CalendarIcon /></Button>
-                                </Stack>
-                                <Modal isOpen={isOpenDatePicker} onOverlayClick={() => { onCloseDatePicker() }}>
-                                    <ModalOverlay />
-                                    <ModalContent borderRadius={20}>
-                                        <Stack direction="row">
-                                            <DatePicker expiry={expiry} setExpiry={setExpiry} setExpiryInput={setExpiryInput} />
-                                        </Stack>
-                                    </ModalContent>
-                                </Modal>
-                            </Stack>
-                        </NoSsr>
-                    </Flex>
+                    </Flex> */}
 
                     <Stack>
                         <Stack direction="row">
@@ -243,6 +227,7 @@ const SetBet = () => {
                                     <TabList mb={2}>
                                         <Tab color="#FF4993">Settings</Tab>
                                         <Tab color="#FF4993">Bond</Tab>
+                                        <Tab color="#FF4993">Expiry</Tab>
                                         <Tab color="#FF4993">Advanced</Tab>
                                         <Tab color="#FF4993">Dev</Tab>
                                     </TabList>
@@ -252,6 +237,9 @@ const SetBet = () => {
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <BondInput setBond={setBond} bond={bond} bondInput={bondInput} setBondInput={setBondInput} />
+                                        </TabPanel>
+                                        <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
+                                            <Expiry expiry={expiry} setExpiry={setExpiry} expiryInput={expiryInput} setExpiryInput={setExpiryInput} isOpenDatePicker={isOpenDatePicker} onCloseDatePicker={onCloseDatePicker} onOpenDatePicker={onOpenDatePicker} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
@@ -265,6 +253,8 @@ const SetBet = () => {
                         </Stack>
                         <Input placeholder="Image url" color="rgb(82, 82, 82)" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} bg="whiteAlpha.800" onChange={(e) => setImgUrl(e.target.value)} />
                     </Stack>
+
+                    <CollateralInputs setAffirmationCollateral={setAffirmationCollateral} setNegationCollateral={setNegationCollateral} />
 
                     <BetAmounts />
 
