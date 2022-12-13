@@ -182,7 +182,7 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
                     </Grid>
                 </Box>
                 <Box>
-                    <Collapse in={isOpenConverter} animateOpacity>
+                    <Collapse in={isOpenConverter}>
                         <Divider borderWidth="0.5px" borderColor="#FF4993" />
                         <Stack direction="row" justify="space-between" align="center" color="#FF4993" pr={6} mt={2.5}>
                             <Stack direction="row" justify="center" align="center" spacing={0.5}>

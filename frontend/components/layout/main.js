@@ -5,8 +5,7 @@ import NoSsr from '../icons-and-logos/no-ssr.js'
 import VoxelDog from '../icons-and-logos/voxel-img.js'
 import { Box, Container, Heading } from '@chakra-ui/react'
 
-const Main = ({ children, router }) => {
-    const [accounts, setAccounts] = useState([])
+const Main = ({ children, router, accounts, setAccounts }) => {
     return (
         <Box as="main" pb={8}>
             <Head>

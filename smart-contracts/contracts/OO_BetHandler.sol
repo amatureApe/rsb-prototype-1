@@ -52,9 +52,8 @@ contract OO_BetHandler is ReentrancyGuard {
 
     event BetSet(
         address indexed creator,
-        IERC20 indexed bondCurrency,
-        bytes indexed ancillaryData,
-        uint256 betId
+        uint256 indexed betId,
+        bytes indexed ancillaryData
     );
 
     event BetTaken(address indexed taker, uint256 indexed betId);
@@ -91,7 +90,7 @@ contract OO_BetHandler is ReentrancyGuard {
 
     uint256 public betId = 0; // latest global betId for all managed bets.
     mapping(uint256 => Bet) public bets; // All bets mapped by their betId
-    mapping(bytes32 => uint256) public hashIds; // A hash of bet question, msg.sender, and timestamp to betId
+    mapping(bytes => uint256) public hashIds; // A hash of bet question, msg.sender, and timestamp to betId
     mapping(uint256 => BetAmount) public betAmounts; // All bet amounts mapped by their betId.
     mapping(address => uint256[]) public userBets; // All bets the user is and has participated in.
 
@@ -125,7 +124,7 @@ contract OO_BetHandler is ReentrancyGuard {
             block.timestamp
         );
 
-        emit BetSet(msg.sender, _bondCurrency, _question, betId);
+        emit BetSet(msg.sender, betId, _question);
 
         bets[betId] = bet;
         hashIds[hashId] = betId;
@@ -148,7 +147,7 @@ contract OO_BetHandler is ReentrancyGuard {
             bet.creator == _affirmation || bet.creator == _negation,
             "must be participant"
         );
-        require(_affirmation != _negation, "must have 2 parties");
+        require(_affirmation != _negation, "must have separate parties");
         require(bet.betStatus == BetStatus.LOADING, "not loading");
 
         BetAmount memory betAmount = BetAmount(
@@ -404,6 +403,14 @@ contract OO_BetHandler is ReentrancyGuard {
                     bet.question
                 )
                 .resolvedPrice;
+    }
+
+    function getHashId(bytes calldata _question, uint256 timestamp)
+        public
+        view
+        returns (bytes memory)
+    {
+        return abi.encode(_question, msg.sender, timestamp);
     }
 
     function stringEncode(string calldata _string)

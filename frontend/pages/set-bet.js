@@ -56,19 +56,21 @@ import erc20ABI from '../utils/abis/erc20ABI.json'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
-const SetBet = () => {
+const SetBet = ({ accounts }) => {
     const [bet, setBet] = useState('')
     const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     const [bondInput, setBondInput] = useState("")
     const [collateralSide, setCollateralSide] = useState(true)
 
+    const [creator, setCreator] = useState("0x0000000000000000000000000000000000000000")
+
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
     const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
-    const [affirmationAmount, setAffirmationAmount] = useState(0)
+    const [affirmationAmount, setAffirmationAmount] = useState("0.01")
 
     const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
-    const [negationAmount, setNegationAmount] = useState(0)
+    const [negationAmount, setNegationAmount] = useState("0.01")
 
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
@@ -85,7 +87,15 @@ const SetBet = () => {
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log("PING", web3.utils.asciiToHex(imgUrl))
+    // console.log("PING", utils.defaultAbiCoder.encode(
+    //     ["bytes", "address", "uint256"],
+    //     [web3.utils.asciiToHex(bet), accounts[0],]
+    // ))
+
+    // console.log(BigNumber.from(affirmationAmount))
+
+    console.log("DING", affirmation)
+
 
     const args = [
         bet,
@@ -132,7 +142,6 @@ const SetBet = () => {
     }
 
     const loadBetArgs = [
-        "betId",
         affirmation,
         affirmationCollateral,
         affirmationAmount,
@@ -150,18 +159,27 @@ const SetBet = () => {
         negationCollateral,
         negationAmount
     ) => {
+        try {
+
+        } catch (err) {
+            console.log("error: ", err)
+        }
+
         const data = [
-            BigNumber.from(1),
+            betId,
             affirmation,
             affirmationCollateral,
-            BigNumber.from(affirmationAmount),
+            utils.parseUnits(affirmationAmount, 18),
             negation,
             negationCollateral,
-            BigNumber.from(negationAmount)
+            utils.parseUnits(negationAmount, 18)
         ]
 
         return data
     }
+
+    console.log("PING", prepareLoadBet(1, ...loadBetArgs))
+
 
     const prepareData = (
         _question,
@@ -188,6 +206,7 @@ const SetBet = () => {
 
         return data
     }
+
 
     const {
         isOpen: isOpenAdvancedMenu,
@@ -241,10 +260,18 @@ const SetBet = () => {
 
     const handleSetBet = async () => {
         const contract = await contractConnection(handler.address, handler.abi)
-        console.log(betSide)
-        console.log(prepareData(...args))
         try {
-            const response = await contract.setBet(...prepareData(...args))
+            const setBetTx = await contract.setBet(...prepareSetBet(...setBetArgs))
+            const setBetTxReceipt = await setBetTx.wait()
+            const betId = setBetTxReceipt.logs[0].topics[2]
+
+            console.log("PING", betId, ...prepareSetBet(...setBetArgs))
+
+            const loadBetTx = await contract.loadBet(...prepareLoadBet(betId, ...loadBetArgs))
+            // console.log("PING", setBetTx)
+            // console.log("DING", setBetTxReceipt)
+            console.log("SING", betId)
+            console.log("ADDRESS", handler.address)
         } catch (err) {
             console.log("error: ", err)
         }
@@ -311,7 +338,7 @@ const SetBet = () => {
                         <Input placeholder="Image url" color="rgb(82, 82, 82)" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} bg="whiteAlpha.800" onChange={(e) => setImgUrl(e.target.value)} />
                     </Stack>
 
-                    <ParticipantInputs betPrivacy={betPrivacy} betSide={betSide} />
+                    <ParticipantInputs betPrivacy={betPrivacy} betSide={betSide} setAffirmation={setAffirmation} setNegation={setNegation} />
 
                     <CollateralInputs setAffirmationCollateral={setAffirmationCollateral} setNegationCollateral={setNegationCollateral} />
 

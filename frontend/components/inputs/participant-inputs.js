@@ -10,25 +10,25 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 
-const ParticipantInputs = ({ betPrivacy, betSide, setAffirmationCollateral, setNegationCollateral }) => {
+const ParticipantInputs = ({ betPrivacy, betSide, setAffirmation, setNegation }) => {
     return (
-        <Collapse in={betPrivacy == 1 ? false : true} animateOpacity >
+        <Collapse in={betPrivacy == 1 ? false : true}>
             <Stack direction="row" justify={betSide == 2 ? "flex-start" : "flex-end"}>
                 <Box w="45%">
-                    <Fade in={betSide == 1 ? false : true} animateOpacity>
+                    <Fade in={betSide == 1 ? false : true}>
                         <Badge colorScheme="green" borderTopRadius={15} px={2} variant={useColorModeValue("solid", "subtle")}>
                             <Heading fontSize={20}> Affirmation Address</Heading>
                         </Badge>
-                        <Input bg="whiteAlpha.800" borderTopLeftRadius={0} color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Affirmation wallet address" onChange={(e) => setAffirmationCollateral(e.target.value)} />
+                        <Input bg="whiteAlpha.800" borderTopLeftRadius={0} color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Affirmation wallet address" onChange={(e) => setAffirmation(e.target.value)} />
                         <Spacer />
                     </Fade>
                 </Box>
                 <Box w="45%">
-                    <Fade in={betSide == 2 ? false : true} animateOpacity>
+                    <Fade in={betSide == 2 ? false : true}>
                         <Badge colorScheme="red" px={2} borderTopRadius={15} variant={useColorModeValue("solid", "subtle")} >
                             <Heading fontSize={20}>Negation Address</Heading>
                         </Badge>
-                        <Input bg="whiteAlpha.800" borderTopLeftRadius={0} color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Negation wallet address" onChange={(e) => setNegationCollateral(e.target.value)} />
+                        <Input bg="whiteAlpha.800" borderTopLeftRadius={0} color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Negation wallet address" onChange={(e) => setNegation(e.target.value)} />
                     </Fade>
                 </Box>
             </Stack >
