@@ -51,10 +51,10 @@ import CollateralInputs from '../components/inputs/collateral-inputs'
 import ParticipantInputs from '../components/inputs/participant-inputs'
 
 import contractConnection from '../utils/contractConnection'
-
 import erc20ABI from '../utils/abis/erc20ABI.json'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+import { ZERO_ADDRESS } from '../consts'
 
 const SetBet = ({ accounts }) => {
     const [bet, setBet] = useState('')
@@ -93,9 +93,6 @@ const SetBet = ({ accounts }) => {
     // ))
 
     // console.log(BigNumber.from(affirmationAmount))
-
-    console.log("DING", affirmation)
-
 
     const args = [
         bet,
@@ -167,10 +164,10 @@ const SetBet = ({ accounts }) => {
 
         const data = [
             betId,
-            affirmation,
+            betPrivacy === '1' ? (betSide === '1' ? accounts[0] : ZERO_ADDRESS) : (betSide === '1' ? ZERO_ADDRESS : affirmation),
             affirmationCollateral,
             utils.parseUnits(affirmationAmount, 18),
-            negation,
+            betPrivacy === '1' ? (betSide === '1' ? ZERO_ADDRESS : accounts[0]) : (betSide === '1' ? negation : ZERO_ADDRESS),
             negationCollateral,
             utils.parseUnits(negationAmount, 18)
         ]
