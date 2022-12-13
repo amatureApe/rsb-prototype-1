@@ -21,19 +21,6 @@ const RadioSettings = ({ betPrivacy, handleBetPrivacy, betSide, setBetSide }) =>
                         valText1={"Public"}
                         valText2={"Private"}
                     />
-                    {betPrivacy === '2' ? (
-                        <Box w="60%">
-                            <Spacer />
-                            <Stack spacing={0} borderWidth={1} px={1} borderColor="#FF4993">
-                                <Text fontSize={16}>Counterparty</Text>
-                                <Input size="sm" bg="whiteAlpha.800" color="#525252" _placeholder={{ color: "#525252" }} placeholder="Counterparty address" />
-
-                            </Stack>
-                        </Box>
-                    ) : (
-                        <Text></Text>
-                    )}
-                    <Spacer />
                 </Stack>
                 <Box pb={1}>
                     <RadioButton

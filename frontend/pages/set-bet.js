@@ -2,6 +2,9 @@ import React from 'react'
 import dynamic from "next/dynamic"
 import { useState, useRef } from 'react'
 import { ethers, BigNumber, utils } from 'ethers'
+const Web3 = require('web3')
+const web3 = new Web3(Web3.givenProvider)
+
 import {
     Container,
     Heading,
@@ -45,6 +48,7 @@ import BetAmounts from '../components/inputs/bet-amounts'
 import BondInput from '../components/inputs/bond-input'
 import Expiry from '../components/inputs/expiry'
 import CollateralInputs from '../components/inputs/collateral-inputs'
+import ParticipantInputs from '../components/inputs/participant-inputs'
 
 import contractConnection from '../utils/contractConnection'
 
@@ -57,23 +61,31 @@ const SetBet = () => {
     const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     const [bondInput, setBondInput] = useState("")
     const [collateralSide, setCollateralSide] = useState(true)
+
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
     const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
+    const [affirmationAmount, setAffirmationAmount] = useState(0)
+
     const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
+    const [negationAmount, setNegationAmount] = useState(0)
+
     const [expiry, setExpiry] = useState(Date.now())
     const [expiryInput, setExpiryInput] = useState("")
+
     const [betSize, setBetSize] = useState(0)
+
     const [validationReward, setValidationReward] = useState('0')
     const [livenessPeriod, setLivenessPeriod] = useState('30')
+
     const [betPrivacy, setBetPrivacy] = useState('1')
     const [betSide, setBetSide] = useState('1')
+
     const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
     const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log("AFF", affirmationCollateral)
-    console.log("NEG", negationCollateral)
+    console.log("PING", web3.utils.asciiToHex(imgUrl))
 
     const args = [
         bet,
@@ -86,6 +98,70 @@ const SetBet = () => {
         betSize,
         counterBet
     ]
+
+    const setBetArgs = [
+        bet,
+        expiry,
+        bond,
+        livenessPeriod,
+        validationReward,
+        betPrivacy,
+        imgUrl
+    ]
+
+    const prepareSetBet = (
+        question,
+        expiry,
+        bond,
+        livenessPeriod,
+        validationReward,
+        betPrivacy,
+        imgUrl
+    ) => {
+        const data = [
+            web3.utils.asciiToHex(question),
+            expiry,
+            bond,
+            BigNumber.from(livenessPeriod),
+            utils.parseEther(validationReward),
+            betPrivacy === '1' ? false : true,
+            web3.utils.asciiToHex(imgUrl)
+        ]
+
+        return data
+    }
+
+    const loadBetArgs = [
+        "betId",
+        affirmation,
+        affirmationCollateral,
+        affirmationAmount,
+        negation,
+        negationCollateral,
+        negationAmount
+    ]
+
+    const prepareLoadBet = (
+        betId,
+        affirmation,
+        affirmationCollateral,
+        affirmationAmount,
+        negation,
+        negationCollateral,
+        negationAmount
+    ) => {
+        const data = [
+            BigNumber.from(1),
+            affirmation,
+            affirmationCollateral,
+            BigNumber.from(affirmationAmount),
+            negation,
+            negationCollateral,
+            BigNumber.from(negationAmount)
+        ]
+
+        return data
+    }
 
     const prepareData = (
         _question,
@@ -190,36 +266,17 @@ const SetBet = () => {
                     </Stack>
                     <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
 
-
-                    {/* <Flex direction="row" justify="space-between">
-                        <Stack direction="column" spacing={0} w={400} justify="flex-end">
-                            <Stack direction="row" align="center">
-                                {collateralSide ? (
-                                    <Badge colorScheme="green" variant={useColorModeValue("solid", "subtle")} borderTopRadius={15} px={1}>
-                                        <Heading fontSize={24}>Collateral</Heading>
-                                    </Badge>
-                                ) : (
-                                    <Spacer />
-                                )}
-                                <Switch colorScheme="pink" px={1.5} onChange={() => setCollateralSide(!collateralSide)} />
-                                {!collateralSide ? (
-                                    <Badge colorScheme="red" variant={useColorModeValue("solid", "subtle")} borderTopRadius={15} px={1}>
-                                        <Heading fontSize={24}>Collateral</Heading>
-                                    </Badge>
-                                ) : (
-                                    <Spacer />
-                                )}
-                            </Stack>
-                            <Input bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Collateral token address" onChange={handleCollateralChange} />
-                        </Stack>
-                    </Flex> */}
-
                     <Stack>
                         <Stack direction="row">
                             <Stack>
                                 <Heading>Image</Heading>
                                 <Stack borderWidth={1} borderColor="#FF4993" p={2} borderRadius={10}>
-                                    <Image src={imgUrl} h={150} w={150} bg="rgba(255, 73, 147, 0.2)" p={2} borderRadius={10} />
+                                    <Image src={imgUrl} h={150} w={150} bg="rgba(255, 73, 147, 0.2)" p={2} borderRadius={10} _active={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        transition: 'all .1s ease'
+                                    }} />
                                 </Stack>
                             </Stack>
                             <Stack w="75%">
@@ -254,9 +311,11 @@ const SetBet = () => {
                         <Input placeholder="Image url" color="rgb(82, 82, 82)" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} bg="whiteAlpha.800" onChange={(e) => setImgUrl(e.target.value)} />
                     </Stack>
 
+                    <ParticipantInputs betPrivacy={betPrivacy} betSide={betSide} />
+
                     <CollateralInputs setAffirmationCollateral={setAffirmationCollateral} setNegationCollateral={setNegationCollateral} />
 
-                    <BetAmounts />
+                    <BetAmounts setAffirmationAmount={setAffirmationAmount} setNegationAmount={setNegationAmount} />
 
                     <Stack direction='row' spacing={4} align="center" justify="space-between">
                         <Button

@@ -91,6 +91,7 @@ contract OO_BetHandler is ReentrancyGuard {
 
     uint256 public betId = 0; // latest global betId for all managed bets.
     mapping(uint256 => Bet) public bets; // All bets mapped by their betId
+    mapping(bytes32 => uint256) public hashIds; // A hash of bet question, msg.sender, and timestamp to betId
     mapping(uint256 => BetAmount) public betAmounts; // All bet amounts mapped by their betId.
     mapping(address => uint256[]) public userBets; // All bets the user is and has participated in.
 
@@ -118,9 +119,16 @@ contract OO_BetHandler is ReentrancyGuard {
             BetStatus.LOADING
         );
 
+        bytes memory hashId = abi.encode(
+            _question,
+            msg.sender,
+            block.timestamp
+        );
+
         emit BetSet(msg.sender, _bondCurrency, _question, betId);
 
         bets[betId] = bet;
+        hashIds[hashId] = betId;
         userBets[msg.sender].push(betId);
         betId += 1;
     }
