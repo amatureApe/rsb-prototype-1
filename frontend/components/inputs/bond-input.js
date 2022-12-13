@@ -1,5 +1,5 @@
 
-import { Box, Stack, Input, Heading, RadioGroup, Radio, Link, Spacer } from '@chakra-ui/react'
+import { Box, Stack, Input, Heading, RadioGroup, Radio, Link, Spacer, useColorModeValue } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 
@@ -17,6 +17,7 @@ const BondInput = ({ setBond, bond, bondInput, setBondInput }) => {
                         color="#525252"
                         borderWidth="1px"
                         borderColor="#FF4993"
+                        borderBottomRadius={0}
                         _placeholder={{ color: "#525252" }}
                         placeholder="Collateral token address"
                         value={bondInput}
@@ -24,7 +25,17 @@ const BondInput = ({ setBond, bond, bondInput, setBondInput }) => {
                             setBond(e.target.value)
                             setBondInput(e.target.value)
                         }} />
-                    <RadioGroup onChange={setBond} value={bond} onClick={resetBondInput}>
+                    <RadioGroup
+                        onChange={setBond}
+                        value={bond}
+                        onClick={resetBondInput}
+                        bg={useColorModeValue('#f0e7db', '#202023')}
+                        px={2}
+                        borderBottomRadius={15}
+                        borderWidth="1px"
+                        borderTopWidth={0}
+                        borderColor="#FF4993"
+                    >
                         <Stack direction="row" align="center">
                             <Stack direction='row'>
                                 <Radio value='1' colorScheme="pink">WETH</Radio>
