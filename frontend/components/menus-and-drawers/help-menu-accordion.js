@@ -25,7 +25,7 @@ const HelpAccordion = () => {
                             </AccordionButton>
                         </h2>
                         <AccordionPanel pb={4}>
-                            Ready Set Bet is a completely decentralized escrow and event validation platform.
+                            Ready Set Bet is a decentralized escrow and event validation platform.
                             Built on the UMA protocol, virtually any event, question, or query you would like to
                             validate can be done so by Ready Set Bet.
                         </AccordionPanel>

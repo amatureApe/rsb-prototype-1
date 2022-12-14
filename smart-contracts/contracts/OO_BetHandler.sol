@@ -6,7 +6,6 @@ import "@uma/core/contracts/oracle/interfaces/OptimisticOracleV2Interface.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract OO_BetHandler is ReentrancyGuard {
-    // Create an Optimistic oracle instance at the deployed address on Görli.
     OptimisticOracleV2Interface oo =
         OptimisticOracleV2Interface(0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884);
 
@@ -14,6 +13,7 @@ contract OO_BetHandler is ReentrancyGuard {
     bytes32 constant IDENTIFIER = bytes32("YES_OR_NO_QUERY"); // Use the yes no idetifier to ask arbitary questions, such as the weather on a particular day.
     address constant ZERO_ADDRESS = address(0);
     // 0x0000000000000000000000000000000000000000
+    //
 
     struct Bet {
         uint256 betId;

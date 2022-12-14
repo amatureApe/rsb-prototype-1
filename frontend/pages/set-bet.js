@@ -251,8 +251,13 @@ const SetBet = ({ accounts }) => {
         setCounterParty(value)
     }
 
-    const checkApproval = async () => {
-        const token = await contractConnection(bond, erc20ABI)
+    const checkApproval = async (token, spender) => {
+        const contract = await contractConnection(token, erc20ABI)
+        const allowance = await contract.allowance(accounts[0], spender)
+        if (allowance <= 0) {
+            const approvalTx = await contract.approve(spender, ethers.constants.MaxUint256)
+            await approvalTx.wait()
+        }
     }
 
     const handleSetBet = async () => {
@@ -262,13 +267,11 @@ const SetBet = ({ accounts }) => {
             const setBetTxReceipt = await setBetTx.wait()
             const betId = setBetTxReceipt.logs[0].topics[2]
 
-            console.log("PING", betId, ...prepareSetBet(...setBetArgs))
+            await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address)
 
             const loadBetTx = await contract.loadBet(...prepareLoadBet(betId, ...loadBetArgs))
-            // console.log("PING", setBetTx)
-            // console.log("DING", setBetTxReceipt)
-            console.log("SING", betId)
-            console.log("ADDRESS", handler.address)
+            loadBetTx.wait()
+
         } catch (err) {
             console.log("error: ", err)
         }
