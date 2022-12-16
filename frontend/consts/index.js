@@ -16,3 +16,5 @@ export const monthNames = [
 export const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const WEEK_IN_SECONDS = 604800

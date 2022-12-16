@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import erc20ABI from '../utils/abis/erc20ABI.json'
 import contractConnection from './contractConnection'
 
-const checkApproval = async (token, spender) => {
+const checkApproval = async (token, spender, accounts) => {
     const contract = await contractConnection(token, erc20ABI)
     const allowance = await contract.allowance(accounts[0], spender)
     if (allowance <= 0) {

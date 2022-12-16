@@ -37,6 +37,7 @@ import { milliToSec } from '../utils/date-picker-funcs'
 
 import contractConnection from '../utils/contractConnection'
 import checkApproval from '../utils/checkApproval'
+import { WEEK_IN_SECONDS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -53,7 +54,7 @@ const SetBet = ({ accounts }) => {
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
     const [negationAmount, setNegationAmount] = useState("0.01")
 
-    const [expiry, setExpiry] = useState(milliToSec(Date.now()))
+    const [expiry, setExpiry] = useState(milliToSec(Date.now()) + WEEK_IN_SECONDS)
     const [expiryInput, setExpiryInput] = useState("")
 
     const [validationReward, setValidationReward] = useState('0')
@@ -63,6 +64,8 @@ const SetBet = ({ accounts }) => {
     const [betSide, setBetSide] = useState('1')
 
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
+
+    console.log("PING", Date.now())
 
     const setBetArgs = [
         bet,
@@ -114,7 +117,7 @@ const SetBet = ({ accounts }) => {
             const setBetTxReceipt = await setBetTx.wait()
             const betId = setBetTxReceipt.logs[0].topics[2]
 
-            await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address)
+            await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address, accounts)
 
             const loadBetTx = await contract.loadBet(...prepareLoadBet(betId, ...loadBetArgs))
             loadBetTx.wait()
@@ -160,7 +163,6 @@ const SetBet = ({ accounts }) => {
                                         <Tab color="#FF4993">Bond</Tab>
                                         <Tab color="#FF4993">Expiry</Tab>
                                         <Tab color="#FF4993">Advanced</Tab>
-                                        <Tab color="#FF4993">Dev</Tab>
                                     </TabList>
                                     <TabPanels>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
@@ -174,9 +176,6 @@ const SetBet = ({ accounts }) => {
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <AdvancedMenu setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
-                                        </TabPanel>
-                                        <TabPanel>
-                                            Hello
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>
