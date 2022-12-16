@@ -50,6 +50,8 @@ import Expiry from '../components/inputs/expiry'
 import CollateralInputs from '../components/inputs/collateral-inputs'
 import ParticipantInputs from '../components/inputs/participant-inputs'
 
+import { secToMilli, milliToSec } from '../utils/date-picker-funcs'
+
 import contractConnection from '../utils/contractConnection'
 import erc20ABI from '../utils/abis/erc20ABI.json'
 
@@ -72,7 +74,7 @@ const SetBet = ({ accounts }) => {
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
     const [negationAmount, setNegationAmount] = useState("0.01")
 
-    const [expiry, setExpiry] = useState(Date.now())
+    const [expiry, setExpiry] = useState(milliToSec(Date.now()))
     const [expiryInput, setExpiryInput] = useState("")
 
     const [betSize, setBetSize] = useState(0)

@@ -3,6 +3,7 @@ import { CalendarIcon } from "@chakra-ui/icons"
 import DatePicker from "./date-picker"
 import NoSsr from "../icons-and-logos/no-ssr"
 
+import { milliToSec, secToMilli } from "../../utils/date-picker-funcs"
 
 const Expiry = ({ expiry, setExpiry, expiryInput, setExpiryInput, isOpenDatePicker, onCloseDatePicker, onOpenDatePicker }) => {
     return (
@@ -12,7 +13,7 @@ const Expiry = ({ expiry, setExpiry, expiryInput, setExpiryInput, isOpenDatePick
                     <Stack direction="row" align="baseline">
                         <Heading>Expiry</Heading>
                         <Text px={1.5} fontSize={14} borderTopRadius={10}>
-                            {new Date(expiry).toLocaleDateString() != "Invalid Date" ? new Date(expiry).toLocaleDateString() : "Date out"} {new Date(expiry).toLocaleTimeString() != "Invalid Date" ? new Date(expiry).toLocaleTimeString() : "of range"}
+                            {new Date(secToMilli(expiry)).toLocaleDateString() != "Invalid Date" ? new Date(secToMilli(expiry)).toLocaleDateString() : "Date out"} {new Date(secToMilli(expiry)).toLocaleTimeString() != "Invalid Date" ? new Date(secToMilli(expiry)).toLocaleTimeString() : "of range"}
                         </Text>
                     </Stack>
                     <Stack direction="row">

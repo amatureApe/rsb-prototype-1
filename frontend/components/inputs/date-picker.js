@@ -4,15 +4,15 @@ import { monthNames } from '../../consts'
 import { getNumberOfDaysInMonth, getSortedDays, range } from '../../utils/date-picker-funcs'
 import { ChevronLeftIcon, ChevronRightIcon, TimeIcon, RepeatClockIcon, NotAllowedIcon, CheckIcon } from '@chakra-ui/icons'
 
+import { secToMilli, milliToSec } from '../../utils/date-picker-funcs'
+
 const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
-    const [currentMonth, setCurrentMonth] = useState(new Date(expiry).getMonth())
-    const [currentYear, setCurrentYear] = useState(new Date(expiry).getFullYear())
-    const [selectedDate, setSelectedDate] = useState(new Date(expiry))
-    const [timestamp, setTimestamp] = useState(Date.now(expiry))
+    const [currentMonth, setCurrentMonth] = useState(new Date(secToMilli(expiry)).getMonth())
+    const [currentYear, setCurrentYear] = useState(new Date(secToMilli(expiry)).getFullYear())
+    const [selectedDate, setSelectedDate] = useState(new Date(secToMilli(expiry)))
+    const [timestamp, setTimestamp] = useState(expiry)
     const [converterTime, setConverterTime] = useState(new Date(Date.now()).toLocaleDateString())
     const [converterInputVal, setConverterInputVal] = useState("")
-
-    console.log(Date.now(expiry))
 
     const TRUE_TIME = Date.now()
 
@@ -44,24 +44,24 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
         setSelectedDate(
             new Date(currentYear, currentMonth, day)
         )
-        setTimestamp(Date.UTC(currentYear, currentMonth, day, 0))
-        setExpiry(Date.UTC(currentYear, currentMonth, day, 0))
-        setExpiryInput(Date.UTC(currentYear, currentMonth, day, 0).toString())
+        setTimestamp(milliToSec(Date.UTC(currentYear, currentMonth, day, 0)))
+        setExpiry(milliToSec(Date.UTC(currentYear, currentMonth, day, 0)))
+        setExpiryInput(milliToSec(Date.UTC(currentYear, currentMonth, day, 0)).toString())
     }
 
     const setEpoch = () => {
-        const time = Number(converterInputVal) > 0 ? Number(converterInputVal) : Date.now()
-        setSelectedDate(new Date(time))
+        const time = Number(converterInputVal) > 0 ? Number(converterInputVal) : milliToSec(Date.now())
+        setSelectedDate(new Date(secToMilli(time)))
         setTimestamp(time)
         setExpiry(time)
         setExpiryInput(time.toString())
-        setCurrentMonth(new Date(time).getMonth())
-        setCurrentYear(new Date(time).getFullYear())
+        setCurrentMonth(new Date(secToMilli(time)).getMonth())
+        setCurrentYear(new Date(secToMilli(time)).getFullYear())
     }
 
     const handleConverterTime = (event) => {
         let time = event.target.value
-        setConverterTime(Number(time))
+        setConverterTime(secToMilli(Number(time)))
         setConverterInputVal(time)
     }
 
@@ -72,7 +72,7 @@ const DatePicker = ({ expiry, setExpiry, setExpiryInput }) => {
 
     const handleDateReset = () => {
         setSelectedDate(new Date())
-        setTimestamp(Date.now())
+        setTimestamp(milliToSec(Date.now()))
         setCurrentMonth(new Date().getMonth())
         setCurrentYear(new Date().getFullYear())
     }

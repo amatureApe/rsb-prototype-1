@@ -19,3 +19,11 @@ export const range = (start, end) => {
     }), { result: [], current: start })
     return result
 }
+
+export const milliToSec = (time) => {
+    return Math.floor(time / 1000)
+}
+
+export const secToMilli = (time) => {
+    return Math.floor(time * 1000)
+}
