@@ -178,8 +178,8 @@ contract OO_BetHandler is ReentrancyGuard {
             );
         }
 
-        bets[_betId] = bet;
         bet.betDetails.betStatus = BetStatus.OPEN;
+        bets[_betId] = bet;
     }
 
     function takeBet(uint256 _betId) public nonReentrant {
