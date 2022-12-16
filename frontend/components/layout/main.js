@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { Box, Container, Heading, Stack, Text, Spacer } from '@chakra-ui/react'
+import { BsTwitter } from 'react-icons/bs'
+
 import Head from 'next/head'
 import Navbar from '../navbar.js'
 import NoSsr from '../icons-and-logos/no-ssr.js'
 import VoxelDog from '../icons-and-logos/voxel-img.js'
-import { Box, Container, Heading } from '@chakra-ui/react'
+
 
 const Main = ({ children, router, accounts, setAccounts }) => {
     return (
@@ -19,8 +22,15 @@ const Main = ({ children, router, accounts, setAccounts }) => {
                 <VoxelDog />
             </NoSsr>
             {children}
-            <Box mt={10} align="center" borderTop="1px">
-                <Heading mt={5}>INSERT FOOTER</Heading>
+            <Box mt={10} align="center" borderTop="1px" borderColor="#FF4993">
+                <Spacer my={10} />
+                <Stack direction="row" justify="center" spacing={10}>
+                    <Text>Discord</Text>
+                    <Text>Twitter</Text>
+                    <Text>Telegram</Text>
+                    <Text>Docs</Text>
+                    <Text>UMA</Text>
+                </Stack>
             </Box>
         </Box>
     )

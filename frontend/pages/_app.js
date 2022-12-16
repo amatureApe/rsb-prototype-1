@@ -6,6 +6,7 @@ import theme from '../lib/theme'
 
 function MyApp({ Component, pageProps, router }) {
   const [accounts, setAccounts] = useState([])
+
   return (
     <ChakraProvider theme={theme}>
       <Layout router={router} accounts={accounts} setAccounts={setAccounts}>

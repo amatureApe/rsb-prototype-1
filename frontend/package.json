@@ -23,6 +23,7 @@
     "react-aria": "3.21.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
     "react-scripts": "5.0.1",
     "react-stately": "3.19.0",
     "three": "^0.146.0",
