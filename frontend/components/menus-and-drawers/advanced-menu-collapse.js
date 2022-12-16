@@ -6,7 +6,7 @@ const AdvancedMenu = ({ setValidationReward, setLivenessPeriod }) => {
             <Stack h={135} p={2} borderRadius={10}>
                 <Box px={5}>
                     <Heading fontSize={18}>Validation Reward</Heading>
-                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setValidationReward}>
+                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" borderWidth="0px" borderColor="#FF4993" defaultValue={0} min={0} onChange={setValidationReward}>
                         <NumberInputField focusBorderColor='red.200' />
                         <NumberInputStepper>
                             <NumberIncrementStepper
@@ -27,7 +27,7 @@ const AdvancedMenu = ({ setValidationReward, setLivenessPeriod }) => {
                 </Box>
                 <Box px={5} pb={1}>
                     <Heading fontSize={18}>Liveness Period</Heading>
-                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setLivenessPeriod}>
+                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" borderWidth="0px" borderColor="#FF4993" defaultValue={0} min={0} onChange={setLivenessPeriod}>
                         <NumberInputField focusBorderColor='red.200' />
                         <NumberInputStepper>
                             <NumberIncrementStepper

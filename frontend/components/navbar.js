@@ -6,6 +6,10 @@ import {
     Link,
     Stack,
     Heading,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
     Flex,
     Text,
     Button,
@@ -40,6 +44,12 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
 const Navbar = props => {
     const { path, accounts, setAccounts } = props
     const isConnected = Boolean(accounts[0])
+
+
+
+    if (!isConnected) {
+        console.log("Connect")
+    }
 
     const connectAccount = async () => {
         if (window.ethereum) {
@@ -131,7 +141,17 @@ const Navbar = props => {
                     >Connect</Button>
                 )}
             </Container>
-        </Box>
+            {isConnected ? (
+                <Box />
+            ) : (
+                <Alert status='error' variant={useColorModeValue("solid", "subtle")}>
+                    <AlertIcon />
+                    <AlertTitle>Wallet not connected!</AlertTitle>
+                    <AlertDescription>Please connect to interact with contracts.</AlertDescription>
+                </Alert>
+            )
+            }
+        </Box >
     )
 }
 
