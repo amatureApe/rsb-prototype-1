@@ -38,7 +38,7 @@ import erc20ABI from '../utils/abis/erc20ABI.json'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
-const OpenBets = ({ Component, pageProps, router }) => {
+const OpenBets = ({ accounts }) => {
     const [bets, setBets] = useState([])
     const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
     const [hidden, setHidden] = useState(!isOpen)
@@ -61,12 +61,12 @@ const OpenBets = ({ Component, pageProps, router }) => {
             question: utils.toUtf8String(betInfo.betDetails.question),
             betStatus: utils.formatUnits(betInfo.betDetails.betStatus, 0),
             affirmation: utils.getAddress(betInfo.affirmation),
+            affirmationToken: utils.getAddress(betInfo.affirmationToken),
             affirmationAmount: utils.formatEther(betInfo.affirmationAmount),
             negation: utils.getAddress(betInfo.negation),
+            negationToken: utils.getAddress(betInfo.negationToken),
             negationAmount: utils.formatEther(betInfo.negationAmount)
         }
-
-        console.log(bet.imgUrl)
 
         setBets([...bets, bet])
     }
@@ -148,7 +148,7 @@ const OpenBets = ({ Component, pageProps, router }) => {
             </Container>
             <Stack direction="row">
                 <Sidebar getButtonProps={getButtonProps} getDisclosureProps={getDisclosureProps} isOpen={isOpen} hidden={hidden} setHidden={setHidden} />
-                <CardsWrap bets={bets} />
+                <CardsWrap bets={bets} accounts={accounts} />
             </Stack>
         </Layout >
     )

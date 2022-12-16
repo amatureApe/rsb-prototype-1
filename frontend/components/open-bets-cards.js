@@ -26,14 +26,23 @@ import checkApproval from '../utils/checkApproval'
 
 import getRatio from '../utils/getRatio'
 import { milliToSec, secToMilli } from '../utils/date-picker-funcs'
+import { ZERO_ADDRESS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
 
-const CardsWrap = ({ bets }) => {
-    const handleBuy = async (betId) => {
-        const contract = await contractConnection(handler.address, handler.abi)
+const CardsWrap = ({ bets, accounts }) => {
 
+    const handleBuy = async (bet) => {
+        const contract = await contractConnection(handler.address, handler.abi)
+        try {
+            await checkApproval(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address, accounts)
+
+            const takeBetTx = await contract.takeBet(bet.betId)
+            const takeBetTxReceipt = await takeBetTx.wait()
+        } catch (err) {
+            console.log("error: ", err)
+        }
     }
 
     return (
@@ -70,7 +79,7 @@ const CardsWrap = ({ bets }) => {
                                         <Stack direction="row">
                                             <Image src={bet.imgUrl} boxSize="100px"></Image>
                                             <Stack direciton="row" justify="space-between">
-                                                <Text fontSize="14px" noOfLines={3}>
+                                                <Text fontSize="14px" noOfLines={4}>
                                                     {bet.question}
                                                 </Text>
                                                 <Stack direction="row" spacing={2}>
@@ -105,7 +114,7 @@ const CardsWrap = ({ bets }) => {
                                                 {odds}
                                             </Stack>
                                             <Stack justify="center" align="center">
-                                                <Button h="24px" bg="#FF4993" onClick={handleBuy}>Buy</Button>
+                                                <Button h="24px" bg="#FF4993" onClick={() => handleBuy(bet)}>Buy</Button>
                                             </Stack>
                                         </Stack>
                                     </CardBody>
