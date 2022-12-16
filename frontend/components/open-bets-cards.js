@@ -21,9 +21,21 @@ import {
 
 import { StarIcon } from '@chakra-ui/icons'
 
+import contractConnection from '../utils/contractConnection'
+import checkApproval from '../utils/checkApproval'
+
 import getRatio from '../utils/getRatio'
+import { milliToSec, secToMilli } from '../utils/date-picker-funcs'
+
+import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+
 
 const CardsWrap = ({ bets }) => {
+    const handleBuy = async (betId) => {
+        const contract = await contractConnection(handler.address, handler.abi)
+
+    }
+
     return (
         <Box px={0}>
             <Wrap>
@@ -35,7 +47,6 @@ const CardsWrap = ({ bets }) => {
                     const odds = bet.creator == bet.affirmation ?
                         <Badge colorScheme="red" py={1}><Badge colorScheme="red" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge> :
                         <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge>
-                    console.log("PING", bet.creator, bet.affirmation)
                     return (
                         <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10} key={bet.betId}>
                             <Center w={400}>
@@ -57,12 +68,15 @@ const CardsWrap = ({ bets }) => {
                                     </CardHeader>
                                     <CardBody>
                                         <Stack direction="row">
-                                            <Image src="https://bit.ly/dan-abramov" boxSize="100px"></Image>
+                                            <Image src={bet.imgUrl} boxSize="100px"></Image>
                                             <Stack direciton="row" justify="space-between">
-                                                <Text fontSize="14px" noOfLines={3}>{bet.question.slice(2, -55)}
-
+                                                <Text fontSize="14px" noOfLines={3}>
+                                                    {bet.question}
                                                 </Text>
-                                                <Text fontSize="12px">Expires At:</Text>
+                                                <Stack direction="row" spacing={2}>
+                                                    <Text fontSize="12px">Expires At:</Text>
+                                                    <Text fontSize="12px">{new Date(secToMilli(bet.expiry)).toLocaleDateString()} {new Date(secToMilli(bet.expiry)).toLocaleTimeString()}</Text>
+                                                </Stack>
                                             </Stack>
                                         </Stack>
                                         <Divider mt={3} mb={2} />
@@ -91,7 +105,7 @@ const CardsWrap = ({ bets }) => {
                                                 {odds}
                                             </Stack>
                                             <Stack justify="center" align="center">
-                                                <Button h="24px" bg="#FF4993">Buy</Button>
+                                                <Button h="24px" bg="#FF4993" onClick={handleBuy}>Buy</Button>
                                             </Stack>
                                         </Stack>
                                     </CardBody>

@@ -13,7 +13,6 @@ contract OO_BetHandler is ReentrancyGuard {
     bytes32 constant IDENTIFIER = bytes32("YES_OR_NO_QUERY"); // Use the yes no idetifier to ask arbitary questions, such as the weather on a particular day.
     address constant ZERO_ADDRESS = address(0);
     // 0x0000000000000000000000000000000000000000
-    //
 
     struct BetDetails {
         uint256 betId;

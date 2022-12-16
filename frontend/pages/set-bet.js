@@ -1,9 +1,6 @@
 import React from 'react'
-import dynamic from "next/dynamic"
 import { useState, useRef } from 'react'
-import { ethers, BigNumber, utils } from 'ethers'
-const Web3 = require('web3')
-const web3 = new Web3(Web3.givenProvider)
+import { prepareSetBet, prepareLoadBet } from '../utils/dataPrep'
 
 import {
     Container,
@@ -11,60 +8,42 @@ import {
     Textarea,
     Input,
     Button,
-    Box,
-    Flex,
     Stack,
     HStack,
     Text,
     Badge,
-    Modal,
-    ModalOverlay,
-    ModalContent,
     Tabs,
     TabList,
     Tab,
     TabPanels,
     TabPanel,
-    Switch,
-    Divider,
-    Collapse,
     Image,
-    Spacer,
     useDisclosure,
     useColorModeValue
 } from '@chakra-ui/react'
-import { ChevronDownIcon, ChevronUpIcon, CalendarIcon } from '@chakra-ui/icons'
 
 import Layout from '../components/layout/article'
-import NumInput from '../components/inputs/number-input'
 import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
 import HelpDrawer from '../components/menus-and-drawers/help-drawer'
 import RadioSettings from '../components/inputs/bet-radio-settings'
 import UMAIcon from '../components/icons-and-logos/uma-icon'
-import NoSsr from '../components/icons-and-logos/no-ssr'
-import VoxelDog from '../components/icons-and-logos/voxel-img'
-import DatePicker from '../components/inputs/date-picker'
 import BetAmounts from '../components/inputs/bet-amounts'
 import BondInput from '../components/inputs/bond-input'
 import Expiry from '../components/inputs/expiry'
 import CollateralInputs from '../components/inputs/collateral-inputs'
 import ParticipantInputs from '../components/inputs/participant-inputs'
 
-import { secToMilli, milliToSec } from '../utils/date-picker-funcs'
+import { milliToSec } from '../utils/date-picker-funcs'
 
 import contractConnection from '../utils/contractConnection'
-import erc20ABI from '../utils/abis/erc20ABI.json'
+import checkApproval from '../utils/checkApproval'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
-import { ZERO_ADDRESS } from '../consts'
 
 const SetBet = ({ accounts }) => {
     const [bet, setBet] = useState('')
     const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     const [bondInput, setBondInput] = useState("")
-    const [collateralSide, setCollateralSide] = useState(true)
-
-    const [creator, setCreator] = useState("0x0000000000000000000000000000000000000000")
 
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
     const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
@@ -77,36 +56,13 @@ const SetBet = ({ accounts }) => {
     const [expiry, setExpiry] = useState(milliToSec(Date.now()))
     const [expiryInput, setExpiryInput] = useState("")
 
-    const [betSize, setBetSize] = useState(0)
-
     const [validationReward, setValidationReward] = useState('0')
     const [livenessPeriod, setLivenessPeriod] = useState('30')
 
     const [betPrivacy, setBetPrivacy] = useState('1')
     const [betSide, setBetSide] = useState('1')
 
-    const [counterParty, setCounterParty] = useState('0x0000000000000000000000000000000000000000')
-    const [counterBet, setCounterBet] = useState(0)
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
-
-    // console.log("PING", utils.defaultAbiCoder.encode(
-    //     ["bytes", "address", "uint256"],
-    //     [web3.utils.asciiToHex(bet), accounts[0],]
-    // ))
-
-    // console.log(BigNumber.from(affirmationAmount))
-
-    const args = [
-        bet,
-        bond,
-        validationReward,
-        livenessPeriod,
-        betPrivacy,
-        counterParty,
-        betSide,
-        betSize,
-        counterBet
-    ]
 
     const setBetArgs = [
         bet,
@@ -118,29 +74,10 @@ const SetBet = ({ accounts }) => {
         imgUrl
     ]
 
-    const prepareSetBet = (
-        question,
-        expiry,
-        bond,
-        livenessPeriod,
-        validationReward,
-        betPrivacy,
-        imgUrl
-    ) => {
-        const data = [
-            web3.utils.asciiToHex(question),
-            expiry,
-            bond,
-            BigNumber.from(livenessPeriod),
-            utils.parseEther(validationReward),
-            betPrivacy === '1' ? false : true,
-            web3.utils.asciiToHex(imgUrl)
-        ]
-
-        return data
-    }
-
     const loadBetArgs = [
+        betSide,
+        accounts,
+        betPrivacy,
         affirmation,
         affirmationCollateral,
         affirmationAmount,
@@ -148,74 +85,6 @@ const SetBet = ({ accounts }) => {
         negationCollateral,
         negationAmount
     ]
-
-    const prepareLoadBet = (
-        betId,
-        affirmation,
-        affirmationCollateral,
-        affirmationAmount,
-        negation,
-        negationCollateral,
-        negationAmount
-    ) => {
-        try {
-
-        } catch (err) {
-            console.log("error: ", err)
-        }
-
-        const data = [
-            betId,
-            betPrivacy === '1' ? (betSide === '1' ? accounts[0] : ZERO_ADDRESS) : (betSide === '1' ? ZERO_ADDRESS : affirmation),
-            affirmationCollateral,
-            utils.parseUnits(affirmationAmount, 18),
-            betPrivacy === '1' ? (betSide === '1' ? ZERO_ADDRESS : accounts[0]) : (betSide === '1' ? negation : ZERO_ADDRESS),
-            negationCollateral,
-            utils.parseUnits(negationAmount, 18)
-        ]
-
-        return data
-    }
-
-    console.log("PING", prepareLoadBet(1, ...loadBetArgs))
-
-
-    const prepareData = (
-        _question,
-        _bondCurrency,
-        _reward,
-        _liveness,
-        _privateBet,
-        _privateBetRecipient,
-        _affirmation,
-        _betAmount,
-        _counterBetAmount
-    ) => {
-        const data = [
-            _question,
-            _bondCurrency,
-            utils.parseEther(_reward),
-            BigNumber.from(_liveness),
-            _privateBet === '1' ? false : true,
-            _privateBetRecipient,
-            _affirmation === '1' ? true : false,
-            utils.parseEther(_betAmount),
-            utils.parseEther(_counterBetAmount)
-        ]
-
-        return data
-    }
-
-
-    const {
-        isOpen: isOpenAdvancedMenu,
-        onToggle: onToggleAdvancedMenu
-    } = useDisclosure()
-
-    const {
-        isOpen: isOpenCounterparty,
-        onToggle: onToggleCounterparty
-    } = useDisclosure()
 
     const {
         isOpen: isOpenDatePicker,
@@ -236,30 +105,6 @@ const SetBet = ({ accounts }) => {
 
     const handleBetPrivacy = (betPrivacy) => {
         setBetPrivacy(betPrivacy)
-        onToggleCounterparty()
-    }
-
-    const handleCollateralChange = (e) => {
-        let value = e.target.value
-        if (collateralSide) {
-            setAffirmationCollateral(value)
-        } else {
-            setNegationCollateral(value)
-        }
-    }
-
-    const handleCounterpartyChange = (e) => {
-        let value = e.target.value
-        setCounterParty(value)
-    }
-
-    const checkApproval = async (token, spender) => {
-        const contract = await contractConnection(token, erc20ABI)
-        const allowance = await contract.allowance(accounts[0], spender)
-        if (allowance <= 0) {
-            const approvalTx = await contract.approve(spender, ethers.constants.MaxUint256)
-            await approvalTx.wait()
-        }
     }
 
     const handleSetBet = async () => {
@@ -328,7 +173,7 @@ const SetBet = ({ accounts }) => {
                                             <Expiry expiry={expiry} setExpiry={setExpiry} expiryInput={expiryInput} setExpiryInput={setExpiryInput} isOpenDatePicker={isOpenDatePicker} onCloseDatePicker={onCloseDatePicker} onOpenDatePicker={onOpenDatePicker} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
-                                            <AdvancedMenu onToggleAdvancedMenu={onToggleAdvancedMenu} setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
+                                            <AdvancedMenu setValidationReward={setValidationReward} setLivenessPeriod={setLivenessPeriod} />
                                         </TabPanel>
                                         <TabPanel>
                                             Hello

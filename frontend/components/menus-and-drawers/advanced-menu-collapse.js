@@ -1,8 +1,6 @@
-import NumInput from "../inputs/number-input"
-import { HStack, Stack, Box, Divider, Heading, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from "@chakra-ui/react"
-import { ChevronUpIcon } from '@chakra-ui/icons'
+import { Stack, Box, Heading, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from "@chakra-ui/react"
 
-const AdvancedMenu = ({ onToggleAdvancedMenu, setValidationReward, setLivenessPeriod }) => {
+const AdvancedMenu = ({ setValidationReward, setLivenessPeriod }) => {
     return (
         <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10}>
             <Stack h={135} p={2} borderRadius={10}>
