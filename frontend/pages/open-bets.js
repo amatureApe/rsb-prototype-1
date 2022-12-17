@@ -45,7 +45,6 @@ const OpenBets = ({ accounts }) => {
 
     const [count, setCount] = useState(0)
 
-
     const getBet = async (betId) => {
         const contract = await contractConnection(handler.address, handler.abi)
 
@@ -68,7 +67,7 @@ const OpenBets = ({ accounts }) => {
             negationAmount: utils.formatEther(betInfo.negationAmount)
         }
 
-        setBets([...bets, bet])
+        return bet
     }
 
     const getSymbol = async (addr) => {
@@ -82,12 +81,15 @@ const OpenBets = ({ accounts }) => {
         const contract = await contractConnection(handler.address, handler.abi)
         const betIndex = (await contract.betId()).toNumber()
 
-        await getBet(count)
-        if (count >= betIndex - 1) {
-            setCount(0)
-        } else {
-            setCount(count + 1)
+        const batch = []
+
+        for (let i = 0; i < betIndex; i++) {
+            const response = await getBet(i)
+            batch.push(response)
         }
+
+        setBets(batch)
+        console.log(batch)
     }
 
     return (
@@ -97,7 +99,7 @@ const OpenBets = ({ accounts }) => {
             </Button>
             <Container maxW="full" borderWidth="1px" borderColor="#FF4993" borderRadius="10px" mb={4}>
                 <Stack direction="row" justify="space-between" align="center" m={5}>
-                    <Button {...getButtonProps()}>Filters</Button>
+                    <Button {...getButtonProps()} bg="#FF4993" color="whiteAlpha.900">Filters</Button>
                     <Stack spacing={4}>
                         <InputGroup>
                             <Input placeholder='Enter amount' w={500} />
@@ -107,7 +109,7 @@ const OpenBets = ({ accounts }) => {
                     <Stack direction="row" spacing={5}>
                         <Stack align='center' direction='row' justify="center">
                             <Text>Owned</Text>
-                            <Switch size='md' />
+                            <Switch colorScheme='pink' />
                         </Stack>
                         <Menu>
                             <MenuButton

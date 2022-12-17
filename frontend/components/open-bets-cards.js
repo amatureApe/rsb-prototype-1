@@ -48,7 +48,7 @@ const CardsWrap = ({ bets, accounts }) => {
     return (
         <Box px={0}>
             <Wrap>
-                {bets.map((bet) => {
+                {!bets ? <Box /> : bets.map((bet) => {
                     const creatorPosition = bet.creator === bet.affirmation ? 'Aff' : 'Neg'
                     const openPosition = bet.creator === bet.affirmation ?
                         <Badge colorScheme='red' mb={1}>Negation</Badge> :
