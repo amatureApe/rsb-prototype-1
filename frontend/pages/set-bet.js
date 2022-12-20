@@ -65,8 +65,6 @@ const SetBet = ({ accounts }) => {
 
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    console.log("PING", Date.now())
-
     const setBetArgs = [
         bet,
         expiry,

@@ -13,7 +13,8 @@ export default function Home() {
       </Head>
       <Box>
         <Stack>
-          <Heading>Hello</Heading>
+          <Heading>Welcome to Ready Set Bet!</Heading>
+          <Text>Please proceed to Set Bet page.</Text>
         </Stack>
       </Box>
     </div>

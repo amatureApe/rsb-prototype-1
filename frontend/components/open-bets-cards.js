@@ -26,7 +26,7 @@ import checkApproval from '../utils/checkApproval'
 
 import getRatio from '../utils/getRatio'
 import { milliToSec, secToMilli } from '../utils/date-picker-funcs'
-import { ZERO_ADDRESS } from '../consts'
+import { ZERO_ADDRESS, BET_STATUS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -46,78 +46,81 @@ const CardsWrap = ({ bets, accounts }) => {
     }
 
     return (
-        <Box px={0}>
-            <Wrap>
+        <Box px={5}>
+            <Wrap spacing={5}>
                 {!bets ? <Box /> : bets.map((bet) => {
-                    const creatorPosition = bet.creator === bet.affirmation ? 'Aff' : 'Neg'
+                    const betStatus = <Badge colorScheme={BET_STATUS[bet.betStatus].color} mb={1} variant={useColorModeValue("solid", "subtle")}>{BET_STATUS[bet.betStatus].status}</Badge>
                     const openPosition = bet.creator === bet.affirmation ?
-                        <Badge colorScheme='red' mb={1}>Negation</Badge> :
-                        <Badge colorScheme='green' mb={1}>Affirmation</Badge>
+                        <Badge colorScheme='red' mb={1} variant={useColorModeValue("solid", "subtle")}>Negation</Badge> :
+                        <Badge colorScheme='green' mb={1} variant={useColorModeValue("solid", "subtle")}>Affirmation</Badge>
                     const odds = bet.creator == bet.affirmation ?
-                        <Badge colorScheme="red" py={1}><Badge colorScheme="red" py={1}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge> :
-                        <Badge colorScheme="green" py={1}><Badge colorScheme="green" py={1}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge>
+                        <Badge colorScheme="red" py={1} variant={useColorModeValue("solid", "subtle")}><Badge colorScheme="red" py={1} variant={useColorModeValue("solid", "subtle")}><Text>{getRatio(bet.affirmationAmount, bet.negationAmount, 0.05)}</Text></Badge></Badge> :
+                        <Badge colorScheme="green" py={1} variant={useColorModeValue("solid", "subtle")}><Badge colorScheme="green" py={1} variant={useColorModeValue("solid", "subtle")}><Text>{getRatio(bet.negationAmount, bet.affirmationAmount, 0.05)}</Text></Badge></Badge>
                     return (
                         <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10} key={bet.betId}>
                             <Center w={400}>
-                                <Card bg={useColorModeValue("#f0e7db", "#202023")}>
-                                    <CardHeader>
-                                        <Stack direction="row" justify="space-between">
-                                            <Stack direction="row" align="center" justify="center">
-                                                <Heading fontSize="14px">Id: {bet.betId}</Heading>
-                                                <Heading fontSize="14px">Status: {bet.betStatus}</Heading>
-                                            </Stack>
-                                            <Flex direction="row" justify="center" align="center">
-                                                <Text fontSize="14px">Position: {openPosition}</Text>
-                                            </Flex>
-                                            <Stack>
-                                                <StarIcon />
-                                            </Stack>
-                                        </Stack>
-                                        <Divider mb={-10} />
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Stack direction="row">
-                                            <Image src={bet.imgUrl} boxSize="100px"></Image>
-                                            <Stack direciton="row" justify="space-between">
-                                                <Text fontSize="14px" noOfLines={4}>
-                                                    {bet.question}
-                                                </Text>
-                                                <Stack direction="row" spacing={2}>
-                                                    <Text fontSize="12px">Expires At:</Text>
-                                                    <Text fontSize="12px">{new Date(secToMilli(bet.expiry)).toLocaleDateString()} {new Date(secToMilli(bet.expiry)).toLocaleTimeString()}</Text>
+                                <Card bg={useColorModeValue("#f0e7db", "#202023")} p={1.5}>
+                                    <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10} borderWidth="1px" borderColor="#FF4993" p={1.5}>
+                                        <CardHeader bg={useColorModeValue("#f0e7db", "#202023")} p={2} mx={4} borderTopRadius={10}>
+                                            <Stack direction="row" justify="space-between">
+                                                <Stack direction="row" align="center" justify="center">
+                                                    <Text fontSize="14px">Status: {betStatus}</Text>
                                                 </Stack>
-                                            </Stack>
-                                        </Stack>
-                                        <Divider mt={3} mb={2} />
-                                        <Stack direction="row" justify="space-between">
-                                            <Stack direction="column" spacing={1}>
+                                                <Flex direction="row" justify="center" align="center">
+                                                    <Text fontSize="14px">Position: {openPosition}</Text>
+                                                </Flex>
                                                 <Stack>
-                                                    <Badge fontSize="10px" colorScheme="green">
-                                                        <Flex>
-                                                            <Text>Affirmation: </Text>
-                                                            <Spacer px={2} />
-                                                            <Text>{bet.affirmationAmount} {bet.collateralSymbol}</Text>
-                                                        </Flex>
-                                                    </Badge>
-                                                </Stack>
-                                                <Stack>
-                                                    <Badge fontSize="10px" colorScheme="red">
-                                                        <Flex>
-                                                            <Text>Negation: </Text>
-                                                            <Spacer px={2} />
-                                                            <Text>{bet.negationAmount} {bet.collateralSymbol}</Text>
-                                                        </Flex>
-                                                    </Badge>
+                                                    <StarIcon />
                                                 </Stack>
                                             </Stack>
-                                            <Stack direction="row" align="center" justify="center">
-                                                {odds}
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Text fontSize="14px" mt={-4} color="#FF4993">ID: {bet.betId}</Text>
+                                            <Stack direction="row">
+                                                <Image src={bet.imgUrl} boxSize="100px" />
+                                                <Stack direciton="row" justify="space-between">
+                                                    <Text fontSize="14px" noOfLines={4}>
+                                                        {bet.question}
+                                                    </Text>
+                                                    <Stack direction="row" spacing={2}>
+                                                        <Text fontSize="12px">Expires At:</Text>
+                                                        <Text fontSize="12px">{new Date(secToMilli(bet.expiry)).toLocaleDateString()} {new Date(secToMilli(bet.expiry)).toLocaleTimeString()}</Text>
+                                                    </Stack>
+                                                </Stack>
                                             </Stack>
-                                            <Stack justify="center" align="center">
-                                                <Button h="24px" bg="#FF4993" onClick={() => handleBuy(bet)}>Buy</Button>
-                                            </Stack>
-                                        </Stack>
-                                    </CardBody>
+                                            <Divider mt={3} mb={2} bg="#FF4993" />
+                                            <Box bg={useColorModeValue("#f0e7db", "#202023")} p={2} borderBottomRadius={10} mb={-5}>
+                                                <Stack direction="row" justify="space-between">
+                                                    <Stack direction="column" spacing={1}>
+                                                        <Stack>
+                                                            <Badge fontSize="10px" colorScheme="green" variant={useColorModeValue("solid", "subtle")}>
+                                                                <Flex>
+                                                                    <Text>Affirmation: </Text>
+                                                                    <Spacer px={2} />
+                                                                    <Text>{bet.affirmationAmount} {bet.collateralSymbol}</Text>
+                                                                </Flex>
+                                                            </Badge>
+                                                        </Stack>
+                                                        <Stack>
+                                                            <Badge fontSize="10px" colorScheme="red" variant={useColorModeValue("solid", "subtle")}>
+                                                                <Flex>
+                                                                    <Text>Negation: </Text>
+                                                                    <Spacer px={2} />
+                                                                    <Text>{bet.negationAmount} {bet.collateralSymbol}</Text>
+                                                                </Flex>
+                                                            </Badge>
+                                                        </Stack>
+                                                    </Stack>
+                                                    <Stack direction="row" align="center" justify="center">
+                                                        {odds}
+                                                    </Stack>
+                                                    <Stack justify="center" align="center">
+                                                        <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>Buy</Button>
+                                                    </Stack>
+                                                </Stack>
+                                            </Box>
+                                        </CardBody>
+                                    </Box>
                                 </Card>
                             </Center>
                         </WrapItem>

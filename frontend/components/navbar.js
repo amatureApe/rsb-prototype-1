@@ -147,7 +147,7 @@ const Navbar = props => {
                 <Alert status='error' variant={useColorModeValue("solid", "subtle")}>
                     <AlertIcon />
                     <AlertTitle>Wallet not connected!</AlertTitle>
-                    <AlertDescription>Please connect to interact with contracts.</AlertDescription>
+                    <AlertDescription>Please connect to interact with blockchain.</AlertDescription>
                 </Alert>
             )
             }

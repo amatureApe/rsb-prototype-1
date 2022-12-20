@@ -3,7 +3,7 @@ import {
     Button,
     Box,
     Text,
-    Spacer,
+    Heading,
     Stack,
     Container,
     InputGroup,
@@ -47,8 +47,15 @@ const OpenBets = ({ accounts }) => {
 
     const getBet = async (betId) => {
         const contract = await contractConnection(handler.address, handler.abi)
+        let collateralSymbol;
 
         const betInfo = await contract.bets(betId)
+        try {
+            collateralSymbol = await getSymbol(utils.getAddress(betInfo.betDetails.bondCurrency))
+        } catch { }
+        if (!collateralSymbol) {
+            return
+        }
 
         const bet = {
             creator: utils.getAddress(betInfo.betDetails.creator),
@@ -56,7 +63,7 @@ const OpenBets = ({ accounts }) => {
             expiry: utils.formatUnits(betInfo.betDetails.expiry, 0),
             imgUrl: utils.toUtf8String(betInfo.betDetails.imgUrl),
             collateral: utils.getAddress(betInfo.betDetails.bondCurrency),
-            collateralSymbol: await getSymbol(utils.getAddress(betInfo.betDetails.bondCurrency)),
+            collateralSymbol: collateralSymbol,
             question: utils.toUtf8String(betInfo.betDetails.question),
             betStatus: utils.formatUnits(betInfo.betDetails.betStatus, 0),
             affirmation: utils.getAddress(betInfo.affirmation),
@@ -82,21 +89,23 @@ const OpenBets = ({ accounts }) => {
         const betIndex = (await contract.betId()).toNumber()
 
         const batch = []
-
         for (let i = 0; i < betIndex; i++) {
             const response = await getBet(i)
-            batch.push(response)
+            if (response != undefined) {
+                batch.push(response)
+            }
         }
 
         setBets(batch)
-        console.log(batch)
     }
+
+    useEffect(() => {
+        handleBet()
+    }, [])
 
     return (
         <Layout title="Set Bet">
-            <Button colorScheme="pink" onClick={handleBet} m={5}>
-                Click
-            </Button>
+            <Heading ml={5}>Bet Manager</Heading>
             <Container maxW="full" borderWidth="1px" borderColor="#FF4993" borderRadius="10px" mb={4}>
                 <Stack direction="row" justify="space-between" align="center" m={5}>
                     <Button {...getButtonProps()} bg="#FF4993" color="whiteAlpha.900">Filters</Button>
