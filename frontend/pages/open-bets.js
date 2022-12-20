@@ -35,6 +35,7 @@ import { useEffect, useState } from 'react'
 
 import contractConnection from '../utils/contractConnection'
 import erc20ABI from '../utils/abis/erc20ABI.json'
+import getBet from '../utils/getBet'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -43,47 +44,7 @@ const OpenBets = ({ accounts }) => {
     const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
     const [hidden, setHidden] = useState(!isOpen)
 
-    const [count, setCount] = useState(0)
-
-    const getBet = async (betId) => {
-        const contract = await contractConnection(handler.address, handler.abi)
-        let collateralSymbol;
-
-        const betInfo = await contract.bets(betId)
-        try {
-            collateralSymbol = await getSymbol(utils.getAddress(betInfo.betDetails.bondCurrency))
-        } catch { }
-        if (!collateralSymbol) {
-            return
-        }
-
-        const bet = {
-            creator: utils.getAddress(betInfo.betDetails.creator),
-            betId: utils.formatUnits(betInfo.betId, 0),
-            expiry: utils.formatUnits(betInfo.betDetails.expiry, 0),
-            imgUrl: utils.toUtf8String(betInfo.betDetails.imgUrl),
-            collateral: utils.getAddress(betInfo.betDetails.bondCurrency),
-            collateralSymbol: collateralSymbol,
-            question: utils.toUtf8String(betInfo.betDetails.question),
-            betStatus: utils.formatUnits(betInfo.betDetails.betStatus, 0),
-            affirmation: utils.getAddress(betInfo.affirmation),
-            affirmationToken: utils.getAddress(betInfo.affirmationToken),
-            affirmationAmount: utils.formatEther(betInfo.affirmationAmount),
-            negation: utils.getAddress(betInfo.negation),
-            negationToken: utils.getAddress(betInfo.negationToken),
-            negationAmount: utils.formatEther(betInfo.negationAmount)
-        }
-
-        return bet
-    }
-
-    const getSymbol = async (addr) => {
-        const token = await contractConnection(addr, erc20ABI)
-        const symbol = await token.symbol()
-        return symbol
-    }
-
-    const handleBet = async () => {
+    const handleBets = async () => {
 
         const contract = await contractConnection(handler.address, handler.abi)
         const betIndex = (await contract.betId()).toNumber()
@@ -100,8 +61,8 @@ const OpenBets = ({ accounts }) => {
     }
 
     useEffect(() => {
-        handleBet()
-    }, [])
+        handleBets()
+    }, [bets])
 
     return (
         <Layout title="Set Bet">

@@ -45,12 +45,6 @@ const Navbar = props => {
     const { path, accounts, setAccounts } = props
     const isConnected = Boolean(accounts[0])
 
-
-
-    if (!isConnected) {
-        console.log("Connect")
-    }
-
     const connectAccount = async () => {
         if (window.ethereum) {
             const accounts = await window.ethereum.request({

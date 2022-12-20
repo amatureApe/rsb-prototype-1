@@ -19,16 +19,6 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const WEEK_IN_SECONDS = 604800
 
-// export const BET_STATUS = {
-//     1: ['LOADING', 'yellow'],
-//     2: ['OPEN', 'blue'],
-//     3: ['ACTIVE', 'green'],
-//     4: ['SETTLING', 'purple'],
-//     5: ['SETTLED', 'orange'],
-//     6: ['CLAIMED', 'cyan'],
-//     7: ['DEAD', 'gray']
-// }
-
 export const BET_STATUS = {
     0: { status: 'LOADING', color: 'yellow' },
     1: { status: 'OPEN', color: 'green' },

@@ -16,10 +16,11 @@ import {
     Image,
     Spacer,
     Badge,
+    Link,
     useColorModeValue
 } from '@chakra-ui/react'
 
-import { StarIcon } from '@chakra-ui/icons'
+import { StarIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 
 import contractConnection from '../utils/contractConnection'
 import checkApproval from '../utils/checkApproval'
@@ -69,8 +70,11 @@ const CardsWrap = ({ bets, accounts }) => {
                                                 <Flex direction="row" justify="center" align="center">
                                                     <Text fontSize="14px">Position: {openPosition}</Text>
                                                 </Flex>
-                                                <Stack>
+                                                <Stack direction="row" justify="center" align="center">
                                                     <StarIcon />
+                                                    <Link href={`/bets/${bet.betId}`} isExternal>
+                                                        <ExternalLinkIcon mb={0.5} />
+                                                    </Link>
                                                 </Stack>
                                             </Stack>
                                         </CardHeader>
