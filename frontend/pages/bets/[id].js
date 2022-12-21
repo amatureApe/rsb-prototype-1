@@ -131,7 +131,6 @@ const Details = ({ accounts, id }) => {
                         <Text>Collateral: {bet.collateral}</Text>
                         <Text>Expiry: {bet.expiry}</Text>
                         <Text>Creator: {bet.creator}</Text>
-                        <Text>Bet Privacy: {bet.betPrivacy}</Text>
                         <Text>Affirmation: {bet.affirmation}</Text>
                         <Text>Affirmation Token: {bet.affirmationToken}</Text>
                         <Text>Affirmation Amount: {bet.affirmationAmount}</Text>
