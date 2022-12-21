@@ -106,13 +106,15 @@ const Details = ({ accounts, id }) => {
                             <Heading fontSize={24}>
                                 {
                                     (() => {
-                                        if (utils.getAddress(accounts[0]) == utils.getAddress(bet.creator)) {
-                                            return "Owner"
-                                        }
-                                        else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
-                                            return "Participant"
-                                        } else {
-                                            return null
+                                        if (accounts[0]) {
+                                            if (utils.getAddress(accounts[0]) == utils.getAddress(bet.creator)) {
+                                                return "Owner"
+                                            }
+                                            else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
+                                                return "Participant"
+                                            } else {
+                                                return null
+                                            }
                                         }
                                     })()
                                 }
