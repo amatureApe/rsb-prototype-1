@@ -103,7 +103,20 @@ const Details = ({ accounts, id }) => {
                         <Flex direction="row" justify="space-between" align="center">
                             <Heading fontSize={32}>Bet Info</Heading>
                             <Spacer />
-                            <Heading fontSize={24}>Not Owned</Heading>
+                            <Heading fontSize={24}>
+                                {
+                                    (() => {
+                                        if (utils.getAddress(accounts[0]) == utils.getAddress(bet.creator)) {
+                                            return "Owner"
+                                        }
+                                        else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
+                                            return "Participant"
+                                        } else {
+                                            return null
+                                        }
+                                    })()
+                                }
+                            </Heading>
                             <Spacer />
                             <Text>ID: {id}</Text>
                             <Spacer />
