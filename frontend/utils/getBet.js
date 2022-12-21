@@ -21,11 +21,12 @@ const getBet = async (betId) => {
     const bet = {
         creator: utils.getAddress(betInfo.betDetails.creator),
         betId: utils.formatUnits(betInfo.betId, 0),
+        question: utils.toUtf8String(betInfo.betDetails.question),
+        betPrivacy: betInfo.betDetails.privateBet,
         expiry: utils.formatUnits(betInfo.betDetails.expiry, 0),
         imgUrl: utils.toUtf8String(betInfo.betDetails.imgUrl),
         collateral: utils.getAddress(betInfo.betDetails.bondCurrency),
         collateralSymbol: collateralSymbol,
-        question: utils.toUtf8String(betInfo.betDetails.question),
         betStatus: utils.formatUnits(betInfo.betDetails.betStatus, 0),
         affirmation: utils.getAddress(betInfo.affirmation),
         affirmationToken: utils.getAddress(betInfo.affirmationToken),

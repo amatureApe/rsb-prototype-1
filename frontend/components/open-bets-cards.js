@@ -61,7 +61,7 @@ const CardsWrap = ({ bets, accounts }) => {
                         <WrapItem borderWidth={1} borderColor="#FF4993" borderRadius={10} key={bet.betId}>
                             <Center w={400}>
                                 <Card bg={useColorModeValue("#f0e7db", "#202023")} p={1.5}>
-                                    <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10} borderWidth="1px" borderColor="#FF4993" p={1.5}>
+                                    <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={1.5}>
                                         <CardHeader bg={useColorModeValue("#f0e7db", "#202023")} p={2} mx={4} borderTopRadius={10}>
                                             <Stack direction="row" justify="space-between">
                                                 <Stack direction="row" align="center" justify="center">
