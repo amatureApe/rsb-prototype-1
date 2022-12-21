@@ -32,11 +32,13 @@ const Details = ({ accounts, id }) => {
     const [bet, setBet] = useState([])
     let contract
 
-    const getContract = async () => {
-        contract = await contractConnection(handler.address, handler.abi)
-    }
+    if (typeof window !== "undefined") {
+        const getContract = async () => {
+            contract = await contractConnection(handler.address, handler.abi)
+        }
 
-    (async () => await getContract())()
+        (async () => await getContract())()
+    }
 
     const handleBet = async () => {
         const response = await getBet(id)
