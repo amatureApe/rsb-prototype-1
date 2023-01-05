@@ -1,5 +1,4 @@
 import {
-    ChakraProvider,
     Button,
     Box,
     Text,
@@ -7,18 +6,13 @@ import {
     Stack,
     Container,
     InputGroup,
-    InputLeftElement,
     Input,
     InputRightElement,
-    Badge,
     Switch,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
     MenuDivider,
     useDisclosure
 } from '@chakra-ui/react'

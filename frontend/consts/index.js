@@ -28,3 +28,5 @@ export const BET_STATUS = {
     5: { status: 'CLAIMED', color: 'gray' },
     6: { status: 'DEAD', color: 'whiteAlpha' }
 }
+
+export const AVAILABLE_NETWORKS = ['0x5']

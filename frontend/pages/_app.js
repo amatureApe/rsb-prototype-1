@@ -6,10 +6,11 @@ import theme from '../lib/theme'
 
 function MyApp({ Component, pageProps, router }) {
   const [accounts, setAccounts] = useState([])
+  const [chainId, setChainId] = useState("")
 
   return (
     <ChakraProvider theme={theme}>
-      <Layout router={router} accounts={accounts} setAccounts={setAccounts}>
+      <Layout router={router} accounts={accounts} setAccounts={setAccounts} chainId={chainId} setChainId={setChainId}>
         <Component {...pageProps} accounts={accounts} />
       </Layout>
     </ChakraProvider>

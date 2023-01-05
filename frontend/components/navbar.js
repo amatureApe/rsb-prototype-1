@@ -1,5 +1,6 @@
 import Logo from './icons-and-logos/main-logo'
 import NextLink from 'next/link'
+import { useEffect } from 'react'
 import {
     Container,
     Box,
@@ -18,10 +19,21 @@ import {
     MenuList,
     MenuButton,
     IconButton,
-    useColorModeValue
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useColorModeValue,
+    useDisclosure
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
+import { providers } from 'ethers'
+import { AVAILABLE_NETWORKS } from '../consts'
+
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
     const active = path === href
@@ -42,8 +54,14 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
 }
 
 const Navbar = props => {
-    const { path, accounts, setAccounts } = props
+    const { path, accounts, setAccounts, chainId, setChainId } = props
     const isConnected = Boolean(accounts[0])
+
+    const {
+        isOpen: isOpenChainIdModal,
+        onOpen: onOpenChainIdModal,
+        onClose: onCloseChainIdModal
+    } = useDisclosure()
 
     const connectAccount = async () => {
         if (window.ethereum) {
@@ -53,6 +71,39 @@ const Navbar = props => {
             setAccounts(accounts)
         }
     }
+
+    const checkNetwork = async () => {
+        console.log("SING", window.ethereum)
+        if (window.ethereum) {
+            const chainId = await window.ethereum.request({
+                method: 'eth_chainId'
+            })
+            setChainId(chainId)
+
+            console.log("PING", isConnected)
+
+            if (AVAILABLE_NETWORKS.includes(chainId)) {
+                return true
+            }
+
+            return false
+        }
+    }
+
+    useEffect(() => {
+        checkNetwork()
+    }, [accounts])
+
+    // const switchNetwork = async () => {
+    //     await window.ethereum.reqeust({
+    //         method: 'wallet_switchEthereumChain',
+    //         params: [{ chainId: targetNetworkId }]
+    //     })
+
+    //     window.location.reload()
+    // }
+
+
     return (
         <Box
             position="fixed"
@@ -143,6 +194,28 @@ const Navbar = props => {
                     <AlertTitle>Wallet not connected!</AlertTitle>
                     <AlertDescription>Please connect to interact with blockchain.</AlertDescription>
                 </Alert>
+            )
+            }
+            {AVAILABLE_NETWORKS.includes(chainId) ? (
+                <Box></Box>
+            ) : (
+                // <Modal isOpen={isOpenChainIdModal} onClose={onCloseChainIdModal}>
+                //     <ModalOverlay />
+                //     <ModalContent>
+                //         <ModalHeader>Modal Title</ModalHeader>
+                //         <ModalCloseButton />
+                //         <ModalBody>
+                //         </ModalBody>
+
+                //         <ModalFooter>
+                //             <Button colorScheme='blue' mr={3} onClick={onCloseChainIdModal}>
+                //                 Close
+                //             </Button>
+                //             <Button variant='ghost'>Secondary Action</Button>
+                //         </ModalFooter>
+                //     </ModalContent>
+                // </Modal>
+                <Box>YOOO</Box>
             )
             }
         </Box >

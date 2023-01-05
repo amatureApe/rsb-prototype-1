@@ -8,7 +8,7 @@ import NoSsr from '../icons-and-logos/no-ssr.js'
 import VoxelDog from '../icons-and-logos/voxel-img.js'
 
 
-const Main = ({ children, router, accounts, setAccounts }) => {
+const Main = ({ children, router, accounts, setAccounts, chainId, setChainId }) => {
     return (
         <Box as="main" pb={8}>
             <Head>
@@ -16,7 +16,7 @@ const Main = ({ children, router, accounts, setAccounts }) => {
                 <title>amatureApe - Homepage</title>
             </Head>
             <Box pb={20}>
-                <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} />
+                <Navbar path={router.asPath} accounts={accounts} setAccounts={setAccounts} chainId={chainId} setChainId={setChainId} />
             </Box>
             <NoSsr>
                 <VoxelDog />
