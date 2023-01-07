@@ -99,7 +99,7 @@ const Details = ({ accounts, id }) => {
                     <Stack direction="row" justify="center" mb={2}>
                         <Heading color="#FF4993" fontSize={24}>ID: {id}</Heading>
                     </Stack>
-                    <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5} m>
+                    <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5}>
                         <Flex direction="row" justify="space-between" align="center">
                             <Badge colorScheme={BET_STATUS[bet.betStatus]?.color} px={2} mb={1} variant={useColorModeValue("solid", "subtle")}><Text fontSize={24}>{BET_STATUS[bet.betStatus]?.status}</Text></Badge>
                             <Spacer />
@@ -123,9 +123,9 @@ const Details = ({ accounts, id }) => {
                             <Spacer />
                             <Spacer />
                         </Flex>
-                        <Heading fontSize={24}>Bet: {bet.question}</Heading>
-                        <Stack spacing={0}>
-                            <Heading >Info</Heading>
+                        <Text fontSize={24}>{bet.question}</Text>
+                        <Stack spacing={0} py={6}>
+                            <Heading fontSize={24}>Info</Heading>
                             <Text fontSize={20}>
                                 Bet Privacy: {
                                     bet.betPrivacy?.toString() === false ?
