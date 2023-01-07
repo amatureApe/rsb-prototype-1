@@ -14,16 +14,15 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
+    Badge,
+    useColorModeValue
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from "@chakra-ui/icons"
 
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
+import { BET_STATUS } from "../../consts"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -100,20 +99,23 @@ const Details = ({ accounts, id }) => {
                         <Text>Description</Text>
                     </Stack>
                 </Stack>
-                <Box borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
+                <Box minW={630} borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
+                    <Stack direction="row" justify="center" mb={2}>
+                        <Heading>Bet Info</Heading>
+                    </Stack>
                     <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5} m>
                         <Flex direction="row" justify="space-between" align="center">
-                            <Heading fontSize={32}>Bet Info</Heading>
+                            <Badge colorScheme={BET_STATUS[bet.betStatus]?.color} px={2} mb={1} variant={useColorModeValue("solid", "subtle")}><Text fontSize={24}>{BET_STATUS[bet.betStatus]?.status}</Text></Badge>
                             <Spacer />
                             <Heading fontSize={24}>
                                 {
                                     (() => {
                                         if (accounts[0] && bet.creator) {
                                             if (utils.getAddress(bet.creator) == utils.getAddress(accounts[0])) {
-                                                return "Owner"
+                                                return "You are the Creator"
                                             }
                                             else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
-                                                return "Participant"
+                                                return "You are a Participant"
                                             } else {
                                                 return null
                                             }
@@ -125,18 +127,23 @@ const Details = ({ accounts, id }) => {
                             <Text>ID: {id}</Text>
                             <Spacer />
                         </Flex>
-                        <Text>Bet Status: {bet.betStatus}</Text>
-                        <Text>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</Text>
+                        <Heading fontSize={24}>Bet: {bet.question}</Heading>
                         <Text>Bet Privacy: {bet.betPrivacy?.toString()}</Text>
                         <Text>Collateral: {bet.collateral}</Text>
                         <Text>Expiry: {bet.expiry}</Text>
                         <Text>Creator: {bet.creator}</Text>
-                        <Text>Affirmation: {bet.affirmation}</Text>
-                        <Text>Affirmation Token: {bet.affirmationToken}</Text>
-                        <Text>Affirmation Amount: {bet.affirmationAmount}</Text>
-                        <Text>Negation: {bet.negation}</Text>
-                        <Text>Negation Token: {bet.negationToken}</Text>
-                        <Text>Negation Amount: {bet.negationAmount}</Text>
+                        <Stack spacing={0}>
+                            <Heading fontSize={24}>Affirmation</Heading>
+                            <Text fontSize={20}>Affirmation: {bet.affirmation}</Text>
+                            <Text fontSize={20}>Affirmation Token: {bet.affirmationToken}</Text>
+                            <Text fontSize={20}>Affirmation Amount: {bet.affirmationAmount}</Text>
+                        </Stack>
+                        <Stack spacing={0}>
+                            <Heading fontSize={24}>Negation</Heading>
+                            <Text fontSize={20}>Negation: {bet.negation}</Text>
+                            <Text fontSize={20}>Negation Token: {bet.negationToken}</Text>
+                            <Text fontSize={20}>Negation Amount: {bet.negationAmount}</Text>
+                        </Stack>
                     </Stack>
                 </Box>
             </Stack>
