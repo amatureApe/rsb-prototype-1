@@ -27,7 +27,8 @@ import {
     ModalBody,
     ModalCloseButton,
     useColorModeValue,
-    useDisclosure
+    useDisclosure,
+    Divider
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
@@ -94,14 +95,14 @@ const Navbar = props => {
         checkNetwork()
     }, [accounts])
 
-    // const switchNetwork = async () => {
-    //     await window.ethereum.reqeust({
-    //         method: 'wallet_switchEthereumChain',
-    //         params: [{ chainId: targetNetworkId }]
-    //     })
+    const switchNetwork = async () => {
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: "0x5" }]
+        })
 
-    //     window.location.reload()
-    // }
+        window.location.reload()
+    }
 
 
     return (
@@ -199,23 +200,14 @@ const Navbar = props => {
             {AVAILABLE_NETWORKS.includes(chainId) ? (
                 <Box></Box>
             ) : (
-                // <Modal isOpen={isOpenChainIdModal} onClose={onCloseChainIdModal}>
-                //     <ModalOverlay />
-                //     <ModalContent>
-                //         <ModalHeader>Modal Title</ModalHeader>
-                //         <ModalCloseButton />
-                //         <ModalBody>
-                //         </ModalBody>
-
-                //         <ModalFooter>
-                //             <Button colorScheme='blue' mr={3} onClick={onCloseChainIdModal}>
-                //                 Close
-                //             </Button>
-                //             <Button variant='ghost'>Secondary Action</Button>
-                //         </ModalFooter>
-                //     </ModalContent>
-                // </Modal>
-                <Box>YOOO</Box>
+                <Box>
+                    <Divider />
+                    <Alert status='error' variant={useColorModeValue("solid", "subtle")}>
+                        <AlertIcon />
+                        <AlertTitle>Connected to the wrong network</AlertTitle>
+                        <Button size="sm" mx={5} bg={useColorModeValue("#f0e7db", "#FF4993")} color={useColorModeValue("#FF4993", "white")} borderWidth="2px" borderColor="#FF4993" onClick={switchNetwork}>Switch Networks</Button>
+                    </Alert>
+                </Box>
             )
             }
         </Box >
