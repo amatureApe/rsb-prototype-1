@@ -73,10 +73,6 @@ const Navbar = props => {
         }
     }
 
-    useEffect(() => {
-        checkNetwork()
-    }, [accounts])
-
     const switchNetwork = async () => {
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
@@ -85,6 +81,10 @@ const Navbar = props => {
 
         window.location.reload()
     }
+
+    useEffect(() => {
+        checkNetwork()
+    }, [])
 
 
     return (

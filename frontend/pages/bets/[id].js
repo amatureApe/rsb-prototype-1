@@ -91,17 +91,13 @@ const Details = ({ accounts, id }) => {
                                 <MenuItem>Change Image</MenuItem>
                                 <MenuItem>Cancel Bet</MenuItem>
                                 <MenuItem>Kill Bet</MenuItem>
-                                <MenuItem>Delete</MenuItem>
                             </MenuList>
                         </Menu>
                     </Stack>
-                    <Stack direction="row" justify="center">
-                        <Text>Description</Text>
-                    </Stack>
                 </Stack>
-                <Box minW={630} borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
+                <Box minW={750} borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
                     <Stack direction="row" justify="center" mb={2}>
-                        <Heading>Bet Info</Heading>
+                        <Heading color="#FF4993" fontSize={24}>ID: {id}</Heading>
                     </Stack>
                     <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5} m>
                         <Flex direction="row" justify="space-between" align="center">
@@ -112,6 +108,7 @@ const Details = ({ accounts, id }) => {
                                     (() => {
                                         if (accounts[0] && bet.creator) {
                                             if (utils.getAddress(bet.creator) == utils.getAddress(accounts[0])) {
+                                                console.log("PING")
                                                 return "You are the Creator"
                                             }
                                             else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
@@ -124,14 +121,21 @@ const Details = ({ accounts, id }) => {
                                 }
                             </Heading>
                             <Spacer />
-                            <Text>ID: {id}</Text>
                             <Spacer />
                         </Flex>
                         <Heading fontSize={24}>Bet: {bet.question}</Heading>
-                        <Text>Bet Privacy: {bet.betPrivacy?.toString()}</Text>
-                        <Text>Collateral: {bet.collateral}</Text>
-                        <Text>Expiry: {bet.expiry}</Text>
-                        <Text>Creator: {bet.creator}</Text>
+                        <Stack spacing={0}>
+                            <Heading >Info</Heading>
+                            <Text fontSize={20}>
+                                Bet Privacy: {
+                                    bet.betPrivacy?.toString() === false ?
+                                        "Public" : "Private"
+                                }
+                            </Text>
+                            <Text fontSize={20}>Collateral: {bet.collateral}</Text>
+                            <Text fontSize={20}>Expiry: {bet.expiry}</Text>
+                            <Text fontSize={20}>Creator: {bet.creator}</Text>
+                        </Stack>
                         <Stack spacing={0}>
                             <Heading fontSize={24}>Affirmation</Heading>
                             <Text fontSize={20}>Affirmation: {bet.affirmation}</Text>
@@ -144,6 +148,9 @@ const Details = ({ accounts, id }) => {
                             <Text fontSize={20}>Negation Token: {bet.negationToken}</Text>
                             <Text fontSize={20}>Negation Amount: {bet.negationAmount}</Text>
                         </Stack>
+                    </Stack>
+                    <Stack direction="row" justify="center" mt={10}>
+                        <Heading fontSize={24}>Bet Details</Heading>
                     </Stack>
                 </Box>
             </Stack>

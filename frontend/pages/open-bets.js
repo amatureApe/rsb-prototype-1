@@ -38,6 +38,8 @@ const OpenBets = ({ accounts }) => {
     const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
     const [hidden, setHidden] = useState(!isOpen)
 
+    console.log("PING")
+
     const handleBets = async () => {
 
         const contract = await contractConnection(handler.address, handler.abi)
@@ -56,7 +58,7 @@ const OpenBets = ({ accounts }) => {
 
     useEffect(() => {
         handleBets()
-    }, [bets])
+    }, [])
 
     return (
         <Layout title="Set Bet">
