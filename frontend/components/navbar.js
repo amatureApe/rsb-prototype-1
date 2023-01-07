@@ -19,13 +19,6 @@ import {
     MenuList,
     MenuButton,
     IconButton,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
     useColorModeValue,
     useDisclosure,
     Divider
@@ -58,12 +51,6 @@ const Navbar = props => {
     const { path, accounts, setAccounts, chainId, setChainId } = props
     const isConnected = Boolean(accounts[0])
 
-    const {
-        isOpen: isOpenChainIdModal,
-        onOpen: onOpenChainIdModal,
-        onClose: onCloseChainIdModal
-    } = useDisclosure()
-
     const connectAccount = async () => {
         if (window.ethereum) {
             const accounts = await window.ethereum.request({
@@ -74,20 +61,15 @@ const Navbar = props => {
     }
 
     const checkNetwork = async () => {
-        console.log("SING", window.ethereum)
         if (window.ethereum) {
             const chainId = await window.ethereum.request({
                 method: 'eth_chainId'
             })
             setChainId(chainId)
 
-            console.log("PING", isConnected)
-
             if (AVAILABLE_NETWORKS.includes(chainId)) {
-                return true
+                await connectAccount()
             }
-
-            return false
         }
     }
 

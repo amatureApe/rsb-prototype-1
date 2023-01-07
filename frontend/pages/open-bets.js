@@ -90,11 +90,15 @@ const OpenBets = ({ accounts }) => {
                                 Sort By <ChevronDownIcon />
                             </MenuButton>
                             <MenuList>
-                                <MenuItem>New File</MenuItem>
-                                <MenuItem>New Window</MenuItem>
-                                <MenuDivider />
-                                <MenuItem>Open...</MenuItem>
-                                <MenuItem>Save File</MenuItem>
+                                <MenuItem>Trending</MenuItem>
+                                <MenuDivider my={1} />
+                                <MenuItem>Liquidity</MenuItem>
+                                <MenuDivider my={1} />
+                                <MenuItem>Volume</MenuItem>
+                                <MenuDivider my={1} />
+                                <MenuItem>Newest</MenuItem>
+                                <MenuDivider my={1} />
+                                <MenuItem>Expiry</MenuItem>
                             </MenuList>
                         </Menu>
                         <Button
