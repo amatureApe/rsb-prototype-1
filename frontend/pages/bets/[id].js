@@ -108,7 +108,6 @@ const Details = ({ accounts, id }) => {
                                     (() => {
                                         if (accounts[0] && bet.creator) {
                                             if (utils.getAddress(bet.creator) == utils.getAddress(accounts[0])) {
-                                                console.log("PING")
                                                 return "You are the Creator"
                                             }
                                             else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {

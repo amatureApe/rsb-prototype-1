@@ -14,6 +14,7 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
+    ScaleFade,
     useDisclosure
 } from '@chakra-ui/react'
 
@@ -35,10 +36,9 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 
 const OpenBets = ({ accounts }) => {
     const [bets, setBets] = useState([])
+    const [isLoaded, setIsLoaded] = useState(false)
     const { getButtonProps, getDisclosureProps, isOpen } = useDisclosure()
     const [hidden, setHidden] = useState(!isOpen)
-
-    console.log("PING")
 
     const handleBets = async () => {
 
@@ -49,11 +49,13 @@ const OpenBets = ({ accounts }) => {
         for (let i = 0; i < betIndex; i++) {
             const response = await getBet(i)
             if (response != undefined) {
+                console.log(response)
                 batch.push(response)
             }
         }
 
         setBets(batch)
+        setIsLoaded(true)
     }
 
     useEffect(() => {
@@ -120,7 +122,11 @@ const OpenBets = ({ accounts }) => {
             </Container>
             <Stack direction="row">
                 <Sidebar getButtonProps={getButtonProps} getDisclosureProps={getDisclosureProps} isOpen={isOpen} hidden={hidden} setHidden={setHidden} />
-                <CardsWrap bets={bets} accounts={accounts} />
+                {
+                    isLoaded ?
+                        <CardsWrap bets={bets} accounts={accounts} /> :
+                        <Heading>LOADING BETS...</Heading>
+                }
             </Stack>
         </Layout >
     )
