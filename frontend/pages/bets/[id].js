@@ -122,10 +122,10 @@ const Details = ({ accounts, id }) => {
                                         {
                                             (() => {
                                                 if (accounts[0] && bet.creator) {
-                                                    if (utils.getAddress(bet.creator) == utils.getAddress(accounts[0])) {
+                                                    if (bet.creator == accounts[0]) {
                                                         return "You are the Creator"
                                                     }
-                                                    else if (utils.getAddress(accounts[0] === bet.affirmation) || utils.getAddress(accounts[0] === bet.negation)) {
+                                                    else if (accounts[0] === bet.affirmation || accounts[0] === bet.negation) {
                                                         return "You are a Participant"
                                                     } else {
                                                         return null
