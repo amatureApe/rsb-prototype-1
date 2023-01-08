@@ -71,6 +71,8 @@ const Details = ({ accounts, id }) => {
 
             await tx.wait()
             Toast(SuccessStyle)
+
+            handleBet()
         } catch (error) {
             Toast(ErrorStyle(error))
         }

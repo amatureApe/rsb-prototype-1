@@ -119,7 +119,10 @@ const CardsWrap = ({ bets, accounts }) => {
                                                         {odds}
                                                     </Stack>
                                                     <Stack justify="center" align="center">
-                                                        <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>Buy</Button>
+                                                        {bet.betStatus === '1' ?
+                                                            <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>Buy</Button> :
+                                                            <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>View</Button>
+                                                        }
                                                     </Stack>
                                                 </Stack>
                                             </Box>
