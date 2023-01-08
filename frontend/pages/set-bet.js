@@ -18,6 +18,7 @@ import {
     TabPanels,
     TabPanel,
     Image,
+    useToast,
     useDisclosure,
     useColorModeValue
 } from '@chakra-ui/react'
@@ -40,6 +41,7 @@ import checkApproval from '../utils/checkApproval'
 import { WEEK_IN_SECONDS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+import { ErrorStyle, PendingStyle, SuccessStyle } from '../styles/toastStyles'
 
 const SetBet = ({ accounts }) => {
     const [bet, setBet] = useState('')
@@ -64,6 +66,8 @@ const SetBet = ({ accounts }) => {
     const [betSide, setBetSide] = useState('1')
 
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
+
+    const Toast = useToast()
 
     const setBetArgs = [
         bet,
@@ -111,17 +115,21 @@ const SetBet = ({ accounts }) => {
     const handleSetBet = async () => {
         const contract = await contractConnection(handler.address, handler.abi)
         try {
+            Toast(PendingStyle)
             const setBetTx = await contract.setBet(...prepareSetBet(...setBetArgs))
             const setBetTxReceipt = await setBetTx.wait()
+            Toast(SuccessStyle)
+
             const betId = setBetTxReceipt.logs[0].topics[2]
 
             await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address, accounts)
 
+            Toast(PendingStyle)
             const loadBetTx = await contract.loadBet(...prepareLoadBet(betId, ...loadBetArgs))
             loadBetTx.wait()
-
-        } catch (err) {
-            console.log("error: ", err)
+            Toast(SuccessStyle)
+        } catch (error) {
+            Toast(ErrorStyle(error))
         }
     }
 

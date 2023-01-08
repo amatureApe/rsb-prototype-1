@@ -17,6 +17,7 @@ import {
     Spacer,
     Badge,
     Link,
+    useToast,
     useColorModeValue
 } from '@chakra-ui/react'
 
@@ -30,19 +31,24 @@ import { milliToSec, secToMilli } from '../utils/date-picker-funcs'
 import { ZERO_ADDRESS, BET_STATUS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
+import { PendingStyle, SuccessStyle, ErrorStyle } from '../styles/toastStyles'
 
 
 const CardsWrap = ({ bets, accounts }) => {
+
+    const Toast = useToast()
 
     const handleBuy = async (bet) => {
         const contract = await contractConnection(handler.address, handler.abi)
         try {
             await checkApproval(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address, accounts)
 
+            Toast(PendingStyle)
             const takeBetTx = await contract.takeBet(bet.betId)
-            const takeBetTxReceipt = await takeBetTx.wait()
-        } catch (err) {
-            console.log("error: ", err)
+            await takeBetTx.wait()
+            Toast(SuccessStyle)
+        } catch (error) {
+            Toast(ErrorStyle(error))
         }
     }
 
@@ -121,7 +127,7 @@ const CardsWrap = ({ bets, accounts }) => {
                                                     <Stack justify="center" align="center">
                                                         {bet.betStatus === '1' ?
                                                             <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>Buy</Button> :
-                                                            <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => handleBuy(bet)}>View</Button>
+                                                            <Button h="24px" bg="#FF4993" color="whiteAlpha.900" onClick={() => window.open(`/bets/${bet.betId}`)}>View</Button>
                                                         }
                                                     </Stack>
                                                 </Stack>
