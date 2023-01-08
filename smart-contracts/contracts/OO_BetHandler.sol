@@ -144,11 +144,6 @@ contract OO_BetHandler is ReentrancyGuard {
     ) public nonReentrant {
         BetDetails storage betDetails = betDetails[_betId];
         require(msg.sender == betDetails.creator, "not creator");
-        require(
-            betDetails.creator == _affirmation ||
-                betDetails.creator == _negation,
-            "must be participant"
-        );
         require(_affirmation != _negation, "must have separate parties");
         require(betDetails.betStatus == BetStatus.LOADING, "not loading");
 

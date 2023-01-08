@@ -49,7 +49,6 @@ const OpenBets = ({ accounts }) => {
         for (let i = 0; i < betIndex; i++) {
             const response = await getBet(i)
             if (response != undefined) {
-                console.log(response)
                 batch.push(response)
             }
         }

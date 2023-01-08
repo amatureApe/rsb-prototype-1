@@ -17,7 +17,8 @@ import {
     Badge,
     Link,
     Divider,
-    useColorModeValue
+    useColorModeValue,
+    useToast
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from "@chakra-ui/icons"
@@ -25,6 +26,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons"
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
 import { BET_STATUS, ZERO_ADDRESS } from "../../consts"
+import { PendingStyle, SuccessStyle, ErrorStyle } from "../../styles/toastStyles"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -37,11 +39,12 @@ const OpenPosition = () => {
     )
 }
 
-
 const Details = ({ accounts, id }) => {
     const [bet, setBet] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     let contract
+
+    const Toast = useToast()
 
     if (typeof window !== "undefined") {
         const getContract = async () => {
@@ -60,6 +63,18 @@ const Details = ({ accounts, id }) => {
     useEffect(() => {
         handleBet()
     }, [])
+
+    const handleBuy = async () => {
+        try {
+            const tx = await contract.takeBet(bet.betId)
+            Toast(PendingStyle)
+
+            await tx.wait()
+            Toast(SuccessStyle)
+        } catch (error) {
+            Toast(ErrorStyle(error))
+        }
+    }
 
 
     return (
@@ -80,9 +95,14 @@ const Details = ({ accounts, id }) => {
                                     (() => {
                                         switch (bet.betStatus) {
                                             case '0':
-                                                return <Button>Load Bet</Button>
+                                                if (accounts[0] === bet.creator) {
+                                                    return <Button>Load Bet</Button>
+                                                }
+                                                else {
+                                                    return <Button>Loading</Button>
+                                                }
                                             case '1':
-                                                return <Button>Buy</Button>
+                                                return <Button onClick={handleBuy}>Buy</Button>
                                             case '2':
                                                 return <Button>Validate</Button>
                                             case '3':
@@ -90,11 +110,11 @@ const Details = ({ accounts, id }) => {
                                             case '4':
                                                 return <Button>Claim</Button>
                                             case '5':
-                                                return <Heading>Claimed!</Heading>
+                                                return <Button>Claimed!</Button>
                                             case '6':
-                                                return <Heading>Dead</Heading>
+                                                return <Button>Dead</Button>
                                             default:
-                                                return <Heading>Loading</Heading>
+                                                return <Button>Loading</Button>
                                         }
                                     })()
                                 }
@@ -110,7 +130,7 @@ const Details = ({ accounts, id }) => {
                                 </Menu>
                             </Stack>
                         </Stack>
-                        <Box minW={750} borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
+                        <Box minW={675} borderWidth="1px" borderColor="#FF4993" borderRadius={10} p={5}>
                             <Stack direction="row" justify="center" mb={2}>
                                 <Heading color="#FF4993" fontSize={24}>ID: {id}</Heading>
                             </Stack>
