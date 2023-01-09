@@ -87,58 +87,57 @@ const Details = ({ accounts, id }) => {
                         <Heading>Bet Details</Heading>
                         <Spacer />
                     </Flex>
-                    <Stack >
+                    <Stack>
                         <Stack direction="row" justify="center" mb={2}>
                             <Heading color="#FF4993" fontSize={24}>ID: {id}</Heading>
                         </Stack>
-                        <Stack direction="row" justify="center" >
-                            <Stack borderRadius={10} p={5}>
-                                <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
-                                <Text>{bet.imgUrl?.slice(0, 30) + '...' + bet.imgUrl?.slice(-10)}</Text>
-                                <Stack direction="row" justify="center">
-                                    {
-                                        (() => {
-                                            switch (bet.betStatus) {
-                                                case '0':
-                                                    if (accounts[0] === bet.creator) {
-                                                        return <Button>Load Bet</Button>
-                                                    }
-                                                    else {
-                                                        return <Button>Loading</Button>
-                                                    }
-                                                case '1':
-                                                    return <Button onClick={handleBuy}>Buy</Button>
-                                                case '2':
-                                                    return <Button>Validate</Button>
-                                                case '3':
-                                                    return <Button>Settle</Button>
-                                                case '4':
-                                                    return <Button>Claim</Button>
-                                                case '5':
-                                                    return <Button>Claimed!</Button>
-                                                case '6':
-                                                    return <Button>Dead</Button>
-                                                default:
-                                                    return <Button>Loading</Button>
-                                            }
-                                        })()
-                                    }
-                                    <Menu>
-                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                                            Manage
-                                        </MenuButton>
-                                        <MenuList>
-                                            <MenuItem>Change Image</MenuItem>
-                                            <MenuItem>Cancel Bet</MenuItem>
-                                            <MenuItem>Kill Bet</MenuItem>
-                                        </MenuList>
-                                    </Menu>
+                        <Stack direction="row" justify="center">
+                            <Box borderRadius={10} p={2}>
+                                <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5}>
+                                    <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
+                                    <Text>{bet.imgUrl?.slice(0, 30) + '...' + bet.imgUrl?.slice(-10)}</Text>
+                                    <Stack direction="row" justify="center">
+                                        {
+                                            (() => {
+                                                switch (bet.betStatus) {
+                                                    case '0':
+                                                        if (accounts[0] === bet.creator) {
+                                                            return <Button>Load Bet</Button>
+                                                        }
+                                                        else {
+                                                            return <Button>Loading</Button>
+                                                        }
+                                                    case '1':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleBuy}>Buy</Button>
+                                                    case '2':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Validate</Button>
+                                                    case '3':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Settle</Button>
+                                                    case '4':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Claim</Button>
+                                                    case '5':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Claimed!</Button>
+                                                    case '6':
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Dead</Button>
+                                                    default:
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Loading</Button>
+                                                }
+                                            })()
+                                        }
+                                        <Menu>
+                                            <MenuButton bg="#FF4993" color="whiteAlpha.800" as={Button} rightIcon={<ChevronDownIcon />}>
+                                                Manage
+                                            </MenuButton>
+                                            <MenuList>
+                                                <MenuItem >Change Image</MenuItem>
+                                                <MenuItem>Cancel Bet</MenuItem>
+                                                <MenuItem>Kill Bet</MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </Stack>
                                 </Stack>
-                            </Stack>
-                            <Box borderRadius={10} p={5}>
-                                {/* <Stack direction="row" justify="center" mb={2}>
-                                    <Heading color="#FF4993" fontSize={24}>ID: {id}</Heading>
-                                </Stack> */}
+                            </Box>
+                            <Box borderRadius={10} p={2}>
                                 <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5}>
                                     <Flex direction="row" justify="space-between" align="center">
                                         <Badge colorScheme={BET_STATUS[bet.betStatus]?.color} px={2} mb={1} variant={useColorModeValue("solid", "subtle")}><Text fontSize={24}>{BET_STATUS[bet.betStatus]?.status}</Text></Badge>
@@ -166,8 +165,8 @@ const Details = ({ accounts, id }) => {
                                     <Divider />
                                     <Stack spacing={0} py={6}>
                                         <Heading fontSize={24}>Info</Heading>
-                                        <Text fontSize={20}>Creator: <Link href={`https://goerli.etherscan.io/address/${bet.creator}`} isExternal>{bet.creator}</Link></Text>
-                                        <Text fontSize={20}>Collateral: <Link href={`https://goerli.etherscan.io/address/${bet.collateral}`} isExternal>{bet.collateral}</Link></Text>
+                                        <Text fontSize={20}>Creator: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.creator}`} isExternal>{bet.creator}</Link></Text>
+                                        <Text fontSize={20}>Collateral: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.collateral}`} isExternal>{bet.collateral}</Link></Text>
                                         <Text fontSize={20}>Expiry: {bet.expiry}</Text>
                                         <Text fontSize={20}>
                                             Bet Privacy: {
@@ -178,14 +177,14 @@ const Details = ({ accounts, id }) => {
                                     </Stack>
                                     <Stack spacing={0}>
                                         <Heading fontSize={24}>Affirmation</Heading>
-                                        {bet.affirmation === ZERO_ADDRESS ? <OpenPosition position="Affirmation" /> : <Text fontSize={20}>Address: <Link href={`https://goerli.etherscan.io/address/${bet.affirmation}`} isExternal>{bet.affirmation}</Link></Text>}
-                                        <Text fontSize={20}>Token: <Link href={`https://goerli.etherscan.io/address/${bet.affirmationToken}`} isExternal>{bet.affirmationToken}</Link></Text>
+                                        {bet.affirmation === ZERO_ADDRESS ? <OpenPosition position="Affirmation" /> : <Text fontSize={20}>Address: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.affirmation}`} isExternal>{bet.affirmation}</Link></Text>}
+                                        <Text fontSize={20}>Token: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.affirmationToken}`} isExternal>{bet.affirmationToken}</Link></Text>
                                         <Text fontSize={20}>Amount: {bet.affirmationAmount}</Text>
                                     </Stack>
                                     <Stack spacing={0}>
                                         <Heading fontSize={24}>Negation</Heading>
-                                        {bet.negation === ZERO_ADDRESS ? <OpenPosition position="Negation" /> : <Text fontSize={20}>Address: <Link href={`https://goerli.etherscan.io/address/${bet.negation}`} isExternal>{bet.negation}</Link></Text>}
-                                        <Text fontSize={20}>Token: <Link href={`https://goerli.etherscan.io/address/${bet.negationToken}`} isExternal>{bet.negationToken}</Link></Text>
+                                        {bet.negation === ZERO_ADDRESS ? <OpenPosition position="Negation" /> : <Text fontSize={20}>Address: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.negation}`} isExternal>{bet.negation}</Link></Text>}
+                                        <Text fontSize={20}>Token: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.negationToken}`} isExternal>{bet.negationToken}</Link></Text>
                                         <Text fontSize={20}>Amount: {bet.negationAmount}</Text>
                                     </Stack>
                                 </Stack>

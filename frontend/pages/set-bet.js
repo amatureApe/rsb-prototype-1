@@ -48,11 +48,13 @@ import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json
 import { ErrorStyle, PendingStyle, SuccessStyle } from '../styles/toastStyles'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
-const SetBet = ({ accounts }) => {
+const SetBet = ({ accounts, chainId }) => {
     const [bet, setBet] = useState('')
     const [specifications, setSpecifications] = useState('')
     const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
-    const [bondInput, setBondInput] = useState("")
+    const [bondInput, setBondInput] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
+
+    console.log(bond)
 
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
     const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
@@ -201,7 +203,7 @@ const SetBet = ({ accounts }) => {
                                             <RadioSettings betPrivacy={betPrivacy} handleBetPrivacy={handleBetPrivacy} betSide={betSide} setBetSide={setBetSide} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
-                                            <BondInput setBond={setBond} bond={bond} bondInput={bondInput} setBondInput={setBondInput} />
+                                            <BondInput chainId={chainId} setBond={setBond} bond={bond} bondInput={bondInput} setBondInput={setBondInput} />
                                         </TabPanel>
                                         <TabPanel borderRadius={10} borderWidth="1px" borderColor="#FF4993">
                                             <Expiry expiry={expiry} setExpiry={setExpiry} expiryInput={expiryInput} setExpiryInput={setExpiryInput} isOpenDatePicker={isOpenDatePicker} onCloseDatePicker={onCloseDatePicker} onOpenDatePicker={onOpenDatePicker} />

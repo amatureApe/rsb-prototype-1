@@ -6,7 +6,7 @@ import theme from '../lib/theme'
 
 function MyApp({ Component, pageProps, router }) {
   const [accounts, setAccounts] = useState([])
-  const [chainId, setChainId] = useState("")
+  const [chainId, setChainId] = useState("0x5")
 
   if (typeof window !== "undefined") {
     window.ethereum.on('accountsChanged', (x) => setAccounts(0))
@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps, router }) {
   return (
     <ChakraProvider theme={theme}>
       <Layout router={router} accounts={accounts} setAccounts={setAccounts} chainId={chainId} setChainId={setChainId}>
-        <Component {...pageProps} accounts={accounts} />
+        <Component {...pageProps} accounts={accounts} chainId={chainId} />
       </Layout>
     </ChakraProvider>
   )

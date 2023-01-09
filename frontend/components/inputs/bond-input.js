@@ -2,11 +2,21 @@
 import { Box, Stack, Input, Heading, RadioGroup, Radio, Link, Spacer, useColorModeValue } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
+import { COLLATERAL_ADDRESSES } from '../../consts'
 
-const BondInput = ({ setBond, bond, bondInput, setBondInput }) => {
+
+const BondInput = ({ chainId, setBond, bond, bondInput, setBondInput }) => {
     const resetBondInput = () => {
         setBondInput("")
     }
+
+    const handleBondInput = (e) => {
+        setBond(e)
+        setBondInput(e)
+    }
+
+    console.log("chainID: ", COLLATERAL_ADDRESSES[chainId]['weth'])
+
     return (
         <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10}>
             <Stack direction="column" h={135} p={2} borderRadius={10} justify="center">
@@ -26,9 +36,8 @@ const BondInput = ({ setBond, bond, bondInput, setBondInput }) => {
                             setBondInput(e.target.value)
                         }} />
                     <RadioGroup
-                        onChange={setBond}
+                        onChange={handleBondInput}
                         value={bond}
-                        onClick={resetBondInput}
                         bg={useColorModeValue('#f0e7db', '#202023')}
                         px={2}
                         borderBottomRadius={15}
@@ -38,14 +47,15 @@ const BondInput = ({ setBond, bond, bondInput, setBondInput }) => {
                     >
                         <Stack direction="row" align="center">
                             <Stack direction='row'>
-                                <Radio value='1' colorScheme="pink">WETH</Radio>
-                                <Radio value='2' colorScheme="pink">WBTC</Radio>
-                                <Radio value='3' colorScheme="pink">DAI</Radio>
-                                <Radio value='4' colorScheme="pink">USDC</Radio>
-                                <Radio value='5' colorScheme="pink">UMA</Radio>
+                                <Radio value={COLLATERAL_ADDRESSES[chainId]['weth']} colorScheme="pink">wETH</Radio>
+                                <Radio value={COLLATERAL_ADDRESSES[chainId]['wbtc']} colorScheme="pink">wBTC</Radio>
+                                <Radio value={COLLATERAL_ADDRESSES[chainId]['dai']} colorScheme="pink">DAI</Radio>
+                                <Radio value={COLLATERAL_ADDRESSES[chainId]['usdc']} colorScheme="pink">USDC</Radio>
+                                <Radio value={COLLATERAL_ADDRESSES[chainId]['uma']} colorScheme="pink">UMA</Radio>
                             </Stack>
+                            <Spacer />
                             <Stack>
-                                <Link href="https://docs.umaproject.org/resources/approved-collateral-types" isExternal={true}>
+                                <Link href="https://docs.umaproject.org/resources/approved-collateral-types" isExternal={true} mr={2} mt={1}>
                                     <ExternalLinkIcon marginInlineStart={0} />
                                 </Link>
                                 <Spacer />
