@@ -78,7 +78,6 @@ const Details = ({ accounts, id }) => {
         }
     }
 
-
     return (
         <Container maxW='75%'>
             {isLoaded ? (
@@ -192,10 +191,16 @@ const Details = ({ accounts, id }) => {
                                 </Stack>
                             </Box>
                         </Stack>
-                        <Stack direction="row" justify="center" mt={10}>
-                            <Heading color="#FF4993" fontSize={24}>Bet Specifications</Heading>
-                        </Stack>
-                        <Text fontSize={20}>{bet.specifications}</Text>
+                        {bet.specifications.length > 1 ?
+                            <Box>
+                                <Stack direction="row" justify="center" mt={10}>
+                                    <Heading color="#FF4993" fontSize={24}>Bet Specifications</Heading>
+                                </Stack>
+                                <Text fontSize={20}>{bet.specifications}</Text>
+                            </Box>
+                            :
+                            <Box></Box>
+                        }
                     </Stack>
                 </Box>
             ) : (

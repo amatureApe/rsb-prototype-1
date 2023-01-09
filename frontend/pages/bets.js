@@ -21,8 +21,8 @@ import {
 import { PhoneIcon, SearchIcon, CheckIcon, ChevronDownIcon, StarIcon } from '@chakra-ui/icons'
 
 import Layout from '../components/layout/article'
-import CardsWrap from '../components/open-bets-cards'
-import Sidebar from '../components/menus-and-drawers/open-bets-sidebar'
+import CardsWrap from '../components/bets-cards'
+import Sidebar from '../components/menus-and-drawers/bets-sidebar'
 
 import theme from '../lib/theme'
 import { ethers, utils, BigNumber } from 'ethers'

@@ -86,8 +86,6 @@ const Navbar = props => {
         checkNetwork()
     }, [])
 
-    console.log("PING")
-
     return (
         <Box
             position="fixed"
@@ -106,11 +104,11 @@ const Navbar = props => {
                     <LinkItem href="/set-bet" path={path}>
                         Set Bet
                     </LinkItem>
-                    <LinkItem href="/open-bets" path={path}>
-                        Open Bets
+                    <LinkItem href="/bets" path={path}>
+                        Bets
                     </LinkItem>
-                    <LinkItem href="/your-bets" path={path}>
-                        Your Bets
+                    <LinkItem href="/stake" path={path}>
+                        Stake
                     </LinkItem>
                     <LinkItem href="/about" path={path}>
                         About
