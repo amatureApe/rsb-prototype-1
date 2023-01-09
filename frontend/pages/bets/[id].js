@@ -94,7 +94,7 @@ const Details = ({ accounts, id }) => {
                         </Stack>
                         <Stack direction="row" justify="center" >
                             <Stack borderRadius={10} p={5}>
-                                <Image src={bet.imgUrl} maxW={550} borderRadius={10} />
+                                <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
                                 <Text>{bet.imgUrl?.slice(0, 30) + '...' + bet.imgUrl?.slice(-10)}</Text>
                                 <Stack direction="row" justify="center">
                                     {
