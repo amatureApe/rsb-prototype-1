@@ -13,11 +13,21 @@ contract OO_BetHandler is ReentrancyGuard {
     bytes32 constant IDENTIFIER = bytes32("YES_OR_NO_QUERY"); // Use the yes no idetifier to ask arbitary questions, such as the weather on a particular day.
     address constant ZERO_ADDRESS = address(0);
     // 0x0000000000000000000000000000000000000000
-    //
+    bytes constant Q = bytes("Q: ");
+    bytes constant QSPECS =
+        bytes(
+            "? --- A:1 for yes. 0 for no. 2 for ambiguous/unknowable | -------- Specifications --------> "
+        );
+
+    struct BetContract {
+        bytes question;
+        bytes specifications;
+    }
 
     struct BetDetails {
         uint256 betId;
-        bytes question;
+        BetContract betContract;
+        bytes ancillaryData;
         uint256 expiry;
         IERC20 bondCurrency;
         address creator;
@@ -99,6 +109,7 @@ contract OO_BetHandler is ReentrancyGuard {
 
     function setBet(
         bytes calldata _question,
+        bytes calldata _specifications,
         uint256 _expiry,
         IERC20 _bondCurrency,
         uint256 _liveness,
@@ -106,9 +117,20 @@ contract OO_BetHandler is ReentrancyGuard {
         bool _privateBet,
         bytes calldata _imgUrl
     ) public nonReentrant {
+        BetContract memory betContract = BetContract(
+            bytes(_question),
+            bytes(_specifications)
+        );
+
+        bytes memory ancillaryData = createAncillaryData(
+            _question,
+            _specifications
+        );
+
         BetDetails memory bet = BetDetails(
             betId,
-            _question,
+            betContract,
+            ancillaryData,
             _expiry,
             _bondCurrency,
             msg.sender,
@@ -121,11 +143,12 @@ contract OO_BetHandler is ReentrancyGuard {
 
         bytes memory hashId = abi.encode(
             _question,
+            _specifications,
             msg.sender,
             block.timestamp
         );
 
-        emit BetSet(msg.sender, betId, _question);
+        emit BetSet(msg.sender, betId, bytes(_question));
 
         betDetails[betId] = bet;
         hashIds[hashId] = betId;
@@ -228,7 +251,7 @@ contract OO_BetHandler is ReentrancyGuard {
         );
         require(bet.affirmation == msg.sender || bet.negation == msg.sender);
 
-        bytes memory ancillaryData = bet.betDetails.question; // Question to ask the UMA Oracle.
+        bytes memory ancillaryData = bet.betDetails.ancillaryData; // Question to ask the UMA Oracle.
 
         requestTime = block.timestamp; // Set the request time to the current block time.
         IERC20 bondCurrency = IERC20(bet.betDetails.bondCurrency); // Use preferred token as the bond currency.
@@ -263,7 +286,7 @@ contract OO_BetHandler is ReentrancyGuard {
         );
         require(bet.affirmation == msg.sender || bet.negation == msg.sender);
 
-        bytes memory ancillaryData = bet.betDetails.question;
+        bytes memory ancillaryData = bet.betDetails.ancillaryData;
 
         oo.settle(address(this), IDENTIFIER, requestTime, ancillaryData);
         bet.betDetails.betStatus = BetStatus.SETTLED;
@@ -355,17 +378,15 @@ contract OO_BetHandler is ReentrancyGuard {
     }
 
     //******* VIEW FUNCTIONS ***********
-    function createQuestion(string memory _question)
-        public
-        pure
-        returns (bytes memory)
-    {
-        bytes memory question = bytes(
-            string.concat(
-                "Q: ",
-                _question,
-                "? --- A:1 for yes. 0 for no. 2 for ambiguous/unknowable"
-            )
+    function createAncillaryData(
+        bytes memory _question,
+        bytes memory _specifications
+    ) public pure returns (bytes memory) {
+        bytes memory question = abi.encodePacked(
+            Q,
+            _question,
+            QSPECS,
+            _specifications
         );
         return question;
     }
@@ -381,7 +402,7 @@ contract OO_BetHandler is ReentrancyGuard {
                     address(this),
                     IDENTIFIER,
                     requestTime,
-                    bet.betDetails.question
+                    bet.betDetails.ancillaryData
                 )
                 .resolvedPrice;
     }

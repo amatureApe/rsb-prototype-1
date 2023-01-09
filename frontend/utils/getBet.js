@@ -21,7 +21,8 @@ const getBet = async (betId) => {
     const bet = {
         creator: utils.getAddress(betInfo.betDetails.creator),
         betId: utils.formatUnits(betInfo.betId, 0),
-        question: utils.toUtf8String(betInfo.betDetails.question),
+        question: utils.toUtf8String(betInfo.betDetails.betContract.question),
+        specifications: utils.toUtf8String(betInfo.betDetails.betContract.specifications),
         betPrivacy: betInfo.betDetails.privateBet,
         expiry: utils.formatUnits(betInfo.betDetails.expiry, 0),
         imgUrl: utils.toUtf8String(betInfo.betDetails.imgUrl),

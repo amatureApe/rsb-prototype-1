@@ -7,6 +7,7 @@ import {
     Heading,
     Textarea,
     Input,
+    Box,
     Button,
     Stack,
     HStack,
@@ -18,6 +19,9 @@ import {
     TabPanels,
     TabPanel,
     Image,
+    Collapse,
+    ScaleFade,
+    SlideFade,
     useToast,
     useDisclosure,
     useColorModeValue
@@ -42,9 +46,11 @@ import { WEEK_IN_SECONDS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 import { ErrorStyle, PendingStyle, SuccessStyle } from '../styles/toastStyles'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 const SetBet = ({ accounts }) => {
     const [bet, setBet] = useState('')
+    const [specifications, setSpecifications] = useState('')
     const [bond, setBond] = useState('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     const [bondInput, setBondInput] = useState("")
 
@@ -71,6 +77,7 @@ const SetBet = ({ accounts }) => {
 
     const setBetArgs = [
         bet,
+        specifications,
         expiry,
         bond,
         livenessPeriod,
@@ -99,13 +106,23 @@ const SetBet = ({ accounts }) => {
 
     const {
         isOpen: isOpenHelpDrawer,
-        onToggle: onToggleHelpDrawer,
+        onToggle: onToggleHelpDrawer
     } = useDisclosure()
     const helpBtnRef = useRef()
+
+    const {
+        isOpen: isOpenSpecifications,
+        onToggle: onToggleSpecifications
+    } = useDisclosure()
 
     const handleBetChange = (e) => {
         let value = e.target.value
         setBet(value)
+    }
+
+    const handleSpecificationsChange = (e) => {
+        let value = e.target.value
+        setSpecifications(value)
     }
 
     const handleBetPrivacy = (betPrivacy) => {
@@ -147,8 +164,17 @@ const SetBet = ({ accounts }) => {
                         )}
                         <Button ref={helpBtnRef} onClick={onToggleHelpDrawer} m={2} variant="ghost" colorScheme="pink">Need Help?</Button>
                     </Stack>
-                    <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" mb={4} _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
-
+                    <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="What do you want to bet?" onChange={handleBetChange} />
+                    <Stack direction="row" justify="flex-end">
+                        <Button ref={helpBtnRef} onClick={onToggleSpecifications} variant="ghost" colorScheme="pink" mt={-4}>Specifications {isOpenSpecifications ? <ChevronUpIcon /> : <ChevronDownIcon />}</Button>
+                    </Stack>
+                    {isOpenSpecifications ?
+                        <Stack mb={4}>
+                            <Heading mt={-8}>Bet Specifications</Heading>
+                            <Textarea bg="whiteAlpha.800" color="#525252" borderWidth="1px" borderColor="#FF4993" _placeholder={{ color: "#525252" }} placeholder="Add your bet specifications here" onChange={handleSpecificationsChange} />
+                        </Stack> :
+                        <Box></Box>
+                    }
                     <Stack>
                         <Stack direction="row">
                             <Stack>

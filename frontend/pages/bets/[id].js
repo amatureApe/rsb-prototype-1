@@ -195,6 +195,7 @@ const Details = ({ accounts, id }) => {
                         <Stack direction="row" justify="center" mt={10}>
                             <Heading color="#FF4993" fontSize={24}>Bet Specifications</Heading>
                         </Stack>
+                        <Text fontSize={20}>{bet.specifications}</Text>
                     </Stack>
                 </Box>
             ) : (

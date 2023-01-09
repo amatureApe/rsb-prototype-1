@@ -7,6 +7,7 @@ import { ZERO_ADDRESS } from '../consts'
 
 export const prepareSetBet = (
     question,
+    specifications,
     expiry,
     bond,
     livenessPeriod,
@@ -16,6 +17,7 @@ export const prepareSetBet = (
 ) => {
     const data = [
         web3.utils.asciiToHex(question),
+        web3.utils.asciiToHex(specifications),
         expiry,
         bond,
         BigNumber.from(livenessPeriod),
