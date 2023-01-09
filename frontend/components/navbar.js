@@ -86,6 +86,7 @@ const Navbar = props => {
         checkNetwork()
     }, [])
 
+    console.log("PING")
 
     return (
         <Box

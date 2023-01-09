@@ -8,6 +8,10 @@ function MyApp({ Component, pageProps, router }) {
   const [accounts, setAccounts] = useState([])
   const [chainId, setChainId] = useState("")
 
+  if (typeof window !== "undefined") {
+    window.ethereum.on('accountsChanged', (x) => setAccounts(0))
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <Layout router={router} accounts={accounts} setAccounts={setAccounts} chainId={chainId} setChainId={setChainId}>
