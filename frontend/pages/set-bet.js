@@ -176,7 +176,7 @@ const SetBet = ({ accounts }) => {
                         <Box></Box>
                     }
                     <Stack>
-                        <Stack direction="row">
+                        <Stack direction="row" mt={isOpenSpecifications ? 0 : -8}>
                             <Stack>
                                 <Heading>Image</Heading>
                                 <Stack borderWidth={1} borderColor="#FF4993" p={2} borderRadius={10}>
