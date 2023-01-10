@@ -31,6 +31,15 @@ const components = {
             color: mode('#3d7aed', '#ff63c3')(props),
             textUnderlineOffset: 3
         })
+    },
+    Tooltip: {
+        colorScheme: {
+            green: {
+                color: "white",
+                bg: "green.500",
+                borderColor: "green.500",
+            },
+        }
     }
 }
 

@@ -78,6 +78,48 @@ const Details = ({ accounts, id }) => {
         }
     }
 
+    const handleValidate = async () => {
+        try {
+            const tx = await contract.requestData(bet.betId)
+            Toast(PendingStyle)
+
+            await tx.wait()
+            Toast(SuccessStyle)
+
+            handleBet()
+        } catch (error) {
+            Toast(ErrorStyle(error))
+        }
+    }
+
+    const handleSettle = async () => {
+        try {
+            const tx = await contract.settleRequest(bet.betId)
+            Toast(PendingStyle)
+
+            await tx.wait()
+            Toast(SuccessStyle)
+
+            handleBet()
+        } catch (error) {
+            Toast(ErrorStyle(error))
+        }
+    }
+
+    const handleClaim = async () => {
+        try {
+            const tx = await contract.claimWinnings(bet.betId)
+            Toast(PendingStyle)
+
+            await tx.wait()
+            Toast(SuccessStyle)
+
+            handleBet()
+        } catch (error) {
+            Toast(ErrorStyle(error))
+        }
+    }
+
     return (
         <Container maxW='75%'>
             {isLoaded ? (
@@ -95,7 +137,7 @@ const Details = ({ accounts, id }) => {
                             <Box borderRadius={10} p={2}>
                                 <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5}>
                                     <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
-                                    <Text>{bet.imgUrl?.slice(0, 30) + '...' + bet.imgUrl?.slice(-10)}</Text>
+                                    <Text>{bet.imgUrl?.slice(0, 40) + '...' + bet.imgUrl?.slice(-10)}</Text>
                                     <Stack direction="row" justify="center">
                                         {
                                             (() => {
@@ -110,11 +152,11 @@ const Details = ({ accounts, id }) => {
                                                     case '1':
                                                         return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleBuy}>Buy</Button>
                                                     case '2':
-                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Validate</Button>
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleValidate}>Validate</Button>
                                                     case '3':
-                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Settle</Button>
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleSettle}>Settle</Button>
                                                     case '4':
-                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Claim</Button>
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleClaim}>Claim</Button>
                                                     case '5':
                                                         return <Button bg="#FF4993" color="whiteAlpha.800">Claimed!</Button>
                                                     case '6':
@@ -146,10 +188,10 @@ const Details = ({ accounts, id }) => {
                                             {
                                                 (() => {
                                                     if (accounts[0] && bet.creator) {
-                                                        if (bet.creator == accounts[0]) {
+                                                        if (bet.creator.toLowerCase() == accounts[0]) {
                                                             return "You are the Creator"
                                                         }
-                                                        else if (accounts[0] === bet.affirmation || accounts[0] === bet.negation) {
+                                                        else if (accounts[0] === bet.affirmation.toLowerCase() || accounts[0] === bet.negation.toLowerCase()) {
                                                             return "You are a Participant"
                                                         } else {
                                                             return null
@@ -167,7 +209,13 @@ const Details = ({ accounts, id }) => {
                                         <Heading fontSize={24}>Info</Heading>
                                         <Text fontSize={20}>Creator: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.creator}`} isExternal>{bet.creator}</Link></Text>
                                         <Text fontSize={20}>Collateral: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.collateral}`} isExternal>{bet.collateral}</Link></Text>
-                                        <Text fontSize={20}>Expiry: {bet.expiry}</Text>
+                                        <Stack direction="row" align="center">
+                                            <Text fontSize={20}>Expiry: {bet.expiry} -- </Text>
+                                            <Stack direction="row" align="center">
+                                                <Text fontSize={20}>{new Date(bet.expiry * 1000).toLocaleDateString() != "Invalid Date" ? new Date(bet.expiry * 1000).toLocaleDateString() : "Date out of range"}</Text>
+                                                <Text fontSize={20}>{new Date(bet.expiry * 1000).toLocaleTimeString() != "Invalid Date" ? new Date(bet.expiry * 1000).toLocaleTimeString() : null}</Text>
+                                            </Stack>
+                                        </Stack>
                                         <Text fontSize={20}>
                                             Bet Privacy: {
                                                 bet.betPrivacy?.toString() === false ?
