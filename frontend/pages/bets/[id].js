@@ -26,7 +26,7 @@ import { ChevronDownIcon, StarIcon } from "@chakra-ui/icons"
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
 import { BET_STATUS, ZERO_ADDRESS } from "../../consts"
-import { PendingStyle, SuccessStyle, ErrorStyle } from "../../styles/toastStyles"
+import { PendingStyle, SuccessStyle, ErrorStyle, ClaimedStyle } from "../../styles/toastStyles"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -120,6 +120,10 @@ const Details = ({ accounts, id }) => {
         }
     }
 
+    const handleAlreadyClaimed = () => {
+        Toast(ClaimedStyle)
+    }
+
     return (
         <Container maxW='75%'>
             {isLoaded ? (
@@ -158,7 +162,7 @@ const Details = ({ accounts, id }) => {
                                                     case '4':
                                                         return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleClaim}>Claim</Button>
                                                     case '5':
-                                                        return <Button bg="#FF4993" color="whiteAlpha.800">Claimed!</Button>
+                                                        return <Button bg="#FF4993" color="whiteAlpha.800" onClick={handleAlreadyClaimed}>Claimed!</Button>
                                                     case '6':
                                                         return <Button bg="#FF4993" color="whiteAlpha.800">Dead</Button>
                                                     default:
