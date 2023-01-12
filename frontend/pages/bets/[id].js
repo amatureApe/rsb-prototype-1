@@ -17,11 +17,12 @@ import {
     Badge,
     Link,
     Divider,
+    Toast,
     useColorModeValue,
     useToast
 } from '@chakra-ui/react'
 
-import { ChevronDownIcon, StarIcon } from "@chakra-ui/icons"
+import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons"
 
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
@@ -44,7 +45,7 @@ const Details = ({ accounts, id }) => {
     const [isLoaded, setIsLoaded] = useState(false)
     let contract
 
-    const Toast = useToast()
+    const toast = useToast()
 
     if (typeof window !== "undefined") {
         const getContract = async () => {
@@ -121,7 +122,23 @@ const Details = ({ accounts, id }) => {
     }
 
     const handleAlreadyClaimed = () => {
-        Toast(ClaimedStyle)
+        const id = toast({
+            position: 'top-left',
+            duration: 20000,
+            render: function renderToast(props) {
+                return (
+                    <Box bg='#202023' borderRadius={10} border='2px solid #FF4993'>
+                        <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                            <Stack direction="row" justify="space-between">
+                                <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
+                                <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                            </Stack>
+                            <Text color='whiteAlpha.900'>The winnings for this bet have already been claimed</Text>
+                        </Stack>
+                    </Box >
+                )
+            }
+        });
     }
 
     return (
