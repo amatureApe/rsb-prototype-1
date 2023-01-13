@@ -4,6 +4,7 @@ import {
     Heading,
     Text,
     Button,
+    useToast,
     useColorModeValue,
 } from "@chakra-ui/react"
 
@@ -68,26 +69,19 @@ export const ErrorStyle = (error) => {
 export const ClaimedStyle = {
     position: 'top-left',
     duration: 20000,
-    isClosable: true,
-    render: (props) => (
-        <Box bg='#202023' borderRadius={10} border='2px solid #FF4993'>
-            <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                <Stack direction="row" justify="space-between">
-                    <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
-                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                </Stack>
-                <Text color='whiteAlpha.900'>The winnings for this bet have already been claimed</Text>
-            </Stack>
-        </Box >
-    ),
-    close: () => {
-
-    },
-    containerStyle: {
-        width: '800px',
-        maxWidth: '60%',
-        border: '2px solid #FF4993',
-        borderRadius: '10px',
-        padding: '2px'
-    },
+    render: function renderToast() {
+        return (
+            <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                <Box bg='#202023' borderRadius={10}>
+                    <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                        <Stack direction="row" justify="space-between">
+                            <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
+                            <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                        </Stack>
+                        <Text color='whiteAlpha.900'>The winnings for this bet have already been claimed</Text>
+                    </Stack>
+                </Box>
+            </Box >
+        )
+    }
 }
