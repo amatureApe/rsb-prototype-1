@@ -17,13 +17,15 @@ import {
     Badge,
     Link,
     Divider,
-    Toast,
+    Spinner,
     useColorModeValue,
     useToast,
     ToastProvider
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons"
+
+import { LeapFrog } from '@uiball/loaders'
 
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
@@ -78,7 +80,10 @@ const Details = ({ accounts, id }) => {
                             <Box bg='#202023' borderRadius={10}>
                                 <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
                                     <Stack direction="row" justify="space-between">
-                                        <Heading fontSize={22} color='whiteAlpha.900'>Pending!</Heading>
+                                        <Stack direction="row">
+                                            <Heading fontSize={22} color='whiteAlpha.900'>Pending!</Heading>
+                                            <LeapFrog size={30} color='white' />
+                                        </Stack>
                                         <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
                                     </Stack>
                                     <Text color='whiteAlpha.900'>Transaction is being confirmed</Text>
@@ -209,7 +214,10 @@ const Details = ({ accounts, id }) => {
                         <Box bg='#202023' borderRadius={10}>
                             <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
                                 <Stack direction="row" justify="space-between">
-                                    <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
+                                    <Stack direction="row">
+                                        <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
+                                        <LeapFrog size={30} color='white' />
+                                    </Stack>
                                     <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
                                 </Stack>
                                 <Text color='whiteAlpha.900'>The winnings for this bet have already been claimed</Text>
@@ -231,7 +239,10 @@ const Details = ({ accounts, id }) => {
                         <Box bg='#202023' borderRadius={10}>
                             <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
                                 <Stack direction="row" justify="space-between">
-                                    <Heading fontSize={22} color='whiteAlpha.900'>Bet is Dead!</Heading>
+                                    <Stack direction="row">
+                                        <Heading fontSize={22} color='whiteAlpha.900'>Bet is Dead!</Heading>
+                                        <LeapFrog size={30} color='white' />
+                                    </Stack>
                                     <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
                                 </Stack>
                                 <Text color='whiteAlpha.900'>This bet was either unsolveable or cancelled.</Text>
