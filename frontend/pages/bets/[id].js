@@ -30,7 +30,7 @@ import { LeapFrog } from '@uiball/loaders'
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
 import { BET_STATUS, ZERO_ADDRESS } from "../../consts"
-import { PendingStyle, SuccessStyle, ErrorStyle, ClaimedStyle } from "../../styles/toastStyles"
+import { PendingStyle, SuccessStyle } from "../../styles/toastStyles"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
@@ -68,190 +68,139 @@ const Details = ({ accounts, id }) => {
         handleBet()
     }, [])
 
+    const customToast = (heading, message, type) => {
+        const id = toast({
+            position: 'top-left',
+            duration: type === 'success' ? 10000 : null,
+            render: function renderToast() {
+                return (
+                    <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                        <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                            <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                <Stack direction="row" justify="space-between">
+                                    {
+                                        type === 'pending' ?
+                                            (
+                                                <Stack direction="row">
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                    <LeapFrog size={30} color='white' />
+                                                </Stack>
+                                            ) : (
+                                                <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                            )}
+                                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                </Stack>
+                                <Text color='whiteAlpha.900'>{message}</Text>
+                            </Stack>
+                        </Box>
+                    </Box >
+                )
+            }
+        })
+
+        return id
+    }
+
+    const updateToast = (id, heading, message, type) => {
+        if (toast.isActive(id)) {
+            toast.update(id, {
+                duration: type === 'success' ? 10000 : null,
+                render: function renderToast() {
+                    return (
+                        <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                            <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                                <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                    <Stack direction="row" justify="space-between">
+                                        {
+                                            type === 'pending' ?
+                                                (
+                                                    <Stack direction="row">
+                                                        <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                        <LeapFrog size={30} color='white' />
+                                                    </Stack>
+                                                ) : (
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                                )}
+                                        <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                    </Stack>
+                                    <Text color='whiteAlpha.900'>{message}</Text>
+                                </Stack>
+                            </Box>
+                        </Box >
+                    )
+                }
+            })
+        }
+        else {
+            customToast(heading, message, type)
+        }
+    }
+
     const handleBuy = async () => {
         try {
             const tx = await contract.takeBet(bet.betId)
-            const id = toast({
-                position: 'top-left',
-                duration: null,
-                render: function renderToast() {
-                    return (
-                        <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                            <Box bg='#202023' borderRadius={10}>
-                                <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                    <Stack direction="row" justify="space-between">
-                                        <Stack direction="row">
-                                            <Heading fontSize={22} color='whiteAlpha.900'>Pending!</Heading>
-                                            <LeapFrog size={30} color='white' />
-                                        </Stack>
-                                        <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                    </Stack>
-                                    <Text color='whiteAlpha.900'>Transaction is being confirmed</Text>
-                                </Stack>
-                            </Box>
-                        </Box >
-                    )
-                }
-            })
+            const id = customToast('Pending!', 'Transaction is being confirmed', 'pending')
 
             await tx.wait()
-            if (toast.isActive(id)) {
-                toast.update(id, {
-                    position: 'top-left',
-                    duration: 10000,
-                    render: function renderToast() {
-                        return (
-                            <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                                <Box bg='#202023' borderRadius={10}>
-                                    <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                        <Stack direction="row" justify="space-between">
-                                            <Heading fontSize={22} color='whiteAlpha.900'>Success!</Heading>
-                                            <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                        </Stack>
-                                        <Text color='whiteAlpha.900'>Transaction has been confirmed</Text>
-                                    </Stack>
-                                </Box>
-                            </Box >
-                        )
-                    }
-                })
-            }
-            else {
-                const id = toast({
-                    position: 'top-left',
-                    duration: null,
-                    render: function renderToast() {
-                        return (
-                            <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                                <Box bg='#202023' borderRadius={10}>
-                                    <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                        <Stack direction="row" justify="space-between">
-                                            <Heading fontSize={22} color='whiteAlpha.900'>Success!</Heading>
-                                            <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                        </Stack>
-                                        <Text color='whiteAlpha.900'>Transaction has been confirmed</Text>
-                                    </Stack>
-                                </Box>
-                            </Box >
-                        )
-                    }
-                })
-            }
+            updateToast(id, 'Success!', 'Transaction has been confirmed', 'success')
 
             handleBet()
         } catch (error) {
-            const id = toast({
-                position: 'top-left',
-                duration: null,
-                render: function renderToast() {
-                    return (
-                        <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                            <Box bg='#202023' borderRadius={10}>
-                                <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                    <Stack direction="row" justify="space-between">
-                                        <Heading fontSize={22} color='whiteAlpha.900'>Error!</Heading>
-                                        <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                    </Stack>
-                                    <Text color='whiteAlpha.900'>{error.message.toString()}</Text>
-                                </Stack>
-                            </Box>
-                        </Box >
-                    )
-                }
-            })
+            customToast('Error!', error.message.toString(), 'error')
         }
     }
 
     const handleValidate = async () => {
         try {
             const tx = await contract.requestData(bet.betId)
-            Toast(PendingStyle)
+            const id = customToast('Pending!', 'Transaction is being confirmed', 'pending')
 
             await tx.wait()
-            Toast(SuccessStyle)
+            updateToast(id, 'Success!', 'Transaction has been confirmed', 'success')
 
             handleBet()
-        } catch (error) {
-            Toast(ErrorStyle(error))
+        } catch (err) {
+            customToast('Error!', err.message.toString(), 'error')
         }
     }
 
     const handleSettle = async () => {
         try {
             const tx = await contract.settleRequest(bet.betId)
-            Toast(PendingStyle)
+            const id = customToast('Pending!', 'Transaction is being confirmed', 'pending')
 
             await tx.wait()
-            Toast(SuccessStyle)
+            updateToast(id, 'Success!', 'Transaction has been confirmed', 'success')
 
             handleBet()
         } catch (error) {
-            Toast(ErrorStyle(error))
+            customToast('Error!', error.message.toString(), 'error')
         }
     }
 
     const handleClaim = async () => {
         try {
             const tx = await contract.claimWinnings(bet.betId)
-            Toast(PendingStyle)
+            const id = customToast('Pending!', 'Transaction is being confirmed', 'pending')
 
             await tx.wait()
-            Toast(SuccessStyle)
+            updateToast(id, 'Success!', 'Transaction has been confirmed', 'success')
 
             handleBet()
         } catch (error) {
-            Toast(ErrorStyle(error))
+            customToast('Error!', error.message.toString(), 'error')
         }
     }
 
     const handleAlreadyClaimed = async () => {
-        const id = toast({
-            position: 'top-left',
-            duration: 20000,
-            render: function renderToast() {
-                return (
-                    <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                        <Box bg='#202023' borderRadius={10}>
-                            <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                <Stack direction="row" justify="space-between">
-                                    <Stack direction="row">
-                                        <Heading fontSize={22} color='whiteAlpha.900'>Already Claimed!</Heading>
-                                        <LeapFrog size={30} color='white' />
-                                    </Stack>
-                                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                </Stack>
-                                <Text color='whiteAlpha.900'>The winnings for this bet have already been claimed</Text>
-                            </Stack>
-                        </Box>
-                    </Box >
-                )
-            }
-        })
+        customToast('Already Claimed!', 'The winnings for this bet have already been claimed', 'error')
     }
 
     const handleDead = () => {
-        const id = toast({
-            position: 'top-left',
-            duration: 20000,
-            render: function renderToast() {
-                return (
-                    <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
-                        <Box bg='#202023' borderRadius={10}>
-                            <Stack bg={useColorModeValue('#FF4993', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
-                                <Stack direction="row" justify="space-between">
-                                    <Stack direction="row">
-                                        <Heading fontSize={22} color='whiteAlpha.900'>Bet is Dead!</Heading>
-                                        <LeapFrog size={30} color='white' />
-                                    </Stack>
-                                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
-                                </Stack>
-                                <Text color='whiteAlpha.900'>This bet was either unsolveable or cancelled.</Text>
-                            </Stack>
-                        </Box>
-                    </Box >
-                )
-            }
-        })
+        customToast('Bet is Dead!', 'Bet was either returned as unsettleable or canceled by owner', 'error')
+
     }
 
     return (
