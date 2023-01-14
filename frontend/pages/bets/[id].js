@@ -30,7 +30,6 @@ import { LeapFrog } from '@uiball/loaders'
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
 import { BET_STATUS, ZERO_ADDRESS } from "../../consts"
-import { PendingStyle, SuccessStyle } from "../../styles/toastStyles"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
 
