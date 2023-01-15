@@ -20,6 +20,8 @@ import {
 
 import { PhoneIcon, SearchIcon, CheckIcon, ChevronDownIcon, StarIcon } from '@chakra-ui/icons'
 
+import { LeapFrog } from '@uiball/loaders'
+
 import Layout from '../components/layout/article'
 import CardsWrap from '../components/bets-cards'
 import Sidebar from '../components/menus-and-drawers/bets-sidebar'
@@ -124,7 +126,12 @@ const OpenBets = ({ accounts }) => {
                 {
                     isLoaded ?
                         <CardsWrap bets={bets} accounts={accounts} handleBets={handleBets} /> :
-                        <Heading>LOADING BETS...</Heading>
+                        <Stack direction="row" align='flex-end'>
+                            <Heading>LOADING BETS</Heading>
+                            <Box position='relative' top={1}>
+                                <LeapFrog color='white' />
+                            </Box>
+                        </Stack>
                 }
             </Stack>
         </Layout >
