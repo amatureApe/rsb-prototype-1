@@ -15,8 +15,6 @@ const BondInput = ({ chainId, setBond, bond, bondInput, setBondInput }) => {
         setBondInput(e)
     }
 
-    console.log("chainID: ", COLLATERAL_ADDRESSES[chainId]['weth'])
-
     return (
         <Box bg="rgba(255, 73, 147, 0.2)" borderRadius={10}>
             <Stack direction="column" h={135} p={2} borderRadius={10} justify="center">
