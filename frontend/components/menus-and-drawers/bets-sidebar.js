@@ -1,21 +1,31 @@
+import { useState } from 'react'
 import {
     useDisclosure,
     useColorModeValue,
     Button,
     Box,
     Text,
+    Stack,
     Divider,
+    Input,
     Container,
     Accordion,
     AccordionItem,
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper
 } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
 
-export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hidden, setHidden }) {
+import { Search2Icon } from '@chakra-ui/icons'
+
+import { motion } from 'framer-motion'
+
+export default function Sidebar({ searchById, setSearchParams, getButtonProps, getDisclosureProps, isOpen, hidden, setHidden }) {
 
     return (
         <Box>
@@ -25,7 +35,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                 initial={false}
                 onAnimationStart={() => setHidden(false)}
                 onAnimationComplete={() => setHidden(!isOpen)}
-                animate={{ width: isOpen ? 225 : 0 }}
+                animate={{ width: isOpen ? 300 : 0 }}
                 style={{
                     background: 'red',
                     overflow: 'hidden',
@@ -42,7 +52,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
             >
                 <Container>
                     <Accordion allowToggle mb={10}>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -52,15 +62,29 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </AccordionButton>
                             </h2>
                             <AccordionPanel pb={4}>
-                                <Text fontSize={10}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo consequat.
-                                </Text>
+                                <Stack direction="row">
+                                    <NumberInput size='sm' bg="whiteAlpha.700" color="#525252" defaultValue={0} min={0} onChange={setSearchParams}>
+                                        <NumberInputField />
+                                        <NumberInputStepper>
+                                            <NumberIncrementStepper
+                                                bg='#FF4993'
+                                                color="whiteAlpha.800"
+                                                _active={{ bg: 'pink.300' }}
+                                                children='+'
+                                                mb={0.5}
+                                            />
+                                            <NumberDecrementStepper
+                                                bg='#FF4993'
+                                                color="whiteAlpha.800"
+                                                _active={{ bg: 'pink.300' }}
+                                                children='-' />
+                                        </NumberInputStepper>
+                                    </NumberInput>
+                                    <Button size='sm' bg='#FF4993' onClick={searchById}><Search2Icon color='whiteAlpha.900' /></Button>
+                                </Stack>
                             </AccordionPanel>
                         </AccordionItem>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -78,10 +102,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </Text>
                             </AccordionPanel>
                         </AccordionItem>
-                    </Accordion>
-
-                    <Accordion allowToggle mb={10}>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -94,7 +115,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 <Button>Hello</Button>
                             </AccordionPanel>
                         </AccordionItem>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -112,7 +133,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </Text>
                             </AccordionPanel>
                         </AccordionItem>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -130,7 +151,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </Text>
                             </AccordionPanel>
                         </AccordionItem>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -148,7 +169,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </Text>
                             </AccordionPanel>
                         </AccordionItem>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>
@@ -166,10 +187,7 @@ export default function Sidebar({ getButtonProps, getDisclosureProps, isOpen, hi
                                 </Text>
                             </AccordionPanel>
                         </AccordionItem>
-                    </Accordion>
-
-                    <Accordion allowToggle>
-                        <AccordionItem>
+                        <AccordionItem borderBottomWidth='1px' borderBottomColor='#FF4993'>
                             <h2>
                                 <AccordionButton>
                                     <Box flex='1' textAlign='left'>

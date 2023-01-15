@@ -57,11 +57,11 @@ const SetBet = ({ accounts, chainId }) => {
 
     const [affirmation, setAffirmation] = useState("0x0000000000000000000000000000000000000000")
     const [affirmationCollateral, setAffirmationCollateral] = useState("0x0000000000000000000000000000000000000000")
-    const [affirmationAmount, setAffirmationAmount] = useState("0.01")
+    const [affirmationAmount, setAffirmationAmount] = useState("")
 
     const [negation, setNegation] = useState("0x0000000000000000000000000000000000000000")
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
-    const [negationAmount, setNegationAmount] = useState("0.01")
+    const [negationAmount, setNegationAmount] = useState("")
 
     const [expiry, setExpiry] = useState(milliToSec(Date.now()))
     const [expiryInput, setExpiryInput] = useState("")
