@@ -19,13 +19,14 @@ import {
     TabPanels,
     TabPanel,
     Image,
-    Collapse,
-    ScaleFade,
-    SlideFade,
     useToast,
     useDisclosure,
     useColorModeValue
 } from '@chakra-ui/react'
+
+import { ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@chakra-ui/icons'
+
+import { LeapFrog } from '@uiball/loaders'
 
 import Layout from '../components/layout/article'
 import AdvancedMenu from '../components/menus-and-drawers/advanced-menu-collapse'
@@ -41,12 +42,10 @@ import ParticipantInputs from '../components/inputs/participant-inputs'
 import { milliToSec } from '../utils/date-picker-funcs'
 
 import contractConnection from '../utils/contractConnection'
-import checkApproval from '../utils/checkApproval'
+import { checkApproval, approve } from '../utils/checkApproval'
 import { WEEK_IN_SECONDS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
-import { ErrorStyle, PendingStyle, SuccessStyle } from '../styles/toastStyles'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 const SetBet = ({ accounts, chainId }) => {
     const [bet, setBet] = useState('')
@@ -64,7 +63,7 @@ const SetBet = ({ accounts, chainId }) => {
     const [negationCollateral, setNegationCollateral] = useState("0x0000000000000000000000000000000000000000")
     const [negationAmount, setNegationAmount] = useState("0.01")
 
-    const [expiry, setExpiry] = useState(milliToSec(Date.now()) + WEEK_IN_SECONDS)
+    const [expiry, setExpiry] = useState(milliToSec(Date.now()))
     const [expiryInput, setExpiryInput] = useState("")
 
     const [validationReward, setValidationReward] = useState('0')
@@ -75,7 +74,77 @@ const SetBet = ({ accounts, chainId }) => {
 
     const [imgUrl, setImgUrl] = useState("./images/rsb-icon-pink-bgIvory.png")
 
-    const Toast = useToast()
+    const toast = useToast()
+
+    const customToast = (heading, message, type) => {
+        const id = toast({
+            position: 'top-left',
+            duration: type === 'success' ? 10000 : null,
+            render: function renderToast() {
+                return (
+                    <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                        <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                            <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                <Stack direction="row" justify="space-between">
+                                    {
+                                        type === 'pending' ?
+                                            (
+                                                <Stack direction="row">
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                    <LeapFrog size={30} color='white' />
+                                                </Stack>
+                                            ) : (
+                                                <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                            )}
+                                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                </Stack>
+                                <Text color='whiteAlpha.900'>{message}</Text>
+                            </Stack>
+                        </Box>
+                    </Box >
+                )
+            }
+        })
+
+        return id
+    }
+
+    const updateToast = (id, heading, message, type) => {
+        if (toast.isActive(id)) {
+            toast.update(id, {
+                duration: type === 'success' ? 10000 : null,
+                render: function renderToast() {
+                    return (
+                        <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                            <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                                <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                    <Stack direction="row" justify="space-between">
+                                        {
+                                            type === 'pending' ?
+                                                (
+                                                    <Stack direction="row">
+                                                        <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                        <LeapFrog size={30} color='white' />
+                                                    </Stack>
+                                                ) : (
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                                )}
+                                        <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                    </Stack>
+                                    <Text color='whiteAlpha.900'>{message}</Text>
+                                </Stack>
+                            </Box>
+                        </Box >
+                    )
+                }
+            })
+        }
+        else {
+            customToast(heading, message, type)
+        }
+    }
 
     const setBetArgs = [
         bet,
@@ -134,21 +203,28 @@ const SetBet = ({ accounts, chainId }) => {
     const handleSetBet = async () => {
         const contract = await contractConnection(handler.address, handler.abi)
         try {
-            Toast(PendingStyle)
+            const id = customToast('Pending!', 'SetBet Tx is being confirmed', 'pending')
             const setBetTx = await contract.setBet(...prepareSetBet(...setBetArgs))
+
             const setBetTxReceipt = await setBetTx.wait()
-            Toast(SuccessStyle)
+            updateToast(id, 'Success!', 'SetBet Tx has been confirmed', 'success')
 
             const betId = setBetTxReceipt.logs[0].topics[2]
 
-            await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address, accounts)
+            const isApproved = await checkApproval(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address, accounts)
+            if (isApproved === false) {
+                const id2 = customToast('Approving!', 'Token approval is being confirmed', 'pending')
+                const approveTx = await approve(betSide === '1' ? affirmationCollateral : negationCollateral, handler.address)
+                updateToast(id2, 'Approved!', 'Token has been approved', 'success')
+            }
 
-            Toast(PendingStyle)
             const loadBetTx = await contract.loadBet(...prepareLoadBet(betId, ...loadBetArgs))
-            loadBetTx.wait()
-            Toast(SuccessStyle)
+            const id3 = customToast('Pending!', 'LoadBet Tx is being confirmed', 'pending')
+
+            await loadBetTx.wait()
+            updateToast(id3, 'Success!', 'LoadBet Tx has been confirmed', 'success')
         } catch (error) {
-            Toast(ErrorStyle(error))
+            customToast('Error!', error.message.toString(), 'error')
         }
     }
 

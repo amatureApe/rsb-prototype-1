@@ -123,7 +123,7 @@ const OpenBets = ({ accounts }) => {
                 <Sidebar getButtonProps={getButtonProps} getDisclosureProps={getDisclosureProps} isOpen={isOpen} hidden={hidden} setHidden={setHidden} />
                 {
                     isLoaded ?
-                        <CardsWrap bets={bets} accounts={accounts} /> :
+                        <CardsWrap bets={bets} accounts={accounts} handleBets={handleBets} /> :
                         <Heading>LOADING BETS...</Heading>
                 }
             </Stack>

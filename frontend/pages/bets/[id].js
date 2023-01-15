@@ -218,8 +218,20 @@ const Details = ({ accounts, id }) => {
                         <Stack direction="row" justify="center">
                             <Box borderRadius={10} p={2}>
                                 <Stack bg="rgba(255, 73, 147, 0.2)" borderRadius={10} p={5}>
-                                    <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
-                                    <Text>{bet.imgUrl?.slice(0, 40) + '...' + bet.imgUrl?.slice(-10)}</Text>
+                                    {
+                                        bet.imgUrl === './images/rsb-icon-pink-bgIvory.png' ?
+                                            (
+                                                <Box>
+                                                    <Image src={'../images/rsb-icon-pink-bgIvory.png'} maxW={400} borderRadius={10} />
+                                                    <Text>RSB Dice</Text>
+                                                </Box>
+                                            ) : (
+                                                <Box>
+                                                    <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
+                                                    <Text>{bet.imgUrl?.slice(0, 40) + '...' + bet.imgUrl?.slice(-10)}</Text>
+                                                </Box>
+                                            )}
+
                                     <Stack direction="row" justify="center">
                                         {
                                             (() => {

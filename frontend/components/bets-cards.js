@@ -21,34 +21,113 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 
-import { StarIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import { StarIcon, ExternalLinkIcon, CloseIcon } from '@chakra-ui/icons'
+
+import { LeapFrog } from '@uiball/loaders'
 
 import contractConnection from '../utils/contractConnection'
-import checkApproval from '../utils/checkApproval'
+import { checkApproval, approve } from '../utils/checkApproval'
 
 import getRatio from '../utils/getRatio'
 import { milliToSec, secToMilli } from '../utils/date-picker-funcs'
 import { ZERO_ADDRESS, BET_STATUS } from '../consts'
 
 import handler from '../../smart-contracts/deployments/goerli/OO_BetHandler.json'
-import { PendingStyle, SuccessStyle, ErrorStyle } from '../styles/toastStyles'
 
 
-const CardsWrap = ({ bets, accounts }) => {
+const CardsWrap = ({ bets, accounts, handleBets }) => {
 
-    const Toast = useToast()
+    const toast = useToast()
+
+    const customToast = (heading, message, type) => {
+        const id = toast({
+            position: 'top-left',
+            duration: type === 'success' ? 10000 : null,
+            render: function renderToast() {
+                return (
+                    <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                        <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                            <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                <Stack direction="row" justify="space-between">
+                                    {
+                                        type === 'pending' ?
+                                            (
+                                                <Stack direction="row">
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                    <LeapFrog size={30} color='white' />
+                                                </Stack>
+                                            ) : (
+                                                <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                            )}
+                                    <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                </Stack>
+                                <Text color='whiteAlpha.900'>{message}</Text>
+                            </Stack>
+                        </Box>
+                    </Box >
+                )
+            }
+        })
+
+        return id
+    }
+
+    const updateToast = (id, heading, message, type) => {
+        if (toast.isActive(id)) {
+            toast.update(id, {
+                duration: type === 'success' ? 10000 : null,
+                render: function renderToast() {
+                    return (
+                        <Box borderRadius={10} borderWidth='3px' borderColor={useColorModeValue('blackAlpha.700', '#FF4993')} p={1}>
+                            <Box bg={useColorModeValue('#f0e7db', '#202023')} borderRadius={10}>
+                                <Stack bg={useColorModeValue('rgba(255, 73, 147, 0.9)', 'rgba(255, 73, 147, 0.3)')} p={3} borderRadius={10}>
+                                    <Stack direction="row" justify="space-between">
+                                        {
+                                            type === 'pending' ?
+                                                (
+                                                    <Stack direction="row">
+                                                        <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+                                                        <LeapFrog size={30} color='white' />
+                                                    </Stack>
+                                                ) : (
+                                                    <Heading fontSize={22} color='whiteAlpha.900'>{heading}</Heading>
+
+                                                )}
+                                        <Button size="xs" variant="ghost" onClick={() => toast.close(id)}> <CloseIcon /></Button>
+                                    </Stack>
+                                    <Text color='whiteAlpha.900'>{message}</Text>
+                                </Stack>
+                            </Box>
+                        </Box >
+                    )
+                }
+            })
+        }
+        else {
+            customToast(heading, message, type)
+        }
+    }
 
     const handleBuy = async (bet) => {
         const contract = await contractConnection(handler.address, handler.abi)
         try {
-            await checkApproval(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address, accounts)
+            const isApproved = await checkApproval(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address, accounts)
+            if (isApproved === false) {
+                const id = customToast('Approving!', 'Token approval is being confirmed', 'pending')
+                const approveTx = await approve(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address)
+                updateToast(id, 'Approved!', 'Token has been approved', 'success')
+            }
 
-            Toast(PendingStyle)
             const takeBetTx = await contract.takeBet(bet.betId)
+            const id2 = customToast('Pending!', 'BuyBet Tx is being confirmed', 'pending')
+
             await takeBetTx.wait()
-            Toast(SuccessStyle)
+            updateToast(id2, 'Success!', 'BuyBet Tx has been confirmed', 'success')
+
+            handleBets()
         } catch (error) {
-            Toast(ErrorStyle(error))
+            customToast('Error!', error.message.toString(), 'error')
         }
     }
 
