@@ -63,9 +63,7 @@ const Details = ({ accounts, id }) => {
         const response = await getBet(id)
         setBet(response)
 
-        console.log(bet.affirmationToken, bet.negationToken)
-
-        await getSymbols(bet.affirmationToken, bet.negationToken)
+        // await getSymbols(bet.affirmationToken, bet.negationToken)
         setIsLoaded(true)
     }
 
