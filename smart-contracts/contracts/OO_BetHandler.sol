@@ -9,7 +9,7 @@ contract OO_BetHandler is ReentrancyGuard {
     OptimisticOracleV2Interface oo =
         OptimisticOracleV2Interface(0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884);
 
-    uint256 requestTime = 0; // Store the request time so we can re-use it later.
+    uint256 requestTime = 0; // Store the request time so we can re-use it later
     bytes32 constant IDENTIFIER = bytes32("YES_OR_NO_QUERY"); // Use the yes no idetifier to ask arbitary questions, such as the weather on a particular day.
     address constant ZERO_ADDRESS = address(0);
     // 0x0000000000000000000000000000000000000000
