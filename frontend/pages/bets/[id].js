@@ -238,15 +238,15 @@ const Details = ({ accounts, id }) => {
                                     {
                                         bet.imgUrl === './images/rsb-icon-pink-bgIvory.png' ?
                                             (
-                                                <Box>
+                                                <Stack>
                                                     <Image src={'../images/rsb-icon-pink-bgIvory.png'} maxW={400} borderRadius={10} />
                                                     <Text>RSB Dice</Text>
-                                                </Box>
+                                                </Stack>
                                             ) : (
-                                                <Box>
+                                                <Stack>
                                                     <Image src={bet.imgUrl} maxW={500} borderRadius={10} />
                                                     <Text>{bet.imgUrl?.slice(0, 40) + '...' + bet.imgUrl?.slice(-10)}</Text>
-                                                </Box>
+                                                </Stack>
                                             )}
 
                                     <Stack direction="row" justify="center">
