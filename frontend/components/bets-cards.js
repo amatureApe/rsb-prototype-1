@@ -115,7 +115,7 @@ const CardsWrap = ({ bets, accounts, handleBets }) => {
             const isApproved = await checkApproval(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address, accounts)
             if (isApproved === false) {
                 const id = customToast('Approving!', 'Token approval is being confirmed', 'pending')
-                const approveTx = await approve(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address)
+                await approve(bet.affirmation === ZERO_ADDRESS ? bet.affirmationToken : bet.negationToken, handler.address)
                 updateToast(id, 'Approved!', 'Token has been approved', 'success')
             }
 

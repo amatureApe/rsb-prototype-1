@@ -29,6 +29,7 @@ import { LeapFrog } from '@uiball/loaders'
 
 import contractConnection from "../../utils/contractConnection"
 import getBet from "../../utils/getBet"
+import getSymbol from "../../utils/getSymbol"
 import { BET_STATUS, ZERO_ADDRESS } from "../../consts"
 
 import handler from '../../../smart-contracts/deployments/goerli/OO_BetHandler.json'
@@ -44,6 +45,7 @@ const OpenPosition = () => {
 
 const Details = ({ accounts, id }) => {
     const [bet, setBet] = useState([])
+    const [symbols, setSymbols] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     let contract
 
@@ -60,7 +62,24 @@ const Details = ({ accounts, id }) => {
     const handleBet = async () => {
         const response = await getBet(id)
         setBet(response)
+
+        console.log(bet.affirmationToken, bet.negationToken)
+
+        await getSymbols(bet.affirmationToken, bet.negationToken)
         setIsLoaded(true)
+    }
+
+    const getSymbols = async (affToken, negToken) => {
+
+        const batch = []
+
+        const affSymbol = await getSymbol(affToken)
+        batch.push(affSymbol)
+
+        const negSymbol = await getSymbol(negToken)
+        batch.push(negSymbol)
+
+        setSymbols(batch)
     }
 
     useEffect(() => {
@@ -321,13 +340,13 @@ const Details = ({ accounts, id }) => {
                                         <Heading fontSize={24}>Affirmation</Heading>
                                         {bet.affirmation === ZERO_ADDRESS ? <OpenPosition position="Affirmation" /> : <Text fontSize={20}>Address: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.affirmation}`} isExternal>{bet.affirmation}</Link></Text>}
                                         <Text fontSize={20}>Token: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.affirmationToken}`} isExternal>{bet.affirmationToken}</Link></Text>
-                                        <Text fontSize={20}>Amount: {bet.affirmationAmount}</Text>
+                                        <Text fontSize={20}>Amount: {bet.affirmationAmount} {symbols[0]}</Text>
                                     </Stack>
                                     <Stack spacing={0}>
                                         <Heading fontSize={24}>Negation</Heading>
                                         {bet.negation === ZERO_ADDRESS ? <OpenPosition position="Negation" /> : <Text fontSize={20}>Address: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.negation}`} isExternal>{bet.negation}</Link></Text>}
                                         <Text fontSize={20}>Token: <Link color="#FF4993" href={`https://goerli.etherscan.io/address/${bet.negationToken}`} isExternal>{bet.negationToken}</Link></Text>
-                                        <Text fontSize={20}>Amount: {bet.negationAmount}</Text>
+                                        <Text fontSize={20}>Amount: {bet.negationAmount} {symbols[1]}</Text>
                                     </Stack>
                                 </Stack>
                             </Box>

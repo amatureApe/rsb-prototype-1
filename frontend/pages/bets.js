@@ -65,8 +65,6 @@ const OpenBets = ({ accounts }) => {
     const searchById = async () => {
         setIsLoaded(false)
 
-        const contract = await contractConnection(handler.address, handler.abi)
-
         const batch = []
         const response = await getBet(Number(searchParams))
         if (response != undefined) {
