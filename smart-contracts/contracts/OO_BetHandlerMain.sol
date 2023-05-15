@@ -370,11 +370,9 @@ contract OO_BetHandlerMain is ReentrancyGuard {
     }
 
     //******* VIEW FUNCTIONS ***********
-    function createQuestion(string memory _question)
-        public
-        pure
-        returns (bytes memory)
-    {
+    function createQuestion(
+        string memory _question
+    ) public pure returns (bytes memory) {
         bytes memory question = bytes(
             string.concat(
                 "Q: ",
@@ -405,27 +403,22 @@ contract OO_BetHandlerMain is ReentrancyGuard {
                 .resolvedPrice;
     }
 
-    function getHashId(bytes calldata _question, uint256 timestamp)
-        public
-        view
-        returns (bytes memory)
-    {
+    function getHashId(
+        bytes calldata _question,
+        uint256 timestamp
+    ) public view returns (bytes memory) {
         return abi.encode(_question, msg.sender, timestamp);
     }
 
-    function stringEncode(string calldata _string)
-        public
-        pure
-        returns (bytes memory)
-    {
+    function stringEncode(
+        string calldata _string
+    ) public pure returns (bytes memory) {
         return bytes(_string);
     }
 
-    function stringDecode(bytes calldata _bytes)
-        public
-        pure
-        returns (string memory)
-    {
+    function stringDecode(
+        bytes calldata _bytes
+    ) public pure returns (string memory) {
         return string(_bytes);
     }
 }
